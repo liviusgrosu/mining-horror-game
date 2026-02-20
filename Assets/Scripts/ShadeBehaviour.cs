@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class ShadeBehaviour : MonoBehaviour
@@ -55,7 +56,9 @@ public class ShadeBehaviour : MonoBehaviour
     [SerializeField]
     private EnemyPathing _pathing;
     private int _currentPointIndex = 0;
-    
+
+    [SerializeField]
+    private bool startAtIdle;
     
     private void Awake()
     {
@@ -134,11 +137,10 @@ public class ShadeBehaviour : MonoBehaviour
     {
         _agent.SetDestination(_player.position);
 
-        // Adding tolerance since sometimes the enemy will be stuck in a weird state and not move because the agent has a tolerance for stopping
         if (_getDistanceFromPlayer <= _agent.stoppingDistance + 0.1f)
         {
             _agent.velocity = Vector3.zero;
-            _currentState = State.Attack;
+            GameManager.Instance.OpenGameOverScreen();
         }
 
         if (_getDistanceFromPlayer > _engageDistance)
@@ -174,7 +176,7 @@ public class ShadeBehaviour : MonoBehaviour
             _agent.velocity = _agent.desiredVelocity;
             _agent.stoppingDistance = 0f;
             _checkStateElapsedTime = 0f;
-            _currentState = _shouldPatrol ? State.Patrol : State.Return;
+            _currentState = _shouldPatrol || startAtIdle ? State.Patrol : State.Return;
         }
     }
 
@@ -184,7 +186,7 @@ public class ShadeBehaviour : MonoBehaviour
         if (Vector3.Distance(transform.position, _startingPosition) < 0.15f)
         {
             _agent.stoppingDistance = _startingStoppingDistance;
-            _currentState = _shouldPatrol ? State.Patrol : State.Idle;
+            _currentState = State.Idle;
         }
     }
 

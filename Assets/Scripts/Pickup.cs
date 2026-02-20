@@ -57,6 +57,11 @@ public class Pickup : MonoBehaviour
             {
                 GameManager.Instance.OpenUpgradeUI();
             }
+            
+            else if (_hoveringOver.CompareTag("Entrance Door"))
+            {
+                GameManager.Instance.ShowEntranceDoorText();
+            }
         }
     }
 }
