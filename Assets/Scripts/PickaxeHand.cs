@@ -52,6 +52,11 @@ public class PickaxeHand : MonoBehaviour
         Destroy(_currentPickaxe);
         _currentPickaxe = Instantiate(chosenPickaxe, transform.position, transform.rotation);
         _currentPickaxe.transform.SetParent(transform);
+
+        if (name == "Gold Pickaxe")
+        {
+            GameManager.Instance.SpawnFinalEncounter();
+        }
     }
 
     public void CheckHit()

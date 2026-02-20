@@ -8,6 +8,7 @@ TagManager:
   - Mineral
   - Anvil
   - Breakable Wall
+  - Entrance Door
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - Mineral
   - NPC
   - Walkable
-  - 
+  - Environment
   - 
   - 
   - 
