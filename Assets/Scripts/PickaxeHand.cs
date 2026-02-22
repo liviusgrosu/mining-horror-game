@@ -61,18 +61,16 @@ public class PickaxeHand : MonoBehaviour
 
     public void CheckHit()
     {
-        if (Physics.Raycast(transform.position, _camera.transform.forward, out var hit))
+        if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit))
         {
+            Debug.Log("hitting: " + hit.collider.name);
+            
             if (hit.collider.CompareTag("Mineral Deposit"))
             {
-                var mineralDeposit = hit.collider.GetComponent<MineralDeposit>();
-                if (_currentPickaxe.GetComponent<Pickaxe>().Power >= mineralDeposit.PowerRequirement)
+                var wp = hit.collider.GetComponent<MineralDeposit>();
+                if (wp != null)
                 {
-                    mineralDeposit.ProduceMineral(hit.point, hit.normal);       
-                }
-                else
-                {
-                    // produce effect
+                    wp.OnHit(hit.point, hit.normal, 5);
                 }
             }
 
@@ -85,5 +83,11 @@ public class PickaxeHand : MonoBehaviour
                 }
             }
         }
+    }
+    
+    void OnDrawGizmosSelected()
+    {
+        //Gizmos.color = Color.yellow;
+        //Gizmos.DrawWireSphere(weakPointPosition, 0.1f);
     }
 }

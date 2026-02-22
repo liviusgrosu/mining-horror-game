@@ -7,8 +7,8 @@ TagManager:
   - Mineral Deposit
   - Mineral
   - Anvil
-  - Breakable Wall
   - Entrance Door
+  - Breakable
   layers:
   - Default
   - TransparentFX

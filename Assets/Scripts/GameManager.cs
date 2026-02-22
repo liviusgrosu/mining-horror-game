@@ -22,8 +22,8 @@ public class GameManager : MonoBehaviour
     private bool triggeredFirstChase, triggeredSecondChase;
 
     [SerializeField]
-    private TextMeshProUGUI _entranceDoorText;
-    private bool DisplayingEntranceDoorText;
+    private TextMeshProUGUI _entranceDoorText, _normalRockHoverText, _mineralDepositHoverText;
+    private bool DisplayingHoverText;
     
     private void Awake()
     {
@@ -113,37 +113,60 @@ public class GameManager : MonoBehaviour
     
     public void ShowEntranceDoorText()
     {
-        if (DisplayingEntranceDoorText)
+        if (DisplayingHoverText)
         {
             return;
         }
 
-        DisplayingEntranceDoorText = true;
+        DisplayingHoverText = true;
         // Start the fade coroutine
         StopAllCoroutines();
-        StartCoroutine(FadeTextInAndOut());
+        StartCoroutine(FadeTextInAndOut(_entranceDoorText));
     }
 
-    private IEnumerator FadeTextInAndOut()
+    public void ShowNormalRockHoverText()
     {
-        float fadeDuration = 1f; 
-        float pauseDuration = 2f; 
+        if (DisplayingHoverText)
+        {
+            return;
+        }
+
+        DisplayingHoverText = true;
+        StopAllCoroutines();
+        StartCoroutine(FadeTextInAndOut(_normalRockHoverText));
+    }
     
-        _entranceDoorText.gameObject.SetActive(true);
-        Color originalColor = _entranceDoorText.color;
-        _entranceDoorText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+    public void ShowMineralDepositHoverText()
+    {
+        if (DisplayingHoverText)
+        {
+            return;
+        }
+
+        DisplayingHoverText = true;
+        StopAllCoroutines();
+        StartCoroutine(FadeTextInAndOut(_mineralDepositHoverText));
+    }
+
+    private IEnumerator FadeTextInAndOut(TextMeshProUGUI text)
+    {
+        const float fadeDuration = 0.25f; 
+        const float pauseDuration = 2f; 
     
-        // Fade in
+        text.gameObject.SetActive(true);
+        var originalColor = text.color;
+        text.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+    
         var elapsedTime = 0f;
         while (elapsedTime < fadeDuration)
         {
             elapsedTime += Time.deltaTime;
             var alpha = Mathf.Lerp(0f, 1f, elapsedTime / fadeDuration);
-            _entranceDoorText.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+            text.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
             yield return null;
         }
     
-        _entranceDoorText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
+        text.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
     
         yield return new WaitForSeconds(pauseDuration);
     
@@ -152,12 +175,12 @@ public class GameManager : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
             var alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
-            _entranceDoorText.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+            text.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
             yield return null;
         }
     
-        _entranceDoorText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
-        _entranceDoorText.gameObject.SetActive(false);
-        DisplayingEntranceDoorText = false;
+        text.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+        text.gameObject.SetActive(false);
+        DisplayingHoverText = false;
     }
 }

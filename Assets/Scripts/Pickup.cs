@@ -53,6 +53,10 @@ public class Pickup : MonoBehaviour
                 _hoveringOverInteractable = null;
                 Destroy(_hoveringOver);
             }
+            if (_hoveringOver.CompareTag("Mineral Deposit"))
+            {
+                GameManager.Instance.ShowMineralDepositHoverText();
+            }
             else if (_hoveringOver.CompareTag("Anvil"))
             {
                 GameManager.Instance.OpenUpgradeUI();
@@ -61,6 +65,11 @@ public class Pickup : MonoBehaviour
             else if (_hoveringOver.CompareTag("Entrance Door"))
             {
                 GameManager.Instance.ShowEntranceDoorText();
+            }
+            
+            else if (_hoveringOver.CompareTag("Breakable"))
+            {
+                GameManager.Instance.ShowNormalRockHoverText();
             }
         }
     }
