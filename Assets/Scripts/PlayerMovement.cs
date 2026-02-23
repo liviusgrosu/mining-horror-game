@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.InMenu)
+        if (GameManager.Instance.InMenu || ScreenShakeEffect.Instance.IsCameraShaking)
         {
             return;
         }
