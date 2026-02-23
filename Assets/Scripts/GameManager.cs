@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
             monster1Chase.SetActive(true);
             rockBlockage1.SetActive(true);
             triggeredFirstChase = true;
+            ScreenShakeEffect.Instance.BeginShaking();
         }
     }
 

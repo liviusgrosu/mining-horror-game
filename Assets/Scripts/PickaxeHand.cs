@@ -16,6 +16,8 @@ public class PickaxeHand : MonoBehaviour
     private Animator _animator;
     private Transform _camera;
 
+    [SerializeField] private GameObject sparkVFX, dustEffect;
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -63,8 +65,6 @@ public class PickaxeHand : MonoBehaviour
     {
         if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit))
         {
-            Debug.Log("hitting: " + hit.collider.name);
-            
             if (hit.collider.CompareTag("Mineral Deposit"))
             {
                 var wp = hit.collider.GetComponent<MineralDeposit>();
@@ -72,22 +72,34 @@ public class PickaxeHand : MonoBehaviour
                 {
                     wp.OnHit(hit.point, hit.normal, 5);
                 }
-            }
 
-            if (hit.collider.CompareTag("Breakable Wall"))
+                SpawnCloudEffect(hit.point);
+            }
+            else if (hit.collider.CompareTag("Breakable Wall"))
             {
                 var wall = hit.collider.GetComponent<BreakableWall>();
                 if (_currentPickaxe.GetComponent<Pickaxe>().Power >= wall.PowerRequirement)
                 {
                     wall.TakeDamage();       
                 }
+                SpawnCloudEffect(hit.point);
+            }
+            else
+            {
+                SpawnSparkEffect(hit.point, hit.normal);
             }
         }
     }
-    
-    void OnDrawGizmosSelected()
+
+    private void SpawnCloudEffect(Vector3 point)
     {
-        //Gizmos.color = Color.yellow;
-        //Gizmos.DrawWireSphere(weakPointPosition, 0.1f);
+        var vfx = Instantiate(dustEffect, point, Quaternion.identity);
+        Destroy(vfx, 1f);
+    }
+
+    private void SpawnSparkEffect(Vector3 point, Vector3 normal)
+    {
+        var vfx = Instantiate(sparkVFX, point, Quaternion.LookRotation(normal));
+        Destroy(vfx, 1f);
     }
 }

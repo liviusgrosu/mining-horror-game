@@ -4,6 +4,8 @@ using UnityEngine.AI;
 
 public class ShadeBehaviour : MonoBehaviour
 {
+    private static readonly int MovementBlend = Animator.StringToHash("MovementBlend");
+
     public enum State
     {
         Idle,
@@ -44,7 +46,10 @@ public class ShadeBehaviour : MonoBehaviour
     private State _currentState = State.Idle;
     private Transform _player;
     private NavMeshAgent _agent;
+    [SerializeField] private float runningSpeed = 2.5f;
+    [SerializeField] private float walkingSpeed = 1f;
 
+    
     private Vector3 _startingPosition;
     private float _startingStoppingDistance;
     private Quaternion _startingRotation;
@@ -59,6 +64,11 @@ public class ShadeBehaviour : MonoBehaviour
 
     [SerializeField]
     private bool startAtIdle;
+    
+    [SerializeField]
+    private Animator animator;
+
+    private float _animationTime;
     
     private void Awake()
     {
@@ -99,9 +109,6 @@ public class ShadeBehaviour : MonoBehaviour
             case State.Engage:
                 EngageState();
                 break;
-            case State.Attack:
-                AttackState();
-                break;
             case State.Check:
                 CheckState();
                 break;
@@ -113,6 +120,7 @@ public class ShadeBehaviour : MonoBehaviour
 
     private void IdleState()
     {
+        animator.SetFloat(MovementBlend, 0f, 0.1f, Time.deltaTime);
         if (Quaternion.Angle(transform.rotation, _startingRotation) > _rotationTolerance)
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, _startingRotation, _startingRotationSpeed * Time.deltaTime);
@@ -121,6 +129,7 @@ public class ShadeBehaviour : MonoBehaviour
 
     private void PatrolState()
     {
+        animator.SetFloat(MovementBlend, 0.5f, 0.1f, Time.deltaTime);
         if (_agent.remainingDistance <= _agent.stoppingDistance)
         {
             _currentPointIndex = (_currentPointIndex + 1) % _pathing.Points.Count;
@@ -135,6 +144,7 @@ public class ShadeBehaviour : MonoBehaviour
 
     private void EngageState()
     {
+        animator.SetFloat(MovementBlend, 1f, 0.1f, Time.deltaTime);
         _agent.SetDestination(_player.position);
 
         if (_getDistanceFromPlayer <= _agent.stoppingDistance + 0.1f)
@@ -168,12 +178,13 @@ public class ShadeBehaviour : MonoBehaviour
 
     private void CheckState()
     {
+        animator.SetFloat(MovementBlend, 0f, 0.1f, Time.deltaTime);
         _checkStateElapsedTime += Time.deltaTime;
 
         if (_checkStateElapsedTime >= _checkStateTime)
         {
             _agent.isStopped = false;
-            _agent.velocity = _agent.desiredVelocity;
+            _agent.speed = walkingSpeed;
             _agent.stoppingDistance = 0f;
             _checkStateElapsedTime = 0f;
             _currentState = _shouldPatrol || startAtIdle ? State.Patrol : State.Return;
@@ -182,6 +193,7 @@ public class ShadeBehaviour : MonoBehaviour
 
     private void ReturnState()
     {
+        animator.SetFloat(MovementBlend, 0.5f, 0.1f, Time.deltaTime);
         _agent.SetDestination(_startingPosition);
         if (Vector3.Distance(transform.position, _startingPosition) < 0.15f)
         {
@@ -204,6 +216,7 @@ public class ShadeBehaviour : MonoBehaviour
             if (Vector3.Angle(enemyToPlayer, transform.forward) <= _fov)
             {
                 _agent.isStopped = false;
+                _agent.speed = runningSpeed;
                 _currentState = State.Engage;
             }
         }
