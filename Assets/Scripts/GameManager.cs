@@ -82,6 +82,12 @@ public class GameManager : MonoBehaviour
         _upgradeText.SetActive(state);
     }
 
+    public void ToggleOffAllText()
+    {
+        _pickupText.SetActive(false);
+        _upgradeText.SetActive(false);   
+    }
+
     public void OpenUpgradeUI()
     {
         ToggleCursorLock(true);
