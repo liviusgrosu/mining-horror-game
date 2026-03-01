@@ -64,6 +64,8 @@ public class ShadeBehaviour : MonoBehaviour
 
     [SerializeField]
     private bool startAtIdle;
+
+    [SerializeField] private bool initiateChase;
     
     [SerializeField]
     private Animator animator;
@@ -130,7 +132,10 @@ public class ShadeBehaviour : MonoBehaviour
     private void PatrolState()
     {
         animator.SetFloat(MovementBlend, 0.5f, 0.1f, Time.deltaTime);
-        if (_agent.remainingDistance <= _agent.stoppingDistance)
+        
+        var distanceToDestination = Vector3.Distance(transform.position, _agent.destination);
+        //if (_agent.remainingDistance <= _agent.stoppingDistance)
+        if (distanceToDestination <= _agent.stoppingDistance + 1)
         {
             _currentPointIndex = (_currentPointIndex + 1) % _pathing.Points.Count;
             SetPathingDestination();
@@ -153,7 +158,7 @@ public class ShadeBehaviour : MonoBehaviour
             GameManager.Instance.OpenGameOverScreen();
         }
 
-        if (_getDistanceFromPlayer > _engageDistance)
+        if (!initiateChase && _getDistanceFromPlayer > _engageDistance)
         {
             _agent.isStopped = true;
             _checkStateElapsedTime = 0f;
@@ -169,7 +174,7 @@ public class ShadeBehaviour : MonoBehaviour
         var targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _toPlayerRotateAttackSpeed * Time.deltaTime);
 
-        if (_getDistanceFromPlayer > _agent.stoppingDistance)
+        if ( _getDistanceFromPlayer > _agent.stoppingDistance)
         {
             _agent.velocity = _agent.desiredVelocity;
             _currentState = State.Engage;
@@ -204,21 +209,26 @@ public class ShadeBehaviour : MonoBehaviour
 
     private void CheckIfPlayerInFov()
     {
-        if (_currentState == State.Attack)
-        {
-            return;
-        }
+        if (_currentState == State.Attack) return;
+        if (!(Vector3.Distance(transform.position, _player.position) <= _engageDistance)) return;
+        var enemyToPlayer = _player.position - transform.position;
 
-        if (Vector3.Distance(transform.position, _player.position) <= _engageDistance)
-        {
-            var enemyToPlayer = _player.position - transform.position;
+        if (!(Vector3.Angle(enemyToPlayer, transform.forward) <= _fov)) return;
+        if (!Physics.Raycast(transform.position, _player.position - transform.position, out var hit, _engageDistance)) return;
+        if (!hit.transform.CompareTag("Player")) return;
 
-            if (Vector3.Angle(enemyToPlayer, transform.forward) <= _fov)
-            {
-                _agent.isStopped = false;
-                _agent.speed = runningSpeed;
-                _currentState = State.Engage;
-            }
-        }
+        _agent.isStopped = false;
+        _agent.speed = runningSpeed;
+        _currentState = State.Engage;
+    }
+
+    public void EndChase()
+    {
+        if (!initiateChase) return;
+        
+        _agent.isStopped = true;
+        _checkStateElapsedTime = 0f;
+        _currentState = State.Check;
+        initiateChase = false;
     }
 }

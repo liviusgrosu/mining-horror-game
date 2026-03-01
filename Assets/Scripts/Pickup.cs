@@ -8,6 +8,8 @@ public class Pickup : MonoBehaviour
     private GameObject _hoveringOver;
     private IInteractable _hoveringOverInteractable;
     
+    public LayerMask ignoreMask;
+    
     private void Start()
     {
         _camera = Camera.main.transform;
@@ -15,14 +17,12 @@ public class Pickup : MonoBehaviour
     
     private void Update()
     {
-        Debug.DrawRay(_camera.position, _camera.transform.forward * 1.2f, Color.red);
-        if (Physics.Raycast(_camera.position, _camera.transform.forward * 1.2f, out var hit))
+        if (Physics.Raycast(
+            _camera.position, _camera.transform.forward * 1.2f, out var hit, 3.0f, ~ignoreMask))
         {
             if (hit.collider.gameObject != _hoveringOver)
             {
-                GameManager.Instance.TogglePickupText(false);
-                GameManager.Instance.ToggleUpgradeText(false);
-                
+                GameManager.Instance.ToggleOffAllText();
                 _hoveringOverInteractable?.ToggleOutline(false);
                 _hoveringOver = hit.collider.gameObject;
             }
@@ -33,19 +33,27 @@ public class Pickup : MonoBehaviour
                 _hoveringOverInteractable = _hoveringOver.GetComponent<IInteractable>();
                 _hoveringOverInteractable?.ToggleOutline(true);
             }
-
-            if (_hoveringOver.CompareTag("Anvil"))
+            else if (_hoveringOver.CompareTag("Anvil"))
             {
                 GameManager.Instance.ToggleUpgradeText(true);
+            }
+            else if (_hoveringOver.CompareTag("Entrance Door"))
+            {
+                //...
+            }
+            else
+            {
+                _hoveringOver = null;
             }
         }
         else
         {
+            GameManager.Instance.ToggleOffAllText();
             _hoveringOverInteractable?.ToggleOutline(false);
             _hoveringOver = null;
         }
 
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.E) && _hoveringOver)
         {
             if (_hoveringOver.CompareTag("Mineral") && _hoveringOverInteractable != null)
             {

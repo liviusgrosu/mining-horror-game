@@ -18,6 +18,8 @@ public class PickaxeHand : MonoBehaviour
 
     [SerializeField] private GameObject sparkVFX, dustEffect;
     
+    public LayerMask ignoreMask;
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -63,8 +65,9 @@ public class PickaxeHand : MonoBehaviour
 
     public void CheckHit()
     {
-        if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit))
+        if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit, 5.0f, ~ignoreMask))
         {
+            Debug.Log(hit.transform.name);
             if (hit.collider.CompareTag("Mineral Deposit"))
             {
                 var wp = hit.collider.GetComponent<MineralDeposit>();
@@ -75,7 +78,7 @@ public class PickaxeHand : MonoBehaviour
 
                 SpawnCloudEffect(hit.point);
             }
-            else if (hit.collider.CompareTag("Breakable Wall"))
+            else if (hit.collider.CompareTag("Breakable Wall") || hit.collider.CompareTag("Entrance Door"))
             {
                 var wall = hit.collider.GetComponent<BreakableWall>();
                 if (_currentPickaxe.GetComponent<Pickaxe>().Power >= wall.PowerRequirement)

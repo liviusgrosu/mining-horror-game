@@ -131,7 +131,7 @@ MonoBehaviour:
   weakPointDamageMultiplier: 2.5
   maxHP: 30
   weakPointIndicatorPrefab: {fileID: 6111545916753776259, guid: 8f187686af977594487be1331a639450, type: 3}
-  PowerRequirement: 1
+  PowerRequirement: 2
   NextStage: {fileID: 8721692818050647315}
 --- !u!1 &3918628509503820459
 GameObject:
@@ -264,7 +264,7 @@ MonoBehaviour:
   weakPointDamageMultiplier: 2.5
   maxHP: 30
   weakPointIndicatorPrefab: {fileID: 6111545916753776259, guid: 8f187686af977594487be1331a639450, type: 3}
-  PowerRequirement: 1
+  PowerRequirement: 2
   NextStage: {fileID: 0}
 --- !u!1 &8721692818050647315
 GameObject:
@@ -397,7 +397,7 @@ MonoBehaviour:
   weakPointDamageMultiplier: 2.5
   maxHP: 30
   weakPointIndicatorPrefab: {fileID: 6111545916753776259, guid: 8f187686af977594487be1331a639450, type: 3}
-  PowerRequirement: 1
+  PowerRequirement: 2
   NextStage: {fileID: 3918628509503820459}
 --- !u!1 &9145567527003824771
 GameObject:
@@ -408,6 +408,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 935914446914698822}
+  - component: {fileID: 3121651420456561160}
   m_Layer: 0
   m_Name: Mineral Deposit - Gold
   m_TagString: Untagged
@@ -433,3 +434,19 @@ Transform:
   - {fileID: 2248514312544564539}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &3121651420456561160
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9145567527003824771}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5

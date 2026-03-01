@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 576274235228433287}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94,17 +94,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShadeBehaviour
   _toggle: 1
   _rotationTolerance: 10
-  _fov: 130
-  _engageDistance: 5
+  _fov: 90
+  _engageDistance: 10
   _startingRotationSpeed: 250
   _checkStateTime: 2
   _toPlayerRotateAttackSpeed: 250
   _movementThreshold: 0.1
   _initialState: 0
-  runningSpeed: 2.5
-  walkingSpeed: 0.7
+  runningSpeed: 4
+  walkingSpeed: 1.25
   _pathing: {fileID: 0}
   startAtIdle: 0
+  initiateChase: 0
   animator: {fileID: 6835881315518645157}
 --- !u!1001 &6856786220266233129
 PrefabInstance:
