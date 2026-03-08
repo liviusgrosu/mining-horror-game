@@ -11,6 +11,8 @@ TagManager:
   - Breakable
   - Breakable Wall
   - Enemy
+  - Stone
+  - Gravel
   layers:
   - Default
   - TransparentFX

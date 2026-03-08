@@ -20,6 +20,14 @@ public class PickaxeHand : MonoBehaviour
     
     public LayerMask ignoreMask;
     
+    private AudioSource _audioSource;
+    
+    [SerializeField]
+    public AudioClip pickaxeValidSound;
+
+    [SerializeField]
+    public AudioClip pickaxeInvalidSound;
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -29,6 +37,10 @@ public class PickaxeHand : MonoBehaviour
         }
 
         Instance = this;
+        
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.playOnAwake = false;
+        _audioSource.loop = false;
     }
 
     void Start()
@@ -76,6 +88,7 @@ public class PickaxeHand : MonoBehaviour
                     wp.OnHit(hit.point, hit.normal, 5);
                 }
 
+                _audioSource.PlayOneShot(pickaxeValidSound);
                 SpawnCloudEffect(hit.point);
             }
             else if (hit.collider.CompareTag("Breakable Wall") || hit.collider.CompareTag("Entrance Door"))
@@ -85,10 +98,13 @@ public class PickaxeHand : MonoBehaviour
                 {
                     wall.TakeDamage();       
                 }
+
+                _audioSource.PlayOneShot(pickaxeValidSound);
                 SpawnCloudEffect(hit.point);
             }
             else
             {
+                _audioSource.PlayOneShot(pickaxeInvalidSound);
                 SpawnSparkEffect(hit.point, hit.normal);
             }
         }

@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI _entranceDoorText, _normalRockHoverText, _mineralDepositHoverText;
     private bool DisplayingHoverText;
+
+    public bool HasWon;
     
     private void Awake()
     {
@@ -189,5 +191,15 @@ public class GameManager : MonoBehaviour
         text.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
         text.gameObject.SetActive(false);
         DisplayingHoverText = false;
+    }
+    
+    public void WinGame()
+    {
+        HasWon = true;
+        var enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (var enemy in enemies)
+        {
+            enemy.SetActive(false);            
+        }
     }
 }

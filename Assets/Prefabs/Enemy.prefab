@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 3741179505598364092}
   - component: {fileID: 6728359870712172962}
   - component: {fileID: 576274235228433287}
+  - component: {fileID: 4954914387349031558}
+  - component: {fileID: 7219305988573877170}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -100,13 +102,137 @@ MonoBehaviour:
   _checkStateTime: 2
   _toPlayerRotateAttackSpeed: 250
   _movementThreshold: 0.1
-  _initialState: 0
-  runningSpeed: 4
-  walkingSpeed: 1.25
+  _initialState: 1
+  runningSpeed: 5
+  walkingSpeed: 0.75
   _pathing: {fileID: 0}
   startAtIdle: 0
   initiateChase: 0
   animator: {fileID: 6835881315518645157}
+--- !u!82 &4954914387349031558
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7490492891687829689}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &7219305988573877170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7490492891687829689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 890d516a8898408cb426aca51c97c00c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyFootsteps
+  gravelSounds:
+  - {fileID: 8300000, guid: 1d9c8d351dd4b9b45a02b1fb1d5336a0, type: 3}
+  - {fileID: 8300000, guid: e704faadc15534a46a92046945ffdb0f, type: 3}
+  - {fileID: 8300000, guid: 665002926814a184293288b6a13f7f30, type: 3}
+  stoneSounds:
+  - {fileID: 8300000, guid: 0a2b52f3ab8f60d40b3cfcb9c5e79f95, type: 3}
+  - {fileID: 8300000, guid: ef7444068ca925b4a9f435a8e4a80eb0, type: 3}
+  - {fileID: 8300000, guid: 1a851782804177d46a448c45b6abc406, type: 3}
+  walkStepInterval: 0.9
+  runStepInterval: 0.5
+  runSpeedThreshold: 2
+  footstepVolume: 0.8
+  raycastDistance: 1.5
+  gravelTag: Gravel
+  stoneTag: Stone
 --- !u!1001 &6856786220266233129
 PrefabInstance:
   m_ObjectHideFlags: 0
