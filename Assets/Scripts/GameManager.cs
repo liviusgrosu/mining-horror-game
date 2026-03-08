@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
 
     public bool HasWon;
     
+    
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -60,6 +62,7 @@ public class GameManager : MonoBehaviour
             rockBlockage1.SetActive(true);
             triggeredFirstChase = true;
             ScreenShakeEffect.Instance.BeginShaking();
+            OtherSFXManager.Instance.PlayEarthQuakeEffect();
         }
     }
 

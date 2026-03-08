@@ -31,7 +31,8 @@ public class EnemyFootsteps : MonoBehaviour
     [Tooltip("Tag applied to stone surfaces in the scene")]
     public string stoneTag = "Stone";
 
-    private AudioSource audioSource;
+    [SerializeField]
+    private AudioSource _audioSource;
     private NavMeshAgent agent;
 
     private float stepTimer;
@@ -40,11 +41,11 @@ public class EnemyFootsteps : MonoBehaviour
 
     void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
+        _audioSource = GetComponent<AudioSource>();
         agent = GetComponent<NavMeshAgent>();
 
-        audioSource.playOnAwake = false;
-        audioSource.loop = false;
+        _audioSource.playOnAwake = false;
+        _audioSource.loop = false;
     }
 
     private void Update()
@@ -85,7 +86,7 @@ public class EnemyFootsteps : MonoBehaviour
         }
 
         var clip = GetRandomClip(soundSet);
-        audioSource.PlayOneShot(clip, footstepVolume);
+        _audioSource.PlayOneShot(clip, footstepVolume);
     }
 
     private AudioClip[] GetSoundSetForSurface()
