@@ -96,9 +96,7 @@ public class ShadeBehaviour : MonoBehaviour
             SetPathingDestination();
         }
 
-        _audioSource.playOnAwake = false;
-        _audioSource.loop = true;
-        _audioSource.PlayOneShot(idleSound);
+        PlayIdleSound();
     }
 
     private void Update()

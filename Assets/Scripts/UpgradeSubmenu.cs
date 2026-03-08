@@ -40,6 +40,7 @@ public class UpgradeSubmenu : MonoBehaviour
     public void Upgrade()
     {
         PickaxeHand.Instance.SwitchPickaxe(_upgradeItemName);
+        PickaxeHand.Instance.PlayUpgradePickupSound();
         
         foreach (var requirement in _requirements)
         {

@@ -19,8 +19,12 @@ public class MineralDeposit : MonoBehaviour
     private GameObject spawnedIndicator;
     public int PowerRequirement;
     public GameObject NextStage;
+
+    [SerializeField] private GameObject soundBite;
     
-    
+    [SerializeField]
+    private AudioClip breakingSound;
+
     void Start()
     {
         currentHP = maxHP;
@@ -102,7 +106,10 @@ public class MineralDeposit : MonoBehaviour
         {
             NextStage.SetActive(true);
         }
-        
+
+        var breakingSoundBite = Instantiate(soundBite, transform.position, Quaternion.identity);
+        breakingSoundBite.GetComponent<AudioSource>().PlayOneShot(breakingSound);
+        Destroy(breakingSoundBite, breakingSound.length);
         Destroy(gameObject);
     }
 
