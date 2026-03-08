@@ -10,6 +10,16 @@ public class Pickup : MonoBehaviour
     
     public LayerMask ignoreMask;
     
+    private AudioSource _audioSource;
+    
+    [SerializeField]
+    private AudioClip _pickupSound;
+
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
+    
     private void Start()
     {
         _camera = Camera.main.transform;
@@ -57,6 +67,7 @@ public class Pickup : MonoBehaviour
         {
             if (_hoveringOver.CompareTag("Mineral") && _hoveringOverInteractable != null)
             {
+                _audioSource.PlayOneShot(_pickupSound);
                 GameManager.Instance.AddMineral(_hoveringOver.GetComponent<Mineral>().MineralName);
                 _hoveringOverInteractable = null;
                 Destroy(_hoveringOver);

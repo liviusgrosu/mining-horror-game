@@ -27,6 +27,12 @@ public class PickaxeHand : MonoBehaviour
 
     [SerializeField]
     public AudioClip pickaxeInvalidSound;
+
+    [SerializeField] 
+    public AudioClip pickaxeUpgradeSound;
+    
+    [SerializeField] 
+    public AudioClip pickaxeMissSound;
     
     private void Awake()
     {
@@ -107,6 +113,10 @@ public class PickaxeHand : MonoBehaviour
                 SpawnSparkEffect(hit.point, hit.normal);
             }
         }
+        else
+        {
+            _audioSource.PlayOneShot(pickaxeMissSound);
+        }
     }
 
     private void SpawnCloudEffect(Vector3 point)
@@ -119,5 +129,10 @@ public class PickaxeHand : MonoBehaviour
     {
         var vfx = Instantiate(sparkVFX, point, Quaternion.LookRotation(normal));
         Destroy(vfx, 1f);
+    }
+
+    public void PlayUpgradePickupSound()
+    {
+        _audioSource.PlayOneShot(pickaxeUpgradeSound);
     }
 }

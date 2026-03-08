@@ -110,5 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a6451382a744833963d68d8a53c8253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BreakableWall
-  _hp: 5
-  PowerRequirement: 1
+  _hp: 3
+  PowerRequirement: 2
+  soundBite: {fileID: 6422313983010601432, guid: 344c0ba16b2c6d84988f914bc10cf783, type: 3}
+  breakingSound: {fileID: 8300000, guid: a4099114abaf883469718a163397d36f, type: 3}

@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (GameManager.Instance.HasWon || GameManager.Instance.InMenu || ScreenShakeEffect.Instance.IsCameraShaking)
         {
+            _controller.Move(Vector3.zero);
             return;
         }
         

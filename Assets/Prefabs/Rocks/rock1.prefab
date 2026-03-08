@@ -112,3 +112,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BreakableWall
   _hp: 5
   PowerRequirement: 1
+  soundBite: {fileID: 6422313983010601432, guid: 344c0ba16b2c6d84988f914bc10cf783, type: 3}
+  breakingSound: {fileID: 8300000, guid: a4099114abaf883469718a163397d36f, type: 3}

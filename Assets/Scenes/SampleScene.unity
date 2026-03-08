@@ -1250,6 +1250,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BreakableWall
   _hp: 4
   PowerRequirement: 1
+  soundBite: {fileID: 0}
+  breakingSound: {fileID: 0}
 --- !u!4 &147356811
 Transform:
   m_ObjectHideFlags: 0
@@ -2544,6 +2546,7 @@ MonoBehaviour:
     m_Bits: 4
   pickaxeValidSound: {fileID: 8300000, guid: 38667095d1f49e54bb588bfef38ee984, type: 3}
   pickaxeInvalidSound: {fileID: 8300000, guid: 4c87ddcc79bca74499c025390848d6b7, type: 3}
+  pickaxeUpgradeSound: {fileID: 8300000, guid: 6352f13e9c1cc164eb2ad0efc3629b2a, type: 3}
 --- !u!95 &282932409
 Animator:
   serializedVersion: 7
@@ -2636,7 +2639,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.565
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -3312,7 +3315,7 @@ Transform:
   m_GameObject: {fileID: 358510695}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000026226041}
-  m_LocalPosition: {x: 72.991, y: -6.82, z: 50.37}
+  m_LocalPosition: {x: 17.33, y: 2.82, z: 39.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3352,6 +3355,7 @@ MonoBehaviour:
   ignoreMask:
     serializedVersion: 2
     m_Bits: 4
+  _pickupSound: {fileID: 8300000, guid: 8c5eb638b221aa14ca3e54372ba2ccae, type: 3}
 --- !u!82 &358510701
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3364,7 +3368,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -3563,6 +3567,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BreakableWall
   _hp: 3
   PowerRequirement: 3
+  soundBite: {fileID: 0}
+  breakingSound: {fileID: 0}
 --- !u!1001 &395944380
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4063,14 +4069,6 @@ PrefabInstance:
     - target: {fileID: 779868837811642530, guid: cde5b74ef3a249c41afe7ef614b7ad34, type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5589560890159154028, guid: cde5b74ef3a249c41afe7ef614b7ad34, type: 3}
-      propertyPath: _hp
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5589560890159154028, guid: cde5b74ef3a249c41afe7ef614b7ad34, type: 3}
-      propertyPath: PowerRequirement
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6568,6 +6566,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BreakableWall
   _hp: 4
   PowerRequirement: 8
+  soundBite: {fileID: 0}
+  breakingSound: {fileID: 0}
 --- !u!65 &853419844
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10254,6 +10254,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BreakableWall
   _hp: 3
   PowerRequirement: 3
+  soundBite: {fileID: 0}
+  breakingSound: {fileID: 0}
 --- !u!64 &1102283591
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11980,7 +11982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -12761,6 +12763,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1508209772}
   - component: {fileID: 1508209773}
+  - component: {fileID: 1508209774}
   m_Layer: 0
   m_Name: Music
   m_TagString: Untagged
@@ -12794,9 +12797,9 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 3003c60a6e356c346bee68c9dd7cd75b, type: 3}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.817
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -12880,6 +12883,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1508209774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508209771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99a12feedf4e4e3cb6bb318ccc4e51eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MusicManager
+  _ambientMusic: {fileID: 8300000, guid: 3003c60a6e356c346bee68c9dd7cd75b, type: 3}
+  _chaseMusic: {fileID: 8300000, guid: 6485c297b1c53074eaf1c87e5c4f9de5, type: 3}
 --- !u!1 &1510979964
 GameObject:
   m_ObjectHideFlags: 0
@@ -13404,6 +13421,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BreakableWall
   _hp: 4
   PowerRequirement: 1
+  soundBite: {fileID: 0}
+  breakingSound: {fileID: 0}
 --- !u!4 &1582358782
 Transform:
   m_ObjectHideFlags: 0
