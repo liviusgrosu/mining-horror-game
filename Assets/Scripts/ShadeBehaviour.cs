@@ -72,6 +72,12 @@ public class ShadeBehaviour : MonoBehaviour
 
     private float _animationTime;
     
+    [SerializeField]
+    private AudioSource _audioSource;
+
+    [SerializeField] private AudioClip idleSound;
+    [SerializeField] private AudioClip chaseSound;
+    
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -89,6 +95,10 @@ public class ShadeBehaviour : MonoBehaviour
         {
             SetPathingDestination();
         }
+
+        _audioSource.playOnAwake = false;
+        _audioSource.loop = true;
+        _audioSource.PlayOneShot(idleSound);
     }
 
     private void Update()
@@ -166,7 +176,7 @@ public class ShadeBehaviour : MonoBehaviour
         }
     }
 
-    private void AttackState()
+    /*private void AttackState()
     {
         var direction = (_player.position - transform.position).normalized;
         direction.y = 0;
@@ -177,9 +187,10 @@ public class ShadeBehaviour : MonoBehaviour
         if ( _getDistanceFromPlayer > _agent.stoppingDistance)
         {
             _agent.velocity = _agent.desiredVelocity;
+            _audioSource.PlayOneShot(chaseSound);
             _currentState = State.Engage;
         }
-    }
+    }*/
 
     private void CheckState()
     {
@@ -209,19 +220,17 @@ public class ShadeBehaviour : MonoBehaviour
 
     private void CheckIfPlayerInFov()
     {
-        if (_currentState == State.Attack) return;
+        if (_currentState is State.Attack or State.Engage) return;
         if (!(Vector3.Distance(transform.position, _player.position) <= _engageDistance)) return;
-        Debug.Log("Player is within distance");
         var enemyToPlayer = _player.position - transform.position;
 
         if (!(Vector3.Angle(enemyToPlayer, transform.forward) <= _fov)) return;
-        Debug.Log("Player is within FOV");
         if (!Physics.Raycast(transform.position, _player.position - transform.position, out var hit, _engageDistance)) return;
-        Debug.Log($"Hitting {hit.transform.name}");
         if (!hit.transform.CompareTag("Player")) return;
 
         _agent.isStopped = false;
         _agent.speed = runningSpeed;
+        PlayChaseSound();
         _currentState = State.Engage;
     }
 
@@ -231,7 +240,24 @@ public class ShadeBehaviour : MonoBehaviour
         
         _agent.isStopped = true;
         _checkStateElapsedTime = 0f;
+        PlayIdleSound();
         _currentState = State.Check;
         initiateChase = false;
+    }
+
+    private void PlayIdleSound()
+    {
+        MusicManager.Instance.PlayAmbientMusic();
+        _audioSource.Stop();
+        _audioSource.clip = idleSound;
+        _audioSource.Play();
+    }
+
+    private void PlayChaseSound()
+    {
+        MusicManager.Instance.PlayChaseMusic();
+        _audioSource.Stop();
+        _audioSource.clip = chaseSound;
+        _audioSource.Play();
     }
 }

@@ -79,7 +79,6 @@ public class PickaxeHand : MonoBehaviour
     {
         if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit, 5.0f, ~ignoreMask))
         {
-            Debug.Log(hit.transform.name);
             if (hit.collider.CompareTag("Mineral Deposit"))
             {
                 var wp = hit.collider.GetComponent<MineralDeposit>();
@@ -96,7 +95,7 @@ public class PickaxeHand : MonoBehaviour
                 var wall = hit.collider.GetComponent<BreakableWall>();
                 if (_currentPickaxe.GetComponent<Pickaxe>().Power >= wall.PowerRequirement)
                 {
-                    wall.TakeDamage();       
+                    wall.TakeDamage();
                 }
 
                 _audioSource.PlayOneShot(pickaxeValidSound);
