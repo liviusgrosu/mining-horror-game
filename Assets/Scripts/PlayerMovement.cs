@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     private float _yRotation;
     [SerializeField]
     private float _mouseSensitivity = 100f;
-    
+
     void Start()
     {
         _controller = GetComponent<CharacterController>();
@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.InMenu || ScreenShakeEffect.Instance.IsCameraShaking)
+        if (GameManager.Instance.HasWon || GameManager.Instance.InMenu || ScreenShakeEffect.Instance.IsCameraShaking)
         {
             return;
         }
