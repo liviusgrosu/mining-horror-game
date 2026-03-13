@@ -131,7 +131,7 @@ MonoBehaviour:
   weakPointRadius: 0.4
   weakPointDamageMultiplier: 2.5
   maxHP: 30
-  weakPointIndicatorPrefab: {fileID: 6111545916753776259, guid: 8f187686af977594487be1331a639450, type: 3}
+  weakPointIndicatorPrefab: {fileID: 4491994403004205622, guid: a4b53fc5c96ecc74a983a76a29ea1e37, type: 3}
   PowerRequirement: 2
   NextStage: {fileID: 8721692818050647315}
   soundBite: {fileID: 6422313983010601432, guid: 344c0ba16b2c6d84988f914bc10cf783, type: 3}
@@ -364,7 +364,7 @@ MonoBehaviour:
   weakPointRadius: 0.4
   weakPointDamageMultiplier: 2.5
   maxHP: 30
-  weakPointIndicatorPrefab: {fileID: 6111545916753776259, guid: 8f187686af977594487be1331a639450, type: 3}
+  weakPointIndicatorPrefab: {fileID: 4491994403004205622, guid: a4b53fc5c96ecc74a983a76a29ea1e37, type: 3}
   PowerRequirement: 2
   NextStage: {fileID: 0}
   soundBite: {fileID: 6422313983010601432, guid: 344c0ba16b2c6d84988f914bc10cf783, type: 3}
@@ -597,7 +597,7 @@ MonoBehaviour:
   weakPointRadius: 0.4
   weakPointDamageMultiplier: 2.5
   maxHP: 30
-  weakPointIndicatorPrefab: {fileID: 6111545916753776259, guid: 8f187686af977594487be1331a639450, type: 3}
+  weakPointIndicatorPrefab: {fileID: 4491994403004205622, guid: a4b53fc5c96ecc74a983a76a29ea1e37, type: 3}
   PowerRequirement: 2
   NextStage: {fileID: 3918628509503820459}
   soundBite: {fileID: 6422313983010601432, guid: 344c0ba16b2c6d84988f914bc10cf783, type: 3}
@@ -714,7 +714,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &935914446914698822
 Transform:
