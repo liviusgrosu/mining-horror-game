@@ -27,9 +27,12 @@ public class GameManager : MonoBehaviour
     private bool DisplayingHoverText;
 
     public bool HasWon;
-    
-    
-    
+
+    [SerializeField] private CanvasGroup _mineralStatsCanvasGroup;
+    private Coroutine _mineralStatsCoroutine;
+    private float _mineralStatsTimer;
+    private bool _mineralStatsVisible;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -49,12 +52,17 @@ public class GameManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        if (_mineralStatsCanvasGroup != null)
+            _mineralStatsCanvasGroup.alpha = 0f;
     }
     
     public void AddMineral(string mineral)
     {
         MineralCounts[mineral]++;
         GameObject.Find($"{mineral} Stat").GetComponentInChildren<TextMeshProUGUI>().text = MineralCounts[mineral].ToString();
+
+        ShowMineralStats();
 
         if (mineral == "Gold" && !triggeredFirstChase)
         {
@@ -65,6 +73,61 @@ public class GameManager : MonoBehaviour
             ScreenShakeEffect.Instance.BeginShaking();
             OtherSFXManager.Instance.PlayEarthQuakeEffect();
         }
+    }
+
+    private void ShowMineralStats()
+    {
+        if (_mineralStatsCanvasGroup == null) return;
+
+        const float displayDuration = 3f;
+
+        if (_mineralStatsVisible)
+        {
+            // Already showing — just reset the timer, don't restart the fade
+            _mineralStatsTimer = displayDuration;
+            return;
+        }
+
+        if (_mineralStatsCoroutine != null)
+            StopCoroutine(_mineralStatsCoroutine);
+
+        _mineralStatsCoroutine = StartCoroutine(MineralStatsFadeRoutine(displayDuration));
+    }
+
+    private IEnumerator MineralStatsFadeRoutine(float displayDuration)
+    {
+        const float fadeDuration = 0.3f;
+
+        // Fade in
+        var elapsed = 0f;
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            _mineralStatsCanvasGroup.alpha = Mathf.Lerp(0f, 1f, elapsed / fadeDuration);
+            yield return null;
+        }
+        _mineralStatsCanvasGroup.alpha = 1f;
+        _mineralStatsVisible = true;
+
+        // Wait, using a timer that can be reset externally
+        _mineralStatsTimer = displayDuration;
+        while (_mineralStatsTimer > 0f)
+        {
+            _mineralStatsTimer -= Time.deltaTime;
+            yield return null;
+        }
+
+        // Fade out
+        _mineralStatsVisible = false;
+        elapsed = 0f;
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            _mineralStatsCanvasGroup.alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
+            yield return null;
+        }
+        _mineralStatsCanvasGroup.alpha = 0f;
+        _mineralStatsCoroutine = null;
     }
 
     public void SpawnFinalEncounter()
