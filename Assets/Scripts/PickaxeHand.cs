@@ -96,7 +96,7 @@ public class PickaxeHand : MonoBehaviour
                 _audioSource.PlayOneShot(pickaxeValidSound);
                 SpawnCloudEffect(hit.point);
             }
-            else if (hit.collider.CompareTag("Breakable Wall") || hit.collider.CompareTag("Entrance Door"))
+            else if (hit.collider.CompareTag("Blockage Rock") || hit.collider.CompareTag("Entrance Door"))
             {
                 var wall = hit.collider.GetComponent<BreakableWall>();
                 if (_currentPickaxe.GetComponent<Pickaxe>().Power >= wall.PowerRequirement)

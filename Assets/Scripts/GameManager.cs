@@ -6,8 +6,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    [SerializeField] private GameObject _pickupText;
     [SerializeField] private GameObject _upgradeText;
+    [SerializeField] private GameObject _questionMarkIcon;
+    [SerializeField] private GameObject _pickupIcon;
     
     public Dictionary<string, int> MineralCounts = new();
 
@@ -22,7 +23,7 @@ public class GameManager : MonoBehaviour
     private bool triggeredFirstChase, triggeredSecondChase;
 
     [SerializeField]
-    private TextMeshProUGUI _entranceDoorText, _normalRockHoverText, _mineralDepositHoverText;
+    private TextMeshProUGUI _entranceDoorText, _normalRockHoverText, _mineralDepositHoverText, _blockageRockHoverText;
     private bool DisplayingHoverText;
 
     public bool HasWon;
@@ -77,20 +78,21 @@ public class GameManager : MonoBehaviour
         triggeredSecondChase = true;
     }
     
-    public void TogglePickupText(bool state)
+    public void TogglePickupIcon(bool state)
     {
-        _pickupText.SetActive(state);
+        _pickupIcon.SetActive(state);
     }
 
-    public void ToggleUpgradeText(bool state)
+    public void ToggleQuestionMark(bool state)
     {
-        _upgradeText.SetActive(state);
+        _questionMarkIcon.SetActive(state);
     }
 
     public void ToggleOffAllText()
     {
-        _pickupText.SetActive(false);
-        _upgradeText.SetActive(false);   
+        _pickupIcon.SetActive(false);
+        _upgradeText.SetActive(false);
+        _questionMarkIcon.SetActive(false);
     }
 
     public void OpenUpgradeUI()
@@ -134,6 +136,19 @@ public class GameManager : MonoBehaviour
         // Start the fade coroutine
         StopAllCoroutines();
         StartCoroutine(FadeTextInAndOut(_entranceDoorText));
+    }
+    
+    public void ShowBlockageRockText()
+    {
+        if (DisplayingHoverText)
+        {
+            return;
+        }
+
+        DisplayingHoverText = true;
+        // Start the fade coroutine
+        StopAllCoroutines();
+        StartCoroutine(FadeTextInAndOut(_blockageRockHoverText));
     }
 
     public void ShowNormalRockHoverText()

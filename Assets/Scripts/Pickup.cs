@@ -39,17 +39,29 @@ public class Pickup : MonoBehaviour
             
             if (_hoveringOver.CompareTag("Mineral"))
             {
-                GameManager.Instance.TogglePickupText(true);
+                GameManager.Instance.TogglePickupIcon(true);
                 _hoveringOverInteractable = _hoveringOver.GetComponent<IInteractable>();
                 _hoveringOverInteractable?.ToggleOutline(true);
             }
             else if (_hoveringOver.CompareTag("Anvil"))
             {
-                GameManager.Instance.ToggleUpgradeText(true);
+                GameManager.Instance.ToggleQuestionMark(true);
             }
             else if (_hoveringOver.CompareTag("Entrance Door"))
             {
-                //...
+                GameManager.Instance.ToggleQuestionMark(true);
+            }
+            else if (_hoveringOver.CompareTag("Mineral Deposit"))
+            {
+                GameManager.Instance.ToggleQuestionMark(true);
+            }
+            else if (_hoveringOver.CompareTag("Blockage Rock"))
+            {
+                GameManager.Instance.ToggleQuestionMark(true);
+            }
+            else if (_hoveringOver.CompareTag("Breakable"))
+            {
+                GameManager.Instance.ToggleQuestionMark(true);
             }
             else
             {
@@ -84,6 +96,11 @@ public class Pickup : MonoBehaviour
             else if (_hoveringOver.CompareTag("Entrance Door"))
             {
                 GameManager.Instance.ShowEntranceDoorText();
+            }
+            
+            else if (_hoveringOver.CompareTag("Blockage Rock"))
+            {
+                GameManager.Instance.ShowBlockageRockText();
             }
             
             else if (_hoveringOver.CompareTag("Breakable"))
