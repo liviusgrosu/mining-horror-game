@@ -84,6 +84,7 @@ public class ShadeBehaviour : MonoBehaviour
         _startingStoppingDistance = _agent.stoppingDistance;
         _startingRotation = transform.rotation;
         _currentState = _initialState;
+        _audioSource.loop = true;
     }
 
     private void Start()
@@ -142,7 +143,6 @@ public class ShadeBehaviour : MonoBehaviour
         animator.SetFloat(MovementBlend, 0.5f, 0.1f, Time.deltaTime);
         
         var distanceToDestination = Vector3.Distance(transform.position, _agent.destination);
-        //if (_agent.remainingDistance <= _agent.stoppingDistance)
         if (distanceToDestination <= _agent.stoppingDistance + 1)
         {
             _currentPointIndex = (_currentPointIndex + 1) % _pathing.Points.Count;
@@ -171,24 +171,9 @@ public class ShadeBehaviour : MonoBehaviour
             _agent.isStopped = true;
             _checkStateElapsedTime = 0f;
             _currentState = State.Check;
+            PlayIdleSound();
         }
     }
-
-    /*private void AttackState()
-    {
-        var direction = (_player.position - transform.position).normalized;
-        direction.y = 0;
-
-        var targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _toPlayerRotateAttackSpeed * Time.deltaTime);
-
-        if ( _getDistanceFromPlayer > _agent.stoppingDistance)
-        {
-            _agent.velocity = _agent.desiredVelocity;
-            _audioSource.PlayOneShot(chaseSound);
-            _currentState = State.Engage;
-        }
-    }*/
 
     private void CheckState()
     {
