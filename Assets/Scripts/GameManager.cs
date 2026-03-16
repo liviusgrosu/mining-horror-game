@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,12 +28,19 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI _entranceDoorText, _normalRockHoverText, _mineralDepositHoverText, _blockageRockHoverText;
     private bool DisplayingHoverText;
 
-    public bool HasWon;
+    public bool HasWon, HasDied;
+    public bool IsPaused;
+
+    [SerializeField] private GameObject _controlsOverlay;
 
     [SerializeField] private CanvasGroup _mineralStatsCanvasGroup;
     private Coroutine _mineralStatsCoroutine;
     private float _mineralStatsTimer;
     private bool _mineralStatsVisible;
+
+    private GameObject player;
+
+    [SerializeField] private Volume _deathPostProcessVolume;
 
     private void Awake()
     {
@@ -48,6 +57,20 @@ public class GameManager : MonoBehaviour
         MineralCounts.Add("Gold", 0);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && !HasWon && !HasDied)
+        {
+            if (InMenu)
+            {
+                CloseUpgradeUI();
+                return;
+            }
+
+            TogglePause();
+        }
+    }
+
     public void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -55,6 +78,8 @@ public class GameManager : MonoBehaviour
 
         if (_mineralStatsCanvasGroup != null)
             _mineralStatsCanvasGroup.alpha = 0f;
+        
+        player = GameObject.Find("Player");
     }
     
     public void AddMineral(string mineral)
@@ -176,10 +201,56 @@ public class GameManager : MonoBehaviour
 
     public void OpenGameOverScreen()
     {
+        player.GetComponent<CharacterController>().height = 0.1f;
+        player.GetComponent<CapsuleCollider>().height = 0.1f;
+
+        StartCoroutine(DeathBlurRoutine());
+
         ToggleCursorLock(true);
         GameOverScreen.SetActive(true);
         UpgradeUI.SetActive(false);
         OverlayUI.SetActive(true);
+
+        HasDied = true;
+    }
+
+    private IEnumerator DeathBlurRoutine()
+    {
+        if (_deathPostProcessVolume == null) yield break;
+
+        if (!_deathPostProcessVolume.profile.TryGet(out DepthOfField dof))
+            yield break;
+
+        _deathPostProcessVolume.gameObject.SetActive(true);
+
+        const float startFocusDistance = 5f;
+        const float blurDuration = 1f;
+
+        dof.mode.Override(DepthOfFieldMode.Bokeh);
+        dof.focusDistance.Override(startFocusDistance);
+
+        float elapsed = 0f;
+
+        while (elapsed < blurDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / blurDuration;
+            dof.focusDistance.Override(Mathf.Lerp(startFocusDistance, 0f, t));
+            yield return null;
+        }
+
+        dof.focusDistance.Override(0f);
+    }
+
+    public void TogglePause()
+    {
+        IsPaused = !IsPaused;
+
+        if (_controlsOverlay != null)
+            _controlsOverlay.SetActive(IsPaused);
+
+        ToggleCursorLock(IsPaused);
+        Time.timeScale = IsPaused ? 0f : 1f;
     }
 
     private void ToggleCursorLock(bool state)
@@ -278,11 +349,6 @@ public class GameManager : MonoBehaviour
     {
         HasWon = true;
         StartCoroutine(FadeOutAllAudio());
-        /*var enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        foreach (var enemy in enemies)
-        {
-            enemy.SetActive(false);
-        }*/
     }
 
     private IEnumerator FadeOutAllAudio()

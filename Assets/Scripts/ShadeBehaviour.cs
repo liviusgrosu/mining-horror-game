@@ -168,6 +168,7 @@ public class ShadeBehaviour : MonoBehaviour
 
         if (!initiateChase && _getDistanceFromPlayer > _engageDistance)
         {
+            _agent.ResetPath();
             _agent.isStopped = true;
             _checkStateElapsedTime = 0f;
             _currentState = State.Check;

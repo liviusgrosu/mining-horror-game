@@ -48,12 +48,21 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.HasWon || GameManager.Instance.InMenu || ScreenShakeEffect.Instance.IsCameraShaking)
+        if (GameManager.Instance.HasWon || GameManager.Instance.InMenu || GameManager.Instance.IsPaused || ScreenShakeEffect.Instance.IsCameraShaking)
         {
             _controller.Move(Vector3.zero);
             return;
         }
-        
+
+        if (GameManager.Instance.HasDied)
+        {
+            if (_controller.isGrounded && _yVelocity < 0)
+                _yVelocity = -2f;
+
+            _yVelocity += _gravity * Time.deltaTime;
+            _controller.Move(Vector3.up * _yVelocity * Time.deltaTime);
+            return;    
+        }
         MovePlayer();
         Look();
     }
