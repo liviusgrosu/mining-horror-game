@@ -277,10 +277,49 @@ public class GameManager : MonoBehaviour
     public void WinGame()
     {
         HasWon = true;
-        var enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        StartCoroutine(FadeOutAllAudio());
+        /*var enemies = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (var enemy in enemies)
         {
-            enemy.SetActive(false);            
+            enemy.SetActive(false);
+        }*/
+    }
+
+    private IEnumerator FadeOutAllAudio()
+    {
+        const float fadeDuration = 3f;
+        var audioSources = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
+        var startVolumes = new float[audioSources.Length];
+
+        for (int i = 0; i < audioSources.Length; i++)
+        {
+            startVolumes[i] = audioSources[i].volume;
+        }
+
+        float elapsed = 0f;
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / fadeDuration;
+
+            for (int i = 0; i < audioSources.Length; i++)
+            {
+                if (audioSources[i] != null)
+                {
+                    audioSources[i].volume = Mathf.Lerp(startVolumes[i], 0f, t);
+                }
+            }
+
+            yield return null;
+        }
+
+        for (int i = 0; i < audioSources.Length; i++)
+        {
+            if (audioSources[i] != null)
+            {
+                audioSources[i].volume = 0f;
+                audioSources[i].Stop();
+            }
         }
     }
 }

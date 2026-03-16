@@ -9,8 +9,11 @@ public class CharacterFootsteps : MonoBehaviour
     public AudioClip[] stoneSounds;
 
     [Header("Footstep Settings")]
-    [Tooltip("Time in seconds between each footstep")]
+    [Tooltip("Time in seconds between each footstep when walking")]
     public float stepInterval = 0.45f;
+
+    [Tooltip("Time in seconds between each footstep when sprinting")]
+    public float sprintStepInterval = 0.3f;
 
     [Range(0f, 1f)]
     public float footstepVolume = 0.8f;
@@ -26,6 +29,7 @@ public class CharacterFootsteps : MonoBehaviour
 
     private AudioSource _audioSource;
     private CharacterController _characterController;
+    private PlayerMovement _playerMovement;
 
     private float _stepTimer;
     private int _lastClipIndex = -1;
@@ -35,6 +39,7 @@ public class CharacterFootsteps : MonoBehaviour
     {
         _audioSource = GetComponent<AudioSource>();
         _characterController = GetComponent<CharacterController>();
+        _playerMovement = GetComponent<PlayerMovement>();
 
         _audioSource.playOnAwake = false;
         _audioSource.loop = false;
@@ -54,7 +59,9 @@ public class CharacterFootsteps : MonoBehaviour
         {
             _stepTimer += Time.deltaTime;
 
-            if (_stepTimer >= stepInterval)
+            float currentInterval = _playerMovement != null && _playerMovement.IsSprinting ? sprintStepInterval : stepInterval;
+
+            if (_stepTimer >= currentInterval)
             {
                 PlayFootstepForSurface();
                 _stepTimer = 0f;
