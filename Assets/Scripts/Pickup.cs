@@ -22,6 +22,10 @@ public class Pickup : MonoBehaviour
     
     private void Start()
     {
+        if (!GameManager.Instance)
+        {
+            enabled = false;
+        }
         _camera = Camera.main.transform;
     }
     

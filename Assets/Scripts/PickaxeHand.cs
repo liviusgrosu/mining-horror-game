@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PickaxeHand : MonoBehaviour
@@ -58,7 +57,7 @@ public class PickaxeHand : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.InMenu)
+        if (GameManager.Instance && GameManager.Instance.InMenu)
         {
             return;
         }
@@ -85,12 +84,11 @@ public class PickaxeHand : MonoBehaviour
     {
         if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit, 5.0f, ~ignoreMask))
         {
-            if (hit.collider.CompareTag("Mineral Deposit"))
+            if (hit.collider.CompareTag("VoxelTerrain"))
             {
-                var wp = hit.collider.GetComponent<MineralDeposit>();
-                if (wp != null)
+                if (VoxelTerrain.Instance != null)
                 {
-                    wp.OnHit(hit.point, hit.normal, 5);
+                    VoxelTerrain.Instance.Mine(hit.point);
                 }
 
                 _audioSource.PlayOneShot(pickaxeValidSound);

@@ -4,18 +4,18 @@ public class PlayerMovement : MonoBehaviour
 {
     private CharacterController _controller;
     [SerializeField]
-    private float _movementSpeed = 6f;
+    private float movementSpeed = 6f;
     private float _yVelocity;
     [SerializeField]
-    private float _gravity = -18f;
+    private float gravity = -18f;
 
     // Sprinting
     [SerializeField]
-    private float _sprintMultiplier = 1.8f;
+    private float sprintMultiplier = 1.8f;
     [SerializeField]
-    private float _maxSprintTime = 5f;
+    private float maxSprintTime = 5f;
     [SerializeField]
-    private float _sprintCooldown = 6f;
+    private float sprintCooldown = 6f;
     private float _sprintTimer;
     private float _cooldownTimer;
     private bool _isSprinting;
@@ -25,16 +25,16 @@ public class PlayerMovement : MonoBehaviour
 
     // Breathing audio
     [SerializeField]
-    private AudioClip _breathingSlowClip;
+    private AudioClip breathingSlowClip;
     [SerializeField]
-    private AudioClip _breathingHeavyClip;
+    private AudioClip breathingHeavyClip;
     private AudioSource _breathingAudioSource;
 
     // Looking
     private Camera _camera;
     private float _yRotation;
     [SerializeField]
-    private float _mouseSensitivity = 100f;
+    private float mouseSensitivity = 100f;
 
     void Start()
     {
@@ -44,33 +44,40 @@ public class PlayerMovement : MonoBehaviour
         _breathingAudioSource = gameObject.AddComponent<AudioSource>();
         _breathingAudioSource.loop = true;
         _breathingAudioSource.playOnAwake = false;
+        
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void Update()
     {
-        if (GameManager.Instance.HasWon || GameManager.Instance.InMenu || GameManager.Instance.IsPaused || ScreenShakeEffect.Instance.IsCameraShaking)
+        if (GameManager.Instance)
         {
-            _controller.Move(Vector3.zero);
-            return;
-        }
+            if (GameManager.Instance.HasWon || GameManager.Instance.InMenu || GameManager.Instance.IsPaused || ScreenShakeEffect.Instance.IsCameraShaking)
+            {
+                _controller.Move(Vector3.zero);
+                return;
+            }
 
-        if (GameManager.Instance.HasDied)
-        {
-            if (_controller.isGrounded && _yVelocity < 0)
-                _yVelocity = -2f;
+            if (GameManager.Instance.HasDied)
+            {
+                if (_controller.isGrounded && _yVelocity < 0)
+                    _yVelocity = -2f;
 
-            _yVelocity += _gravity * Time.deltaTime;
-            _controller.Move(Vector3.up * _yVelocity * Time.deltaTime);
-            return;    
+                _yVelocity += gravity * Time.deltaTime;
+                _controller.Move(Vector3.up * (_yVelocity * Time.deltaTime));
+                return;    
+            }
         }
+        
         MovePlayer();
         Look();
     }
 
     private void Look()
     {
-        var mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * _mouseSensitivity;
-        var mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * _mouseSensitivity;
+        var mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * mouseSensitivity;
+        var mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * mouseSensitivity;
         
         _yRotation -= mouseY;
         _yRotation = Mathf.Clamp(_yRotation, -80f, 80f);
@@ -89,20 +96,20 @@ public class PlayerMovement : MonoBehaviour
             _yVelocity = -2f;
         }
 
-        bool isMoving = horizontal != 0f || vertical != 0f;
+        var isMoving = horizontal != 0f || vertical != 0f;
         HandleSprint(isMoving);
         HandleBreathingAudio();
 
         var movementDir = transform.right * horizontal + transform.forward * vertical;
-        float speed = _isSprinting ? _movementSpeed * _sprintMultiplier : _movementSpeed;
+        var speed = _isSprinting ? movementSpeed * sprintMultiplier : movementSpeed;
         movementDir *= speed;
 
         if (Input.GetButtonDown("Jump") && _controller.isGrounded)
         {
-            _yVelocity = Mathf.Sqrt(-2f * _gravity);
+            _yVelocity = Mathf.Sqrt(-2f * gravity);
         }
 
-        _yVelocity += _gravity * Time.deltaTime;
+        _yVelocity += gravity * Time.deltaTime;
         var velocity = movementDir + Vector3.up * _yVelocity;
         _controller.Move(velocity * Time.deltaTime);
     }
@@ -111,17 +118,17 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_isOnCooldown)
         {
-            if (_breathingAudioSource.clip != _breathingHeavyClip)
+            if (_breathingAudioSource.clip != breathingHeavyClip)
             {
-                _breathingAudioSource.clip = _breathingHeavyClip;
+                _breathingAudioSource.clip = breathingHeavyClip;
                 _breathingAudioSource.Play();
             }
         }
         else if (_sprintTimer >= 0.5f)
         {
-            if (_breathingAudioSource.clip != _breathingSlowClip)
+            if (_breathingAudioSource.clip != breathingSlowClip)
             {
-                _breathingAudioSource.clip = _breathingSlowClip;
+                _breathingAudioSource.clip = breathingSlowClip;
                 _breathingAudioSource.Play();
             }
         }
@@ -149,18 +156,18 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        bool wantsToSprint = Input.GetKey(KeyCode.LeftShift) && isMoving;
+        var wantsToSprint = Input.GetKey(KeyCode.LeftShift) && isMoving;
 
         if (wantsToSprint)
         {
             _isSprinting = true;
             _sprintTimer += Time.deltaTime;
 
-            if (_sprintTimer >= _maxSprintTime)
+            if (_sprintTimer >= maxSprintTime)
             {
                 _isSprinting = false;
                 _isOnCooldown = true;
-                _cooldownTimer = _sprintCooldown;
+                _cooldownTimer = sprintCooldown;
             }
         }
         else

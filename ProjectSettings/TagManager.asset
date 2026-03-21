@@ -14,6 +14,8 @@ TagManager:
   - Stone
   - Gravel
   - Blockage Rock
+  - Mineable
+  - VoxelTerrain
   layers:
   - Default
   - TransparentFX
