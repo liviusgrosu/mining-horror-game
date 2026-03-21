@@ -13,6 +13,7 @@ public class VoxelTerrainEditor : Editor
         var sizeInChunksProp = serializedObject.FindProperty("sizeInChunks");
         var blockMaterialProp = serializedObject.FindProperty("blockMaterial");
         var mineRadiusProp = serializedObject.FindProperty("mineRadius");
+        var oreProductName = serializedObject.FindProperty("oreProductName");
 
         var hasSourceModel = sourceModelProp.objectReferenceValue != null;
 
@@ -32,6 +33,7 @@ public class VoxelTerrainEditor : Editor
         EditorGUILayout.Space(5);
         EditorGUILayout.LabelField("Mining", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(mineRadiusProp);
+        EditorGUILayout.PropertyField(oreProductName);
 
         serializedObject.ApplyModifiedProperties();
 
