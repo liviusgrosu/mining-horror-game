@@ -1,10 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// A placeable solid voxel block that the player can mine into.
-/// Assign a source model to voxelize its shape, or leave it empty for a solid cube.
+/// Use the editor tool to voxelize in edit mode. At runtime it just finds existing chunks.
 /// </summary>
 public class VoxelTerrain : MonoBehaviour
 {
@@ -24,7 +23,6 @@ public class VoxelTerrain : MonoBehaviour
     [SerializeField] private float mineRadius = 1.5f;
 
     private Dictionary<Vector3Int, VoxelChunk> _chunks = new Dictionary<Vector3Int, VoxelChunk>();
-    private bool _isGenerating;
 
     private void Awake()
     {
@@ -38,10 +36,23 @@ public class VoxelTerrain : MonoBehaviour
 
     private void Start()
     {
-        if (sourceModel != null)
-            StartCoroutine(GenerateFromModelCoroutine());
-        else
+        // At runtime, find pre-baked chunks and populate the dictionary
+        CollectExistingChunks();
+
+        // If no pre-baked chunks exist and no source model, generate a solid block
+        if (_chunks.Count == 0 && sourceModel == null)
             GenerateBlock();
+
+        // Hide source model at runtime — it was only needed for voxelization in editor
+        if (sourceModel != null)
+            sourceModel.SetActive(false);
+    }
+
+    private void CollectExistingChunks()
+    {
+        _chunks.Clear();
+        foreach (var chunk in GetComponentsInChildren<VoxelChunk>())
+            _chunks[chunk.chunkCoord] = chunk;
     }
 
     private void GenerateBlock()
@@ -77,22 +88,33 @@ public class VoxelTerrain : MonoBehaviour
             chunk.Rebuild();
     }
 
-    private IEnumerator GenerateFromModelCoroutine()
+    #region Editor Voxelization (called by VoxelTerrainEditor)
+
+    /// <summary>
+    /// Voxelize from the source model in edit mode. Called by the custom editor.
+    /// Returns false if something went wrong.
+    /// </summary>
+    public bool VoxelizeFromModel(System.Action<float, string> progressCallback = null)
     {
-        _isGenerating = true;
+        if (sourceModel == null)
+        {
+            Debug.LogError("VoxelTerrain: No source model assigned.");
+            return false;
+        }
 
         var meshFilter = sourceModel.GetComponent<MeshFilter>();
         if (meshFilter == null || meshFilter.sharedMesh == null)
         {
             Debug.LogError("VoxelTerrain: Source model needs a MeshFilter with a mesh.");
-            _isGenerating = false;
-            yield break;
+            return false;
         }
+
+        // Clear existing chunks first
+        ClearChunks();
 
         var sourceMesh = meshFilter.sharedMesh;
         var sourceTransform = sourceModel.transform;
 
-        // Read vertices and transform to world space
         var localVerts = sourceMesh.vertices;
         var worldVerts = new Vector3[localVerts.Length];
         for (var i = 0; i < localVerts.Length; i++)
@@ -100,7 +122,6 @@ public class VoxelTerrain : MonoBehaviour
 
         var tris = sourceMesh.triangles;
 
-        // Calculate world-space bounds
         var bounds = new Bounds(worldVerts[0], Vector3.zero);
         for (var i = 1; i < worldVerts.Length; i++)
             bounds.Encapsulate(worldVerts[i]);
@@ -115,21 +136,6 @@ public class VoxelTerrain : MonoBehaviour
             Mathf.CeilToInt((float)voxelCountY / VoxelChunk.ChunkSize),
             Mathf.CeilToInt((float)voxelCountZ / VoxelChunk.ChunkSize));
 
-        var totalSamples = sizeInChunks.x * sizeInChunks.y * sizeInChunks.z
-                           * VoxelChunk.SampleSize * VoxelChunk.SampleSize * VoxelChunk.SampleSize;
-        var totalTriTests = (long)totalSamples * (tris.Length / 3);
-
-        Debug.Log($"VoxelTerrain: Voxelizing model — {sizeInChunks.x * VoxelChunk.ChunkSize}x" +
-                  $"{sizeInChunks.y * VoxelChunk.ChunkSize}x{sizeInChunks.z * VoxelChunk.ChunkSize} voxels, " +
-                  $"{sizeInChunks.x * sizeInChunks.y * sizeInChunks.z} chunks, " +
-                  $"{tris.Length / 3} triangles");
-
-        if (totalTriTests > 500_000_000)
-        {
-            Debug.LogWarning($"VoxelTerrain: ~{totalTriTests / 1_000_000}M ray-triangle tests. " +
-                             "Consider lowering voxelsPerUnit or model scale to avoid long load times.");
-        }
-
         var gridOrigin = bounds.min - new Vector3(voxelSize, voxelSize, voxelSize);
         transform.position = gridOrigin;
         transform.localScale = Vector3.one * voxelSize;
@@ -139,15 +145,14 @@ public class VoxelTerrain : MonoBehaviour
         for (var cz = 0; cz < sizeInChunks.z; cz++)
             CreateChunk(new Vector3Int(cx, cy, cz));
 
-        // Hide the source model while we voxelize
-        sourceModel.SetActive(false);
-
-        // Process one chunk per frame to avoid freezing
-        var chunksProcessed = 0;
         var totalChunks = _chunks.Count;
+        var chunksProcessed = 0;
 
         foreach (var (chunkCoordinates, chunk) in _chunks)
         {
+            progressCallback?.Invoke((float)chunksProcessed / totalChunks,
+                $"Voxelizing chunk {chunksProcessed + 1}/{totalChunks}...");
+
             for (var z = 0; z < VoxelChunk.SampleSize; z++)
             for (var y = 0; y < VoxelChunk.SampleSize; y++)
             for (var x = 0; x < VoxelChunk.SampleSize; x++)
@@ -157,7 +162,6 @@ public class VoxelTerrain : MonoBehaviour
                     gridOrigin.y + (chunkCoordinates.y * VoxelChunk.ChunkSize + y) * voxelSize,
                     gridOrigin.z + (chunkCoordinates.z * VoxelChunk.ChunkSize + z) * voxelSize);
 
-                // Quick bounds check — points outside the mesh AABB are definitely outside
                 if (!bounds.Contains(worldPos))
                 {
                     chunk.SetDensity(x, y, z, 0f);
@@ -170,14 +174,53 @@ public class VoxelTerrain : MonoBehaviour
 
             chunk.Rebuild();
             chunksProcessed++;
-            Debug.Log($"VoxelTerrain: Chunk {chunksProcessed}/{totalChunks} done");
-            yield return null;
         }
 
-        Destroy(sourceModel);
-        _isGenerating = false;
-        Debug.Log("VoxelTerrain: Voxelization complete");
+        Debug.Log($"VoxelTerrain: Voxelization complete — {totalChunks} chunks, " +
+                  $"{sizeInChunks.x * VoxelChunk.ChunkSize}x{sizeInChunks.y * VoxelChunk.ChunkSize}x" +
+                  $"{sizeInChunks.z * VoxelChunk.ChunkSize} voxels");
+
+        return true;
     }
+
+    /// <summary>
+    /// Generate a solid cube in edit mode. Called by the custom editor.
+    /// </summary>
+    public void VoxelizeSolidBlock()
+    {
+        ClearChunks();
+        GenerateBlock();
+        Debug.Log($"VoxelTerrain: Generated solid block — {sizeInChunks.x}x{sizeInChunks.y}x{sizeInChunks.z} chunks");
+    }
+
+    /// <summary>
+    /// Destroy all child chunk GameObjects.
+    /// </summary>
+    public void ClearChunks()
+    {
+        // Collect first to avoid modifying collection while iterating
+        var children = new List<GameObject>();
+        for (var i = transform.childCount - 1; i >= 0; i--)
+        {
+            var child = transform.GetChild(i).gameObject;
+            if (child.GetComponent<VoxelChunk>() != null)
+                children.Add(child);
+        }
+
+        foreach (var child in children)
+        {
+            if (Application.isPlaying)
+                Destroy(child);
+            else
+                DestroyImmediate(child);
+        }
+
+        _chunks.Clear();
+    }
+
+    #endregion
+
+    #region Mesh Inside Test
 
     private static bool IsInsideMesh(Vector3 point, Vector3[] verts, int[] tris)
     {
@@ -196,16 +239,11 @@ public class VoxelTerrain : MonoBehaviour
         return crossings % 2 == 1;
     }
 
-    /// <summary>
-    /// Möller–Trumbore ray-triangle intersection.
-    /// Ray origin = point, ray direction = +X.
-    /// </summary>
     private static bool RayHitsTriangle(Vector3 origin, Vector3 v0, Vector3 v1, Vector3 v2)
     {
         var edge1 = v1 - v0;
         var edge2 = v2 - v0;
 
-        // h = rayDir x edge2, rayDir is (1,0,0) so cross product simplifies
         var hy = -edge2.z;
         var hz = edge2.y;
 
@@ -235,6 +273,10 @@ public class VoxelTerrain : MonoBehaviour
         return t > 0.00001f;
     }
 
+    #endregion
+
+    #region Chunk Management
+
     private void CreateChunk(Vector3Int chunkCoordinates)
     {
         var go = new GameObject($"Chunk ({chunkCoordinates.x}, {chunkCoordinates.y}, {chunkCoordinates.z})");
@@ -254,10 +296,12 @@ public class VoxelTerrain : MonoBehaviour
         _chunks[chunkCoordinates] = chunk;
     }
 
+    #endregion
+
+    #region Runtime Mining
+
     public void Mine(Vector3 worldPoint)
     {
-        if (_isGenerating) return;
-
         var localPoint = transform.InverseTransformPoint(worldPoint);
 
         var minX = Mathf.FloorToInt(localPoint.x - mineRadius);
@@ -350,4 +394,6 @@ public class VoxelTerrain : MonoBehaviour
             dirtyChunks.Add(neighborCoord);
         }
     }
+
+    #endregion
 }
