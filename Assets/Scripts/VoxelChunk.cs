@@ -18,6 +18,7 @@ public class VoxelChunk : MonoBehaviour
     // Reusable lists to avoid GC allocs every rebuild
     private readonly List<Vector3> _vertices = new();
     private readonly List<int> _triangles = new();
+    private readonly List<Vector2> _uvs = new();
 
     // Corner offset lookup (local to each marching cube cell)
     private static readonly Vector3Int[] CornerOffsets = new Vector3Int[8]
@@ -90,6 +91,7 @@ public class VoxelChunk : MonoBehaviour
     {
         _vertices.Clear();
         _triangles.Clear();
+        _uvs.Clear();
 
         var iso = MarchingCubesTables.IsoLevel;
 
@@ -144,14 +146,47 @@ public class VoxelChunk : MonoBehaviour
                     cornerDensities[c0], cornerDensities[c1], iso);
             }
 
-            // Generate triangles
+            // Generate triangles with triplanar UVs
             for (var i = 0; MarchingCubesTables.TriTable[cubeIndex, i] != -1; i += 3)
             {
                 var baseIndex = _vertices.Count;
 
-                _vertices.Add(edgeVertices[MarchingCubesTables.TriTable[cubeIndex, i]]);
-                _vertices.Add(edgeVertices[MarchingCubesTables.TriTable[cubeIndex, i + 1]]);
-                _vertices.Add(edgeVertices[MarchingCubesTables.TriTable[cubeIndex, i + 2]]);
+                var v0 = edgeVertices[MarchingCubesTables.TriTable[cubeIndex, i]];
+                var v1 = edgeVertices[MarchingCubesTables.TriTable[cubeIndex, i + 1]];
+                var v2 = edgeVertices[MarchingCubesTables.TriTable[cubeIndex, i + 2]];
+
+                _vertices.Add(v0);
+                _vertices.Add(v1);
+                _vertices.Add(v2);
+
+                // Pick UV projection based on face normal direction
+                var faceNormal = Vector3.Cross(v1 - v0, v2 - v0);
+                var absX = Mathf.Abs(faceNormal.x);
+                var absY = Mathf.Abs(faceNormal.y);
+                var absZ = Mathf.Abs(faceNormal.z);
+
+                var scale = 1f / ChunkSize;
+                if (absY >= absX && absY >= absZ)
+                {
+                    // Face points up/down — project onto XZ
+                    _uvs.Add(new Vector2(v0.x, v0.z) * scale);
+                    _uvs.Add(new Vector2(v1.x, v1.z) * scale);
+                    _uvs.Add(new Vector2(v2.x, v2.z) * scale);
+                }
+                else if (absX >= absZ)
+                {
+                    // Face points left/right — project onto YZ
+                    _uvs.Add(new Vector2(v0.z, v0.y) * scale);
+                    _uvs.Add(new Vector2(v1.z, v1.y) * scale);
+                    _uvs.Add(new Vector2(v2.z, v2.y) * scale);
+                }
+                else
+                {
+                    // Face points forward/back — project onto XY
+                    _uvs.Add(new Vector2(v0.x, v0.y) * scale);
+                    _uvs.Add(new Vector2(v1.x, v1.y) * scale);
+                    _uvs.Add(new Vector2(v2.x, v2.y) * scale);
+                }
 
                 _triangles.Add(baseIndex);
                 _triangles.Add(baseIndex + 1);
@@ -162,6 +197,7 @@ public class VoxelChunk : MonoBehaviour
         var mesh = _meshFilter.mesh;
         mesh.Clear();
         mesh.SetVertices(_vertices);
+        mesh.SetUVs(0, _uvs);
         mesh.SetTriangles(_triangles, 0);
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
