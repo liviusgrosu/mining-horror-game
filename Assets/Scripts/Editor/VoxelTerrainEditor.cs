@@ -6,15 +6,41 @@ public class VoxelTerrainEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
+        serializedObject.Update();
 
+        var sourceModelProp = serializedObject.FindProperty("sourceModel");
+        var voxelsPerUnitProp = serializedObject.FindProperty("voxelsPerUnit");
+        var sizeInChunksProp = serializedObject.FindProperty("sizeInChunks");
+        var blockMaterialProp = serializedObject.FindProperty("blockMaterial");
+        var mineRadiusProp = serializedObject.FindProperty("mineRadius");
+
+        var hasSourceModel = sourceModelProp.objectReferenceValue != null;
+
+        EditorGUILayout.LabelField("Source Model", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(sourceModelProp);
+        if (hasSourceModel)
+            EditorGUILayout.PropertyField(voxelsPerUnitProp);
+
+        EditorGUILayout.Space(5);
+        if (!hasSourceModel)
+        {
+            EditorGUILayout.LabelField("Solid Block Settings", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(sizeInChunksProp);
+            EditorGUILayout.PropertyField(blockMaterialProp);
+        }
+
+        EditorGUILayout.Space(5);
+        EditorGUILayout.LabelField("Mining", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(mineRadiusProp);
+
+        serializedObject.ApplyModifiedProperties();
+
+        // --- Editor Tools ---
         var terrain = (VoxelTerrain)target;
+        var hasChunks = terrain.transform.childCount > 0;
 
         EditorGUILayout.Space(10);
         EditorGUILayout.LabelField("Editor Tools", EditorStyles.boldLabel);
-
-        var hasSourceModel = serializedObject.FindProperty("sourceModel").objectReferenceValue != null;
-        var hasChunks = terrain.transform.childCount > 0;
 
         if (hasSourceModel)
         {
@@ -26,7 +52,6 @@ public class VoxelTerrainEditor : Editor
                 {
                     if (EditorUtility.DisplayCancelableProgressBar("Voxelizing", message, progress))
                     {
-                        // User cancelled — clean up
                         EditorUtility.ClearProgressBar();
                         terrain.ClearChunks();
                         return;

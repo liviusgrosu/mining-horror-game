@@ -15,9 +15,7 @@ public class VoxelTerrain : MonoBehaviour
 
     [Header("Block Size (used when no source model, in chunks of 16 voxels)")]
     [SerializeField] private Vector3Int sizeInChunks = new Vector3Int(2, 2, 2);
-
-    [Header("Rendering")]
-    [SerializeField] private Material terrainMaterial;
+    [SerializeField] private Material blockMaterial;
 
     [Header("Mining")]
     [SerializeField] private float mineRadius = 1.5f;
@@ -60,7 +58,7 @@ public class VoxelTerrain : MonoBehaviour
         for (var cx = 0; cx < sizeInChunks.x; cx++)
         for (var cy = 0; cy < sizeInChunks.y; cy++)
         for (var cz = 0; cz < sizeInChunks.z; cz++)
-            CreateChunk(new Vector3Int(cx, cy, cz));
+            CreateChunk(new Vector3Int(cx, cy, cz), blockMaterial);
 
         var totalX = sizeInChunks.x * VoxelChunk.ChunkSize;
         var totalY = sizeInChunks.y * VoxelChunk.ChunkSize;
@@ -109,6 +107,15 @@ public class VoxelTerrain : MonoBehaviour
             return false;
         }
 
+        var sourceRenderer = sourceModel.GetComponent<MeshRenderer>();
+        if (sourceRenderer == null || sourceRenderer.sharedMaterial == null)
+        {
+            Debug.LogError("VoxelTerrain: Source model needs a MeshRenderer with a material.");
+            return false;
+        }
+
+        var material = sourceRenderer.sharedMaterial;
+
         // Clear existing chunks first
         ClearChunks();
 
@@ -143,7 +150,7 @@ public class VoxelTerrain : MonoBehaviour
         for (var cx = 0; cx < sizeInChunks.x; cx++)
         for (var cy = 0; cy < sizeInChunks.y; cy++)
         for (var cz = 0; cz < sizeInChunks.z; cz++)
-            CreateChunk(new Vector3Int(cx, cy, cz));
+            CreateChunk(new Vector3Int(cx, cy, cz), material);
 
         var totalChunks = _chunks.Count;
         var chunksProcessed = 0;
@@ -277,7 +284,7 @@ public class VoxelTerrain : MonoBehaviour
 
     #region Chunk Management
 
-    private void CreateChunk(Vector3Int chunkCoordinates)
+    private void CreateChunk(Vector3Int chunkCoordinates, Material material)
     {
         var go = new GameObject($"Chunk ({chunkCoordinates.x}, {chunkCoordinates.y}, {chunkCoordinates.z})");
         go.transform.SetParent(transform, false);
@@ -291,7 +298,7 @@ public class VoxelTerrain : MonoBehaviour
         go.AddComponent<MeshCollider>();
 
         var chunk = go.AddComponent<VoxelChunk>();
-        chunk.Initialize(chunkCoordinates, terrainMaterial);
+        chunk.Initialize(chunkCoordinates, material);
 
         _chunks[chunkCoordinates] = chunk;
     }
