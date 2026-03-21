@@ -10,6 +10,8 @@ public class Inventory : MonoBehaviour
     public event Action OnChanged;
 
     private readonly Dictionary<InventoryItem, int> _items = new();
+    
+    private readonly List<InventoryItem> _pickaxeGems = new();
 
     private void Awake()
     {
@@ -49,5 +51,14 @@ public class Inventory : MonoBehaviour
         }
 
         OnChanged?.Invoke();
+    }
+
+    public InventoryItem GetItem(int id)
+    {
+        foreach (var item in _items.Keys)
+        {
+            if (item.Id == id) return item;
+        }
+        return null;
     }
 }
