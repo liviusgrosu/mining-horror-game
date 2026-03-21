@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1c45998a0f66b34092b6388865a9543, type: 3}
+  m_Name: Iron Ore
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryItem
+  Id: 1
+  Name: Gold Ore
+  Icon: {fileID: 21300000, guid: 5bcf8e9b290de3f4f88a94505cbc7e4c, type: 3}

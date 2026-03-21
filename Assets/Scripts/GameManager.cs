@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     public bool IsPaused;
 
     [SerializeField] private GameObject _controlsOverlay;
+    [SerializeField] private GameObject _inventoryUI;
 
     [SerializeField] private CanvasGroup _mineralStatsCanvasGroup;
     private Coroutine _mineralStatsCoroutine;
@@ -67,7 +68,7 @@ public class GameManager : MonoBehaviour
                 return;
             }
 
-            TogglePause();
+            ToggleInventory();
         }
     }
 
@@ -246,8 +247,23 @@ public class GameManager : MonoBehaviour
     {
         IsPaused = !IsPaused;
 
-        if (_controlsOverlay != null)
+        if (_controlsOverlay)
+        {
             _controlsOverlay.SetActive(IsPaused);
+        }
+
+        ToggleCursorLock(IsPaused);
+        Time.timeScale = IsPaused ? 0f : 1f;
+    }
+
+    public void ToggleInventory()
+    {
+        IsPaused = !IsPaused;
+
+        if (_inventoryUI)
+        {
+            _inventoryUI.SetActive(IsPaused);
+        }
 
         ToggleCursorLock(IsPaused);
         Time.timeScale = IsPaused ? 0f : 1f;
