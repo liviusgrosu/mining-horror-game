@@ -52,5 +52,7 @@ public class UpgradeSubmenu : MonoBehaviour
         {
             _nextUpgradeItem.SetActive(true);
         }
+        
+        Inventory.Instance.SwitchPickaxe(_upgradeItemName);
     }
 }

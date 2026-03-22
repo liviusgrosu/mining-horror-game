@@ -5,7 +5,13 @@ using UnityEngine;
 public class PickaxeUI : MonoBehaviour
 {
     private List<PickaxeUIGemSlot> _pickaxeGemUISlots;
-    
+    public int GemSlotCount => _pickaxeGemUISlots.Count;
+
+    private void Awake()
+    {
+        _pickaxeGemUISlots = transform.GetComponentsInChildren<PickaxeUIGemSlot>().ToList();
+    }
+
     private void OnEnable()
     {
         if (Inventory.Instance != null)
@@ -23,11 +29,8 @@ public class PickaxeUI : MonoBehaviour
         }
     }
 
-    
     private void Refresh()
     {
-        _pickaxeGemUISlots = transform.GetComponentsInChildren<PickaxeUIGemSlot>().ToList();
-        
         foreach (var gemSlot in _pickaxeGemUISlots)
         {
             gemSlot.Clear();
