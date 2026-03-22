@@ -13,14 +13,16 @@ public class VoxelTerrainEditor : Editor
         var sizeInChunksProp = serializedObject.FindProperty("sizeInChunks");
         var blockMaterialProp = serializedObject.FindProperty("blockMaterial");
         var mineRadiusProp = serializedObject.FindProperty("mineRadius");
-        var oreProductName = serializedObject.FindProperty("oreProductName");
+        var oreInventoryItem = serializedObject.FindProperty("oreInventoryItem");
 
         var hasSourceModel = sourceModelProp.objectReferenceValue != null;
 
         EditorGUILayout.LabelField("Source Model", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(sourceModelProp);
         if (hasSourceModel)
+        {
             EditorGUILayout.PropertyField(voxelsPerUnitProp);
+        }
 
         EditorGUILayout.Space(5);
         if (!hasSourceModel)
@@ -33,7 +35,7 @@ public class VoxelTerrainEditor : Editor
         EditorGUILayout.Space(5);
         EditorGUILayout.LabelField("Mining", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(mineRadiusProp);
-        EditorGUILayout.PropertyField(oreProductName);
+        EditorGUILayout.PropertyField(oreInventoryItem);
 
         serializedObject.ApplyModifiedProperties();
 
@@ -63,7 +65,9 @@ public class VoxelTerrainEditor : Editor
                 EditorUtility.ClearProgressBar();
 
                 if (success)
+                {
                     EditorUtility.SetDirty(terrain);
+                }
             }
         }
         else

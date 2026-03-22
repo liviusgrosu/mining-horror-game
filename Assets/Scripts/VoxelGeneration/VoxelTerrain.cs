@@ -19,7 +19,7 @@ public class VoxelTerrain : MonoBehaviour
 
     [Header("Mining")]
     [SerializeField] private float mineRadius = 1.5f;
-    [SerializeField] private string oreProductName;
+    [SerializeField] private InventoryItem oreInventoryItem;
     
     private readonly Dictionary<Vector3Int, VoxelChunk> _chunks = new();
 
@@ -393,9 +393,9 @@ public class VoxelTerrain : MonoBehaviour
         }
         
         // TODO: Depending on how powerful the pickaxe is, the more ore you can get
-        if (!string.IsNullOrEmpty(oreProductName))
+        if (oreInventoryItem)
         {
-            //GameManager.Instance.AddMineral(oreProductName);
+            Inventory.Instance.Add(oreInventoryItem);
         }
     }
 
