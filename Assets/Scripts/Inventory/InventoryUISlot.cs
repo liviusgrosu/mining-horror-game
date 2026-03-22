@@ -34,11 +34,20 @@ public class InventoryUISlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
         }
 
         var item = Inventory.Instance.GetItem(ItemId);
-        if (item != null && item.Type == ItemType.GemSlot)
+        if (item == null) return;
+
+        switch (item.Type)
         {
-            Inventory.Instance.EquipGem(item);
-            InventoryUI.Instance.HideTooltip();
+            case ItemType.GemSlot:
+                Inventory.Instance.EquipGem(item);
+                break;
+            case ItemType.Consumable:
+                var playerHealth = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>();
+                playerHealth.Heal(25);
+                Inventory.Instance.Remove(item, 1);
+                break;
         }
+        InventoryUI.Instance.HideTooltip();
     }
 
     public void Clear()
