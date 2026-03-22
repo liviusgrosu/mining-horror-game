@@ -78,32 +78,19 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 459a48f5d067de9458de532a542502bc, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1756131881113555394}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 459a48f5d067de9458de532a542502bc, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 9187558471344230182}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 459a48f5d067de9458de532a542502bc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4663967498479387222}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 459a48f5d067de9458de532a542502bc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2540153664903419129}
   m_SourcePrefab: {fileID: 100100000, guid: 459a48f5d067de9458de532a542502bc, type: 3}
 --- !u!1 &5558931387618829489 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 459a48f5d067de9458de532a542502bc, type: 3}
   m_PrefabInstance: {fileID: 4747958892133554656}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1756131881113555394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5558931387618829489}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1602f5ab2c2fdbe44b08f848cfcb16fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Mineral
-  MineralName: Gold
 --- !u!54 &9187558471344230182
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -153,3 +140,16 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -9032557090061056480, guid: 459a48f5d067de9458de532a542502bc, type: 3}
+--- !u!114 &2540153664903419129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5558931387618829489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97015b8434b6f3c43970ef75cc907b4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldItem
+  Item: {fileID: 11400000, guid: 899220e9c03787e4f85640cbd18a5a94, type: 2}

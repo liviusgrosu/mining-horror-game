@@ -18,7 +18,9 @@ public class InventoryUI : MonoBehaviour
 
         var cg = _tooltip.GetComponent<CanvasGroup>();
         if (cg == null)
+        {
             cg = _tooltip.AddComponent<CanvasGroup>();
+        }
         cg.blocksRaycasts = false;
     }
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1c45998a0f66b34092b6388865a9543, type: 3}
   m_Name: Health Bottle
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItem
-  Id: 6
+  Id: 7
   Name: Health Bottle
   Icon: {fileID: 21300000, guid: 0940c8437e6043548b2b2b0900c757ff, type: 3}
   Type: 0

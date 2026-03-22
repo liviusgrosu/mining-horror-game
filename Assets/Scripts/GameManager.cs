@@ -12,16 +12,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _questionMarkIcon;
     [SerializeField] private GameObject _pickupIcon;
     
-    public Dictionary<string, int> MineralCounts = new();
-
     public GameObject OverlayUI;
     public GameObject UpgradeUI;
     public GameObject GameOverScreen;
     
     public bool InMenu;
-
-    public GameObject monster1Patrol, monster1Chase, monster2Chase;
-    public GameObject rockBlockage1;
+    
     private bool triggeredFirstChase, triggeredSecondChase;
 
     [SerializeField]
@@ -52,10 +48,6 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-        
-        MineralCounts.Add("Copper", 0);
-        MineralCounts.Add("Silver", 0);
-        MineralCounts.Add("Gold", 0);
     }
 
     private void Update()
@@ -81,90 +73,6 @@ public class GameManager : MonoBehaviour
             _mineralStatsCanvasGroup.alpha = 0f;
         
         player = GameObject.Find("Player");
-    }
-    
-    public void AddMineral(string mineral)
-    {
-        MineralCounts[mineral]++;
-        GameObject.Find($"{mineral} Stat").GetComponentInChildren<TextMeshProUGUI>().text = MineralCounts[mineral].ToString();
-
-        ShowMineralStats();
-
-        if (mineral == "Gold" && !triggeredFirstChase)
-        {
-            monster1Patrol.SetActive(false);
-            monster1Chase.SetActive(true);
-            rockBlockage1.SetActive(true);
-            triggeredFirstChase = true;
-            ScreenShakeEffect.Instance.BeginShaking();
-            OtherSFXManager.Instance.PlayEarthQuakeEffect();
-        }
-    }
-
-    private void ShowMineralStats()
-    {
-        if (_mineralStatsCanvasGroup == null) return;
-
-        const float displayDuration = 3f;
-
-        if (_mineralStatsVisible)
-        {
-            // Already showing — just reset the timer, don't restart the fade
-            _mineralStatsTimer = displayDuration;
-            return;
-        }
-
-        if (_mineralStatsCoroutine != null)
-            StopCoroutine(_mineralStatsCoroutine);
-
-        _mineralStatsCoroutine = StartCoroutine(MineralStatsFadeRoutine(displayDuration));
-    }
-
-    private IEnumerator MineralStatsFadeRoutine(float displayDuration)
-    {
-        const float fadeDuration = 0.3f;
-
-        // Fade in
-        var elapsed = 0f;
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            _mineralStatsCanvasGroup.alpha = Mathf.Lerp(0f, 1f, elapsed / fadeDuration);
-            yield return null;
-        }
-        _mineralStatsCanvasGroup.alpha = 1f;
-        _mineralStatsVisible = true;
-
-        // Wait, using a timer that can be reset externally
-        _mineralStatsTimer = displayDuration;
-        while (_mineralStatsTimer > 0f)
-        {
-            _mineralStatsTimer -= Time.deltaTime;
-            yield return null;
-        }
-
-        // Fade out
-        _mineralStatsVisible = false;
-        elapsed = 0f;
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            _mineralStatsCanvasGroup.alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
-            yield return null;
-        }
-        _mineralStatsCanvasGroup.alpha = 0f;
-        _mineralStatsCoroutine = null;
-    }
-
-    public void SpawnFinalEncounter()
-    {
-        /*if (triggeredSecondChase)
-        {
-            return;
-        }
-        monster1Chase.SetActive(false);
-        monster2Chase.SetActive(true);
-        triggeredSecondChase = true;*/
     }
     
     public void TogglePickupIcon(bool state)

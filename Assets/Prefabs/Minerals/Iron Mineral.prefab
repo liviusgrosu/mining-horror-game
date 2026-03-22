@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 40a9fe5ee2eaf034aad64126a05e7286, type: 2}
     - target: {fileID: 919132149155446097, guid: 459a48f5d067de9458de532a542502bc, type: 3}
       propertyPath: m_Name
-      value: Silver Mineral
+      value: Iron Mineral
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 459a48f5d067de9458de532a542502bc, type: 3}
       propertyPath: m_TagString
@@ -78,32 +78,19 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 459a48f5d067de9458de532a542502bc, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1756131881113555394}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 459a48f5d067de9458de532a542502bc, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 9187558471344230182}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 459a48f5d067de9458de532a542502bc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5975931249680230134}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 459a48f5d067de9458de532a542502bc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6186207459015457420}
   m_SourcePrefab: {fileID: 100100000, guid: 459a48f5d067de9458de532a542502bc, type: 3}
 --- !u!1 &5558931387618829489 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 459a48f5d067de9458de532a542502bc, type: 3}
   m_PrefabInstance: {fileID: 4747958892133554656}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1756131881113555394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5558931387618829489}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1602f5ab2c2fdbe44b08f848cfcb16fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Mineral
-  MineralName: Silver
 --- !u!54 &9187558471344230182
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -153,3 +140,16 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -9032557090061056480, guid: 459a48f5d067de9458de532a542502bc, type: 3}
+--- !u!114 &6186207459015457420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5558931387618829489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97015b8434b6f3c43970ef75cc907b4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldItem
+  Item: {fileID: 11400000, guid: 6c818ca8e9758284bb0e0959fabd7187, type: 2}

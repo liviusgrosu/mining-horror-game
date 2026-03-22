@@ -395,7 +395,7 @@ public class VoxelTerrain : MonoBehaviour
         // TODO: Depending on how powerful the pickaxe is, the more ore you can get
         if (!string.IsNullOrEmpty(oreProductName))
         {
-            GameManager.Instance.AddMineral(oreProductName);
+            //GameManager.Instance.AddMineral(oreProductName);
         }
     }
 
