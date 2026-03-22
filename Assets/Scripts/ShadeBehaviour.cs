@@ -5,6 +5,7 @@ using UnityEngine.AI;
 public class ShadeBehaviour : MonoBehaviour
 {
     private static readonly int MovementBlend = Animator.StringToHash("MovementBlend");
+    private static readonly int IsAttacking = Animator.StringToHash("IsAttacking");
 
     public enum State
     {
@@ -37,6 +38,15 @@ public class ShadeBehaviour : MonoBehaviour
     [Header("Attack State")]
     [Tooltip("How fast the enemy will rotate to the player after finishing an attack")]
     [SerializeField] private float _toPlayerRotateAttackSpeed = 250f;
+    [Tooltip("Damage dealt per attack")]
+    [SerializeField] private int _attackDamage = 20;
+    [Tooltip("Cooldown between attacks in seconds")]
+    [SerializeField] private float _attackCooldown = 2f;
+    [Tooltip("Distance to trigger attack")]
+    [SerializeField] private float _attackRange = 2f;
+    private float _attackCooldownTimer;
+    private bool _isAttacking;
+    private PlayerHealth _playerHealth;
 
     [SerializeField] private float _movementThreshold = 0.1f;
     private bool _wasMoving;
@@ -91,6 +101,7 @@ public class ShadeBehaviour : MonoBehaviour
     {
         _startingPosition = transform.position;
         _player = GameObject.FindGameObjectWithTag("Player").transform;
+        _playerHealth = _player.GetComponent<PlayerHealth>();
 
         if (_shouldPatrol)
         {
@@ -119,6 +130,9 @@ public class ShadeBehaviour : MonoBehaviour
                 break;
             case State.Engage:
                 EngageState();
+                break;
+            case State.Attack:
+                AttackState();
                 break;
             case State.Check:
                 CheckState();
@@ -160,10 +174,15 @@ public class ShadeBehaviour : MonoBehaviour
         animator.SetFloat(MovementBlend, 1f, 0.1f, Time.deltaTime);
         _agent.SetDestination(_player.position);
 
-        if (_getDistanceFromPlayer <= _agent.stoppingDistance + 0.1f)
+        if (_getDistanceFromPlayer <= _attackRange)
         {
             _agent.velocity = Vector3.zero;
-            GameManager.Instance.OpenGameOverScreen();
+            _agent.isStopped = true;
+            _isAttacking = true;
+            _attackCooldownTimer = 0f;
+            animator.SetBool(IsAttacking, true);
+            animator.Play("Attack", 0, 0f);
+            _currentState = State.Attack;
         }
 
         if (!initiateChase && _getDistanceFromPlayer > _engageDistance)
@@ -173,6 +192,42 @@ public class ShadeBehaviour : MonoBehaviour
             _checkStateElapsedTime = 0f;
             _currentState = State.Check;
             PlayIdleSound();
+        }
+    }
+
+    private void AttackState()
+    {
+        // Rotate toward the player during attack
+        var directionToPlayer = (_player.position - transform.position).normalized;
+        directionToPlayer.y = 0f;
+        if (directionToPlayer != Vector3.zero)
+        {
+            var targetRotation = Quaternion.LookRotation(directionToPlayer);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _toPlayerRotateAttackSpeed * Time.deltaTime);
+        }
+
+        _attackCooldownTimer += Time.deltaTime;
+
+        // If player moved out of range, go back to chasing
+        if (_getDistanceFromPlayer > _attackRange * 1.5f)
+        {
+            _isAttacking = false;
+            animator.SetBool(IsAttacking, false);
+            _agent.isStopped = false;
+            _currentState = State.Engage;
+            return;
+        }
+
+        // Cooldown elapsed — attack again
+        if (_attackCooldownTimer >= _attackCooldown)
+        {
+            _attackCooldownTimer = 0f;
+            animator.SetBool(IsAttacking, true);
+            animator.Play("Attack", 0, 0f);
+            if (_playerHealth != null)
+            {
+                _playerHealth.TakeDamage(_attackDamage);
+            }
         }
     }
 
