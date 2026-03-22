@@ -158,13 +158,13 @@ public class GameManager : MonoBehaviour
 
     public void SpawnFinalEncounter()
     {
-        if (triggeredSecondChase)
+        /*if (triggeredSecondChase)
         {
             return;
         }
         monster1Chase.SetActive(false);
         monster2Chase.SetActive(true);
-        triggeredSecondChase = true;
+        triggeredSecondChase = true;*/
     }
     
     public void TogglePickupIcon(bool state)

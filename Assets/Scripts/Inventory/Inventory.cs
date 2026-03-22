@@ -97,6 +97,27 @@ public class Inventory : MonoBehaviour
         OnChanged?.Invoke();
     }
 
+    public int GetCount(InventoryItem item)
+    {
+        return _items.GetValueOrDefault(item, 0);
+    }
+
+    public void Remove(InventoryItem item, int amount)
+    {
+        if (!_items.ContainsKey(item)) 
+        {
+            return;
+        }        
+
+        _items[item] -= amount;
+        if (_items[item] <= 0)
+        {
+            _items.Remove(item);
+        }
+
+        OnChanged?.Invoke();
+    }
+
     public InventoryItem GetItem(int id)
     {
         foreach (var item in _items.Keys)

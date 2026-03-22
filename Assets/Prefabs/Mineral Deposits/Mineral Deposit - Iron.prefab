@@ -710,7 +710,7 @@ GameObject:
   - component: {fileID: 935914446914698822}
   - component: {fileID: -6221707473109421755}
   m_Layer: 0
-  m_Name: Mineral Deposit - Silver
+  m_Name: Mineral Deposit - Iron
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 4194143897438859164}
   - component: {fileID: 4129081148335706190}
   m_Layer: 6
-  m_Name: Silver Mineral
+  m_Name: Iron Mineral
   m_TagString: Mineral
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

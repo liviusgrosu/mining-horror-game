@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1c45998a0f66b34092b6388865a9543, type: 3}
-  m_Name: Door Key Ruby
+  m_Name: Door Key Emerald
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItem
-  Id: 4
-  Name: Door Key - Ruby
-  Icon: {fileID: 21300000, guid: a3ec5aa31fae5d94b878ed4c3f25e5ac, type: 3}
+  Id: 5
+  Name: Door Key - Emerald
+  Icon: {fileID: 21300000, guid: 20076a49aee87bc4999fab4e4cf5bb52, type: 3}
   Type: 2

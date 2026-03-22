@@ -8,7 +8,7 @@ using UnityEngine.UI;
 [Serializable]
 public class Requirement
 {
-    public string Mineral;
+    public InventoryItem Item;
     public int Amount;
     public TextMeshProUGUI Text;
 }
@@ -26,7 +26,7 @@ public class UpgradeSubmenu : MonoBehaviour
         _meetsRequirements = true;
         foreach (var requirement in _requirements)
         {
-            var currentAmount = GameManager.Instance.MineralCounts[requirement.Mineral];
+            var currentAmount = Inventory.Instance.GetCount(requirement.Item);
             if (currentAmount < requirement.Amount)
             {
                 _meetsRequirements = false;
@@ -44,7 +44,7 @@ public class UpgradeSubmenu : MonoBehaviour
         
         foreach (var requirement in _requirements)
         {
-            GameManager.Instance.MineralCounts[requirement.Mineral] -= requirement.Amount;
+            Inventory.Instance.Remove(requirement.Item, requirement.Amount);
         }
         
         gameObject.SetActive(false);
