@@ -17,7 +17,10 @@ public class PickaxeUIGemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
     
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (ItemId == -1) return;
+        if (ItemId == -1)
+        {
+            return;
+        }
 
         var item = Inventory.Instance.GetItem(ItemId);
         if (item != null)
@@ -39,9 +42,10 @@ public class PickaxeUIGemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
         }
 
         var item = Inventory.Instance.GetItem(ItemId);
-        if (item != null && item.Type == ItemType.GemSlot)
+        if (item != null)
         {
             Inventory.Instance.RemoveGem(item);
+            InventoryUI.Instance.HideTooltip();
         }
     }
 }

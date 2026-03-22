@@ -37,6 +37,7 @@ public class InventoryUISlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
         if (item != null && item.Type == ItemType.GemSlot)
         {
             Inventory.Instance.EquipGem(item);
+            InventoryUI.Instance.HideTooltip();
         }
     }
 
