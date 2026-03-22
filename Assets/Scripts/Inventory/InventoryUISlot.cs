@@ -3,11 +3,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InventoryUISlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class InventoryUISlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public int ItemId = -1;
     public Image Icon;
     public TextMeshProUGUI Quantity;
+    public Sprite EmptySprite;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -23,5 +24,29 @@ public class InventoryUISlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public void OnPointerExit(PointerEventData eventData)
     {
         InventoryUI.Instance.HideTooltip();
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (ItemId == -1)
+        {
+            return;
+        }
+
+        var item = Inventory.Instance.GetItem(ItemId);
+        if (item != null && item.Type == ItemType.GemSlot)
+        {
+            Inventory.Instance.EquipGem(item);
+        }
+    }
+
+    public void Clear()
+    {
+        ItemId = -1;
+        Icon.sprite = EmptySprite;
+        if (Quantity)
+        {
+            Quantity.text = "";
+        }
     }
 }

@@ -9,6 +9,9 @@ public class Inventory : MonoBehaviour
 
     public event Action OnChanged;
 
+    private int _inventoryCapacity = 8;
+    private int _pickaxeGemCapacity = 1;
+    
     private readonly Dictionary<InventoryItem, int> _items = new();
     
     private readonly List<InventoryItem> _pickaxeGems = new();
@@ -24,8 +27,9 @@ public class Inventory : MonoBehaviour
     }
 
     public IReadOnlyDictionary<InventoryItem, int> Items => _items;
+    public IReadOnlyList<InventoryItem> PickaxeGems => _pickaxeGems;
 
-    public InventoryItem TempItem1, TempItem2, TempItem3;
+    public InventoryItem TempItem1, TempItem2, TempItem3, TempItem4;
 
     private void Update()
     {
@@ -41,6 +45,10 @@ public class Inventory : MonoBehaviour
         {
             Add(TempItem3);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            Add(TempItem4);
+        }
     }
 
     public void Add(InventoryItem item)
@@ -53,11 +61,57 @@ public class Inventory : MonoBehaviour
         OnChanged?.Invoke();
     }
 
+
+    public void EquipGem(InventoryItem item)
+    {
+        if (_pickaxeGems.Count >= _pickaxeGemCapacity)
+        {
+            return;
+        }
+
+        if (_items.ContainsKey(item))
+        {
+            _items[item]--;
+            if (_items[item] <= 0)
+            {
+                _items.Remove(item);
+            }
+        }
+
+        _pickaxeGems.Add(item);
+        OnChanged?.Invoke();
+    }
+
+    public void RemoveGem(InventoryItem item)
+    {
+        if (_pickaxeGems.Count >= _inventoryCapacity)
+        {
+            return;
+        }
+
+        if (_pickaxeGems.Contains(item))
+        {
+            _pickaxeGems.Remove(item);
+        }
+        Add(item);
+        OnChanged?.Invoke();
+    }
+
     public InventoryItem GetItem(int id)
     {
         foreach (var item in _items.Keys)
         {
-            if (item.Id == id) return item;
+            if (item.Id == id)
+            {
+                return item;
+            }
+        }
+        foreach (var item in _pickaxeGems)
+        {
+            if (item.Id == id)
+            {
+                return item;
+            }
         }
         return null;
     }

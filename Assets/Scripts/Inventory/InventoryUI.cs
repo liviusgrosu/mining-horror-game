@@ -9,7 +9,7 @@ public class InventoryUI : MonoBehaviour
 
     [SerializeField] private GameObject _tooltip;
     [SerializeField] private TextMeshProUGUI _tooltipText;
-
+    [SerializeField] private List<PickaxeUIGemSlot> _pickaxeGemSlots;
     private List<InventoryUISlot> _itemUISlots;
     private bool _tooltipVisible;
 
@@ -65,6 +65,13 @@ public class InventoryUI : MonoBehaviour
     {
         _itemUISlots = transform.GetComponentsInChildren<InventoryUISlot>().ToList();
 
+        // Clear all inventory slots first
+        foreach (var slot in _itemUISlots)
+        {
+            slot.Clear();
+        }
+
+        // Populate inventory slots
         foreach (var (item, quantity) in Inventory.Instance.Items)
         {
             var slot = _itemUISlots.Find(s => s.ItemId == item.Id);
@@ -78,6 +85,19 @@ public class InventoryUI : MonoBehaviour
             nextEmptySlot.Icon.sprite = item.Icon;
             nextEmptySlot.ItemId = item.Id;
             nextEmptySlot.Quantity.text = quantity.ToString();
+        }
+
+        // Clear and repopulate pickaxe gem slots
+        foreach (var gemSlot in _pickaxeGemSlots)
+        {
+            gemSlot.Clear();
+        }
+
+        for (var i = 0; i < Inventory.Instance.PickaxeGems.Count && i < _pickaxeGemSlots.Count; i++)
+        {
+            var gem = Inventory.Instance.PickaxeGems[i];
+            _pickaxeGemSlots[i].Icon.sprite = gem.Icon;
+            _pickaxeGemSlots[i].ItemId = gem.Id;
         }
     }
 }

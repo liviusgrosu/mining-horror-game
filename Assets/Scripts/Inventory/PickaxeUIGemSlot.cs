@@ -1,15 +1,47 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class PickaxeUIGemSlot : MonoBehaviour
+public class PickaxeUIGemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public int ItemId = -1;
-    [HideInInspector]
     public Image Icon;
-
-    private void Awake()
+    public Sprite EmptySprite;
+    
+    public void Clear()
     {
-        Icon = GetComponent<Image>();
+        ItemId = -1;
+        Icon.sprite = EmptySprite;
+    }
+    
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (ItemId == -1) return;
+
+        var item = Inventory.Instance.GetItem(ItemId);
+        if (item != null)
+        {
+            InventoryUI.Instance.ShowTooltip(item.Name);
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        InventoryUI.Instance.HideTooltip();
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (ItemId == -1)
+        {
+            return;
+        }
+
+        var item = Inventory.Instance.GetItem(ItemId);
+        if (item != null && item.Type == ItemType.GemSlot)
+        {
+            Inventory.Instance.RemoveGem(item);
+        }
     }
 }
