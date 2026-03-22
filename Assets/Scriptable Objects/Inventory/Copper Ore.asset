@@ -15,3 +15,4 @@ MonoBehaviour:
   Id: 1
   Name: Copper Ore
   Icon: {fileID: 21300000, guid: 061fcb12bbac1424ab801cd7fbb4f1a7, type: 3}
+  Type: 1

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1c45998a0f66b34092b6388865a9543, type: 3}
-  m_Name: Iron Ore
+  m_Name: Door Key Ruby
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItem
-  Id: 3
-  Name: Iron Ore
-  Icon: {fileID: 21300000, guid: 8308184ebbca0514da0854f0e5c72abc, type: 3}
-  Type: 1
+  Id: 4
+  Name: Door Key - Red
+  Icon: {fileID: 21300000, guid: a3ec5aa31fae5d94b878ed4c3f25e5ac, type: 3}
+  Type: 2
