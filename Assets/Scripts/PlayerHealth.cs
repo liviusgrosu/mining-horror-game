@@ -1,5 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
+[System.Serializable]
+public struct HealthStatus
+{
+    public Sprite sprite;
+    public string text;
+}
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -8,10 +16,18 @@ public class PlayerHealth : MonoBehaviour
 
     [SerializeField] private Image _damageVignette;
 
+    [Header("Health Status UI")]
+    [SerializeField] private Image _healthStatusImage;
+    [SerializeField] private TMP_Text _healthStatusText;
+    [SerializeField] private HealthStatus _healthy;
+    [SerializeField] private HealthStatus _damaged;
+    [SerializeField] private HealthStatus _dying;
+    
     private void Start()
     {
         _currentHealth = MaxHealth;
         UpdateVignette();
+        UpdateHealthStatus();
     }
 
     private void Update()
@@ -30,6 +46,7 @@ public class PlayerHealth : MonoBehaviour
     {
         _currentHealth = Mathf.Max(_currentHealth - amount, 0);
         UpdateVignette();
+        UpdateHealthStatus();
 
         if (_currentHealth <= 0)
         {
@@ -42,6 +59,28 @@ public class PlayerHealth : MonoBehaviour
     {
         _currentHealth = Mathf.Min(_currentHealth + amount, MaxHealth);
         UpdateVignette();
+        UpdateHealthStatus();
+    }
+
+    private void UpdateHealthStatus()
+    {
+        if (!_healthStatusImage)
+        {
+            return;
+        }
+
+        var status = _currentHealth switch
+        {
+            >= 66 => _healthy,
+            >= 33 => _damaged,
+            _ => _dying
+        };
+
+        _healthStatusImage.sprite = status.sprite;
+        if (_healthStatusText)
+        {
+            _healthStatusText.text = status.text;
+        }
     }
 
     private void UpdateVignette()
