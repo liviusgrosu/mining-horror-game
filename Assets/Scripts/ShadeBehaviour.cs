@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -93,6 +94,7 @@ public class ShadeBehaviour : MonoBehaviour
     [SerializeField] private int _maxHealth = 100;
     private int _currentHealth;
     private bool _isDead;
+    private bool _isTakingHit;
     
     private void Awake()
     {
@@ -120,7 +122,7 @@ public class ShadeBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (!_toggle)
+        if (!_toggle || _isTakingHit)
         {
             return;
         }
@@ -320,7 +322,27 @@ public class ShadeBehaviour : MonoBehaviour
         }
 
         _attackCooldownTimer = 0f;
+        StartCoroutine(HitStun());
+    }
+
+    private IEnumerator HitStun()
+    {
+        _isTakingHit = true;
+        _agent.isStopped = true;
+        _agent.velocity = Vector3.zero;
         animator.Play("Take Hit", 0, 0f);
+
+        // Wait a frame for the animator to update, then wait for the clip to finish
+        yield return null;
+        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        yield return new WaitForSeconds(stateInfo.length);
+
+        _isTakingHit = false;
+        if (!_isDead)
+        {
+            _agent.isStopped = false;
+            animator.Play("Movement", 0, 0f);
+        }
     }
 
     private void Die()
