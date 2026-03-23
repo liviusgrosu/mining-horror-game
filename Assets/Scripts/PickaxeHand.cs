@@ -102,7 +102,7 @@ public class PickaxeHand : MonoBehaviour
             }
             else if (hit.collider.CompareTag("Enemy"))
             {
-                var shade = hit.collider.GetComponentInParent<ShadeBehaviour>();
+                var shade = hit.collider.GetComponentInParent<ZombieBehaviour>();
                 if (shade != null)
                 {
                     shade.TakeDamage(_currentPickaxe.GetComponent<Pickaxe>().Power * 10);
