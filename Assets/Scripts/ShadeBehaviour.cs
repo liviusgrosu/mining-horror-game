@@ -6,6 +6,7 @@ public class ShadeBehaviour : MonoBehaviour
 {
     private static readonly int MovementBlend = Animator.StringToHash("MovementBlend");
     private static readonly int IsAttacking = Animator.StringToHash("IsAttacking");
+    private static readonly int TakeHit = Animator.StringToHash("Take Hit");
 
     public enum State
     {
@@ -87,6 +88,11 @@ public class ShadeBehaviour : MonoBehaviour
 
     [SerializeField] private AudioClip idleSound;
     [SerializeField] private AudioClip chaseSound;
+
+    [Header("Health")]
+    [SerializeField] private int _maxHealth = 100;
+    private int _currentHealth;
+    private bool _isDead;
     
     private void Awake()
     {
@@ -95,6 +101,7 @@ public class ShadeBehaviour : MonoBehaviour
         _startingRotation = transform.rotation;
         _currentState = _initialState;
         _audioSource.loop = true;
+        _currentHealth = _maxHealth;
     }
 
     private void Start()
@@ -298,5 +305,39 @@ public class ShadeBehaviour : MonoBehaviour
         _audioSource.Stop();
         _audioSource.clip = chaseSound;
         _audioSource.Play();
+    }
+
+    public void TakeDamage(int amount)
+    {
+        if (_isDead) return;
+
+        _currentHealth -= amount;
+
+        if (_currentHealth <= 0)
+        {
+            Die();
+            return;
+        }
+
+        _attackCooldownTimer = 0f;
+        animator.Play("Take Hit", 0, 0f);
+    }
+
+    private void Die()
+    {
+        _isDead = true;
+        _toggle = false;
+
+        _agent.isStopped = true;
+        _agent.enabled = false;
+
+        foreach (var col in GetComponentsInChildren<Collider>())
+        {
+            col.enabled = false;
+        }
+
+        _audioSource.Stop();
+        MusicManager.Instance.PlayAmbientMusic();
+        animator.Play("Die", 0, 0f);
     }
 }

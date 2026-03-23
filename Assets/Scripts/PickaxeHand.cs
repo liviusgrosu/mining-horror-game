@@ -100,6 +100,16 @@ public class PickaxeHand : MonoBehaviour
                 _audioSource.PlayOneShot(pickaxeValidSound);
                 SpawnCloudEffect(hit.point);
             }
+            else if (hit.collider.CompareTag("Enemy"))
+            {
+                var shade = hit.collider.GetComponentInParent<ShadeBehaviour>();
+                if (shade != null)
+                {
+                    shade.TakeDamage(_currentPickaxe.GetComponent<Pickaxe>().Power * 10);
+                }
+                _audioSource.PlayOneShot(pickaxeValidSound);
+                SpawnSparkEffect(hit.point, hit.normal);
+            }
             else
             {
                 _audioSource.PlayOneShot(pickaxeInvalidSound);
