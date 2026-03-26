@@ -16,8 +16,19 @@ public class PickupNotification : MonoBehaviour
         Instance = this;
     }
 
+    public void ClearAll()
+    {
+        foreach (var entry in _activeEntries)
+        {
+            if (entry) Destroy(entry.gameObject);
+        }
+        _activeEntries.Clear();
+    }
+
     public void Show(InventoryItem item)
     {
+        if (GameManager.Instance && GameManager.Instance.IsPaused) return;
+
         // Push existing entries up
         foreach (var entry in _activeEntries)
         {

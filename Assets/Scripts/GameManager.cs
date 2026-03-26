@@ -173,6 +173,11 @@ public class GameManager : MonoBehaviour
             _inventoryUI.SetActive(IsPaused);
         }
 
+        if (IsPaused && PickupNotification.Instance)
+        {
+            PickupNotification.Instance.ClearAll();
+        }
+
         ToggleCursorLock(IsPaused);
         Time.timeScale = IsPaused ? 0f : 1f;
     }
