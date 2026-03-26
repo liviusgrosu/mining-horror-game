@@ -90,6 +90,11 @@ public class Inventory : MonoBehaviour
             _items[item]++;
         }
 
+        if (PickupNotification.Instance)
+        {
+            PickupNotification.Instance.Show(item);
+        }
+
         OnChanged?.Invoke();
     }
 
