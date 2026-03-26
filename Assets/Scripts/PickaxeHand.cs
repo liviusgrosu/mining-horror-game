@@ -15,7 +15,7 @@ public class PickaxeHand : MonoBehaviour
     private Animator _animator;
     private Transform _camera;
 
-    [SerializeField] private GameObject sparkVFX, dustEffect;
+    [SerializeField] private GameObject sparkVFX, dustEffect, bloodVFX;
     
     public LayerMask ignoreMask;
     
@@ -116,7 +116,7 @@ public class PickaxeHand : MonoBehaviour
                     shade.TakeDamage(_currentPickaxe.GetComponent<Pickaxe>().Power * 10);
                 }
                 _audioSource.PlayOneShot(pickaxeValidSound);
-                SpawnSparkEffect(hit.point, hit.normal);
+                SpawnBloodEffect(hit.point, hit.normal);
             }
             else
             {
@@ -139,6 +139,12 @@ public class PickaxeHand : MonoBehaviour
     private void SpawnSparkEffect(Vector3 point, Vector3 normal)
     {
         var vfx = Instantiate(sparkVFX, point, Quaternion.LookRotation(normal));
+        Destroy(vfx, 1f);
+    }
+
+    private void SpawnBloodEffect(Vector3 point, Vector3 normal)
+    {
+        var vfx = Instantiate(bloodVFX, point, Quaternion.LookRotation(normal));
         Destroy(vfx, 1f);
     }
 
