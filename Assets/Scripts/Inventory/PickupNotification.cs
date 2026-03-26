@@ -1,71 +1,40 @@
-using System.Collections;
-using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PickupNotification : MonoBehaviour
 {
     public static PickupNotification Instance;
 
-    [Header("UI References")]
-    [SerializeField] private Image iconImage;
-    [SerializeField] private TextMeshProUGUI nameText;
-    [SerializeField] private TextMeshProUGUI quantityText;
+    [SerializeField] private GameObject notificationPrefab;
+    [SerializeField] private float slideUpAmount = 70f;
+    [SerializeField] private float slideSpeed = 8f;
 
-    [Header("Settings")]
-    [SerializeField] private float displayDuration = 2f;
-    [SerializeField] private float fadeDuration = 0.5f;
-
-    private CanvasGroup _canvasGroup;
-    private Coroutine _activeRoutine;
+    private readonly List<PickupNotificationEntry> _activeEntries = new();
 
     private void Awake()
     {
         Instance = this;
-        _canvasGroup = GetComponent<CanvasGroup>();
-        if (_canvasGroup == null)
-        {
-            _canvasGroup = gameObject.AddComponent<CanvasGroup>();
-        }
-
-        _canvasGroup.alpha = 0f;
     }
 
     public void Show(InventoryItem item)
     {
-        iconImage.sprite = item.Icon;
-        nameText.text = item.Name;
-        quantityText.text = "x1";
-
-        if (_activeRoutine != null)
+        // Push existing entries up
+        foreach (var entry in _activeEntries)
         {
-            StopCoroutine(_activeRoutine);
+            entry.PushUp(slideUpAmount);
         }
 
-        _activeRoutine = StartCoroutine(ShowRoutine());
+        var go = Instantiate(notificationPrefab, transform);
+        var rt = go.GetComponent<RectTransform>();
+        rt.anchoredPosition = Vector2.zero;
+
+        var entry2 = go.GetComponent<PickupNotificationEntry>();
+        entry2.Init(item, slideSpeed, this);
+        _activeEntries.Add(entry2);
     }
 
-    private IEnumerator ShowRoutine()
+    public void RemoveEntry(PickupNotificationEntry entry)
     {
-        var t = 0f;
-        while (t < fadeDuration)
-        {
-            t += Time.deltaTime;
-            _canvasGroup.alpha = Mathf.Lerp(0f, 1f, t / fadeDuration);
-            yield return null;
-        }
-        _canvasGroup.alpha = 1f;
-
-        yield return new WaitForSeconds(displayDuration);
-
-        t = 0f;
-        while (t < fadeDuration)
-        {
-            t += Time.deltaTime;
-            _canvasGroup.alpha = Mathf.Lerp(1f, 0f, t / fadeDuration);
-            yield return null;
-        }
-        _canvasGroup.alpha = 0f;
-        _activeRoutine = null;
+        _activeEntries.Remove(entry);
     }
 }
