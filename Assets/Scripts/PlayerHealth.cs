@@ -16,6 +16,9 @@ public class PlayerHealth : MonoBehaviour
 
     [SerializeField] private Image _damageVignette;
 
+    [Header("Consumables")]
+    [SerializeField] private InventoryItem _healthBottle;
+
     [Header("Health Status UI")]
     [SerializeField] private Image _healthStatusImage;
     [SerializeField] private TMP_Text _healthStatusText;
@@ -40,6 +43,27 @@ public class PlayerHealth : MonoBehaviour
         {
             Heal(10);
         }
+        
+        if (Input.GetKeyDown(KeyCode.H) && !GameManager.Instance.IsPaused)
+        {
+            UseHealthBottle();
+        }
+    }
+
+    private void UseHealthBottle()
+    {
+        if (!_healthBottle || _currentHealth >= MaxHealth)
+        {
+            return;
+        }
+
+        if (Inventory.Instance.GetCount(_healthBottle) <= 0)
+        {
+            return;
+        }
+
+        Heal(25);
+        Inventory.Instance.Remove(_healthBottle, 1);
     }
 
     public void TakeDamage(int amount)
