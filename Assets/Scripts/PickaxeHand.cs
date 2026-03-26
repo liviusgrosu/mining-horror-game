@@ -92,13 +92,21 @@ public class PickaxeHand : MonoBehaviour
             else if (hit.collider.CompareTag("Destructible"))
             {
                 var destructible = hit.collider.GetComponentInParent<Destructible>();
-                if (destructible != null && _currentPickaxe.GetComponent<Pickaxe>().Power >= destructible.PowerRequirement)
+                var canDamage = destructible != null
+                    && _currentPickaxe.GetComponent<Pickaxe>().Power >= destructible.PowerRequirement
+                    && (destructible.RequiredGem == null || Inventory.Instance.PickaxeGems.Contains(destructible.RequiredGem));
+
+                if (canDamage)
                 {
                     destructible.TakeDamage();
+                    _audioSource.PlayOneShot(pickaxeValidSound);
+                    SpawnCloudEffect(hit.point);
                 }
-
-                _audioSource.PlayOneShot(pickaxeValidSound);
-                SpawnCloudEffect(hit.point);
+                else
+                {
+                    _audioSource.PlayOneShot(pickaxeInvalidSound);
+                    SpawnSparkEffect(hit.point, hit.normal);
+                }
             }
             else if (hit.collider.CompareTag("Enemy"))
             {

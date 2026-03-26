@@ -14253,11 +14253,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4d398d6ea4dc4f4d86ad20ee2474554, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Destructible
-  stageHP:
-  - 3
-  - 3
-  - 3
+  stageHp: []
   powerRequirement: 1
+  requiredGem: {fileID: 11400000, guid: 861c7dff18f77c041aefa58f8ae38e10, type: 2}
 --- !u!1 &357177053
 GameObject:
   m_ObjectHideFlags: 0
@@ -26814,11 +26812,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4d398d6ea4dc4f4d86ad20ee2474554, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Destructible
-  stageHP:
-  - 10
-  - 10
-  - 10
+  stageHp: []
   powerRequirement: 1
+  requiredGem: {fileID: 11400000, guid: c2fb3ea4a3abfe44bba8af25c2f45caa, type: 2}
 --- !u!65 &625905516
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -73478,11 +73474,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4d398d6ea4dc4f4d86ad20ee2474554, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Destructible
-  stageHP:
-  - 3
-  - 3
-  - 3
+  stageHp: []
   powerRequirement: 1
+  requiredGem: {fileID: 11400000, guid: 07b7101319103614da515703d889807a, type: 2}
 --- !u!1 &1308187533
 GameObject:
   m_ObjectHideFlags: 0

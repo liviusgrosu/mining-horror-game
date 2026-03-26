@@ -5,8 +5,10 @@ public class Destructible : MonoBehaviour
 {
     [SerializeField] private float[] stageHp;
     [SerializeField] private float powerRequirement;
+    [SerializeField] private InventoryItem requiredGem;
 
     public float PowerRequirement => powerRequirement;
+    public InventoryItem RequiredGem => requiredGem;
 
     private int _currentStageIndex;
     private float _currentHp;
