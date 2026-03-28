@@ -6360,8 +6360,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
+      propertyPath: _maxHealth
+      value: 100000000
+      objectReference: {fileID: 0}
+    - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: _attackRange
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
+      propertyPath: _attackDamage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: _damageCollider

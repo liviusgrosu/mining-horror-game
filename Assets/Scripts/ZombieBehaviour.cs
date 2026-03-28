@@ -95,6 +95,7 @@ public class ZombieBehaviour : MonoBehaviour
 
     [Header("Health")]
     [SerializeField] private int _maxHealth = 100;
+    [SerializeField] private float _hitStunDuration = 0.5f;
     private int _currentHealth;
     private bool _isDead;
     private bool _isTakingHit;
@@ -329,12 +330,8 @@ public class ZombieBehaviour : MonoBehaviour
         _agent.isStopped = true;
         _agent.velocity = Vector3.zero;
 
-        var crossfadeDuration = 0.1f;
-        animator.CrossFadeInFixedTime("Take Hit", crossfadeDuration, 0);
-
-        yield return null;
-        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        yield return new WaitForSeconds(stateInfo.length + crossfadeDuration);
+        animator.CrossFadeInFixedTime("Take Hit", 0.1f, 0);
+        yield return new WaitForSeconds(_hitStunDuration);
 
         _isTakingHit = false;
         if (!_isDead)
