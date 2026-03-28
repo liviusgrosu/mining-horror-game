@@ -48,7 +48,6 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] private float _attackRange = 2f;
     private float _attackCooldownTimer;
     private bool _isAttacking;
-    private PlayerHealth _playerHealth;
 
     [SerializeField] private float _movementThreshold = 0.1f;
     private bool _wasMoving;
@@ -90,6 +89,9 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] private AudioClip idleSound;
     [SerializeField] private AudioClip chaseSound;
 
+    [Header("Damage Collider")]
+    [SerializeField] private Collider _damageCollider;
+
     [Header("Health")]
     [SerializeField] private int _maxHealth = 100;
     private int _currentHealth;
@@ -110,7 +112,6 @@ public class ZombieBehaviour : MonoBehaviour
     {
         _startingPosition = transform.position;
         _player = GameObject.FindGameObjectWithTag("Player").transform;
-        _playerHealth = _player.GetComponent<PlayerHealth>();
 
         if (_shouldPatrol)
         {
@@ -206,7 +207,8 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void AttackState()
     {
-        // Rotate toward the player during attack
+        animator.SetFloat(MovementBlend, 0f, 0.1f, Time.deltaTime);
+
         var directionToPlayer = (_player.position - transform.position).normalized;
         directionToPlayer.y = 0f;
         if (directionToPlayer != Vector3.zero)
@@ -217,7 +219,6 @@ public class ZombieBehaviour : MonoBehaviour
 
         _attackCooldownTimer += Time.deltaTime;
 
-        // If player moved out of range, go back to chasing
         if (_getDistanceFromPlayer > _attackRange * 1.5f)
         {
             _isAttacking = false;
@@ -227,16 +228,11 @@ public class ZombieBehaviour : MonoBehaviour
             return;
         }
 
-        // Cooldown elapsed — attack again
         if (_attackCooldownTimer >= _attackCooldown)
         {
             _attackCooldownTimer = 0f;
             animator.SetBool(IsAttacking, true);
             animator.Play("Attack", 0, 0f);
-            if (_playerHealth != null)
-            {
-                _playerHealth.TakeDamage(_attackDamage);
-            }
         }
     }
 
@@ -330,18 +326,47 @@ public class ZombieBehaviour : MonoBehaviour
         _isTakingHit = true;
         _agent.isStopped = true;
         _agent.velocity = Vector3.zero;
-        animator.Play("Take Hit", 0, 0f);
 
-        // Wait a frame for the animator to update, then wait for the clip to finish
+        var crossfadeDuration = 0.1f;
+        animator.CrossFadeInFixedTime("Take Hit", crossfadeDuration, 0);
+
+        // Wait for crossfade + clip to finish
         yield return null;
         var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        yield return new WaitForSeconds(stateInfo.length);
+        yield return new WaitForSeconds(stateInfo.length + crossfadeDuration);
 
         _isTakingHit = false;
         if (!_isDead)
         {
-            _agent.isStopped = false;
-            animator.Play("Movement", 0, 0f);
+            if (_currentState == State.Attack)
+            {
+                _attackCooldownTimer = 0f;
+                animator.SetBool(IsAttacking, true);
+                animator.Play("Attack", 0, 0f);
+            }
+            else
+            {
+                _agent.isStopped = false;
+                animator.CrossFadeInFixedTime("Movement", 0.15f, 0);
+            }
+        }
+    }
+
+    public void EnableDamageCollider()
+    {
+        _damageCollider.enabled = true;
+    }
+
+    public void DisableDamageCollider()
+    {
+        _damageCollider.enabled = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            PlayerHealth.Instance.TakeDamage(_attackDamage);
         }
     }
 

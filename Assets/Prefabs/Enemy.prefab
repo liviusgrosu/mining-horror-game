@@ -1,5 +1,58 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2010945257494473380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2619708419325164395}
+  - component: {fileID: 3299095472076722445}
+  m_Layer: 0
+  m_Name: Attack Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2619708419325164395
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2010945257494473380}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.597}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3171712787432831805}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3299095472076722445
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2010945257494473380}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1.9166068, z: 0.8906851}
+  m_Center: {x: 0, y: 0.20898515, z: -0.0028920174}
 --- !u!1 &7490492891687829689
 GameObject:
   m_ObjectHideFlags: 0
@@ -36,6 +89,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6386820880218880706}
+  - {fileID: 2619708419325164395}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &3741179505598364092
@@ -102,8 +156,11 @@ MonoBehaviour:
   _startingRotationSpeed: 250
   _checkStateTime: 2
   _toPlayerRotateAttackSpeed: 250
+  _attackDamage: 20
+  _attackCooldown: 2
+  _attackRange: 2
   _movementThreshold: 0.1
-  _initialState: 1
+  _initialState: 0
   runningSpeed: 3
   walkingSpeed: 0.75
   _pathing: {fileID: 0}
@@ -113,6 +170,7 @@ MonoBehaviour:
   _audioSource: {fileID: 4954914387349031558}
   idleSound: {fileID: 8300000, guid: d9b58e179b2116f44845fdeb0543b62c, type: 3}
   chaseSound: {fileID: 8300000, guid: dc434e87c38265d45a3860ca3246c7f0, type: 3}
+  _maxHealth: 100
 --- !u!82 &4954914387349031558
 AudioSource:
   m_ObjectHideFlags: 0
@@ -126,7 +184,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.445
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -251,7 +309,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.409
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -389,7 +447,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: cd0c06c31c4f15d47870ac3d7791dd2e, type: 2}
     - target: {fileID: 919132149155446097, guid: acf5687dcee45994c8a9fe7caafeee87, type: 3}
       propertyPath: m_Name
-      value: Shade
+      value: Zombie
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

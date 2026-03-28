@@ -11,6 +11,8 @@ public struct HealthStatus
 
 public class PlayerHealth : MonoBehaviour
 {
+    public static PlayerHealth Instance;
+    
     public int MaxHealth = 100;
     private int _currentHealth;
 
@@ -25,6 +27,16 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private HealthStatus _healthy;
     [SerializeField] private HealthStatus _damaged;
     [SerializeField] private HealthStatus _dying;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
     
     private void Start()
     {

@@ -122,7 +122,50 @@ ModelImporter:
       takeName: Armature|Attacking
       internalID: -7319296097215582619
       firstFrame: 0
-      lastFrame: 24
+      lastFrame: 37
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0.65094334
+        functionName: EnableDamageCollider
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d0aa6255276abd7458760c12fa580c3d, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.8301887
+        functionName: DisableDamageCollider
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d0aa6255276abd7458760c12fa580c3d, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature|Taking Hit - Damage
+      takeName: Armature|Taking Hit - Damage
+      internalID: -7951325670034313983
+      firstFrame: 0
+      lastFrame: 19
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -147,9 +190,9 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Taking Hit
-      takeName: Armature|Taking Hit
-      internalID: -7951325670034313983
+      name: Armature|Taking Hit - No Damage
+      takeName: Armature|Taking Hit - No Damage
+      internalID: -5304085496746233626
       firstFrame: 0
       lastFrame: 19
       wrapMode: 0
@@ -178,9 +221,9 @@ ModelImporter:
     - serializedVersion: 16
       name: Armature|Dying
       takeName: Armature|Dying
-      internalID: 1505095705877386793
+      internalID: 5030044076475101116
       firstFrame: 0
-      lastFrame: 24
+      lastFrame: 16
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
