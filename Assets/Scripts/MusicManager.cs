@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
@@ -9,8 +10,12 @@ public class MusicManager : MonoBehaviour
     private AudioClip _ambientMusic;
     [SerializeField]
     private AudioClip _chaseMusic;
+    [SerializeField]
+    private float _fadeDuration = 2f;
 
-    void Awake()
+    private Coroutine _fadeCoroutine;
+
+    private void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -31,9 +36,19 @@ public class MusicManager : MonoBehaviour
         
         _audioSource.Stop();
         _audioSource.clip = _ambientMusic;
+        _audioSource.volume = 1f;
         _audioSource.Play();
     }
     
+    public void FadeToAmbientMusic()
+    {
+        if (_fadeCoroutine != null)
+        {
+            StopCoroutine(_fadeCoroutine);
+        }
+        _fadeCoroutine = StartCoroutine(FadeOutThenPlay(_ambientMusic));
+    }
+
     public void PlayChaseMusic()
     {
         if (_audioSource.clip == _chaseMusic)
@@ -41,8 +56,33 @@ public class MusicManager : MonoBehaviour
             return;
         }
         
+        if (_fadeCoroutine != null)
+        {
+            StopCoroutine(_fadeCoroutine);
+        }
+
         _audioSource.Stop();
         _audioSource.clip = _chaseMusic;
+        _audioSource.volume = 1f;
         _audioSource.Play();
+    }
+
+    private IEnumerator FadeOutThenPlay(AudioClip nextClip)
+    {
+        var startVolume = _audioSource.volume;
+        var elapsed = 0f;
+
+        while (elapsed < _fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            _audioSource.volume = Mathf.Lerp(startVolume, 0f, elapsed / _fadeDuration);
+            yield return null;
+        }
+
+        _audioSource.Stop();
+        _audioSource.clip = nextClip;
+        _audioSource.volume = 1f;
+        _audioSource.Play();
+        _fadeCoroutine = null;
     }
 }

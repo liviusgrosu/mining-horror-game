@@ -382,7 +382,7 @@ public class ZombieBehaviour : MonoBehaviour
         }
 
         _audioSource.Stop();
-        MusicManager.Instance.PlayAmbientMusic();
+        MusicManager.Instance.FadeToAmbientMusic();
         animator.Play("Die", 0, 0f);
     }
 }
