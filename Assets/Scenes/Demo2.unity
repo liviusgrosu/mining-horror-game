@@ -6361,7 +6361,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: _maxHealth
-      value: 100000000
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: _attackRange
@@ -90544,6 +90544,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MusicManager
   _ambientMusic: {fileID: 8300000, guid: 3003c60a6e356c346bee68c9dd7cd75b, type: 3}
   _chaseMusic: {fileID: 8300000, guid: 6485c297b1c53074eaf1c87e5c4f9de5, type: 3}
+  _fadeDuration: 2
 --- !u!1 &1515366676
 GameObject:
   m_ObjectHideFlags: 0

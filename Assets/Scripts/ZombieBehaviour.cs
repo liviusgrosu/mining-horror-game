@@ -294,7 +294,7 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void PlayIdleSound()
     {
-        MusicManager.Instance.PlayAmbientMusic();
+        MusicManager.Instance.FadeToAmbientMusic();
         _audioSource.Stop();
         _audioSource.clip = idleSound;
         _audioSource.Play();
