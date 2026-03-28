@@ -54,6 +54,7 @@ public class ZombieBehaviour : MonoBehaviour
 
     [SerializeField]
     private State _initialState = State.Idle;
+    [SerializeField]
     private State _currentState = State.Idle;
     private Transform _player;
     private NavMeshAgent _agent;
@@ -219,7 +220,8 @@ public class ZombieBehaviour : MonoBehaviour
 
         _attackCooldownTimer += Time.deltaTime;
 
-        if (_getDistanceFromPlayer > _attackRange * 1.5f)
+        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (!stateInfo.IsName("Attack") && _getDistanceFromPlayer > _attackRange * 1.5f)
         {
             _isAttacking = false;
             animator.SetBool(IsAttacking, false);
@@ -330,7 +332,6 @@ public class ZombieBehaviour : MonoBehaviour
         var crossfadeDuration = 0.1f;
         animator.CrossFadeInFixedTime("Take Hit", crossfadeDuration, 0);
 
-        // Wait for crossfade + clip to finish
         yield return null;
         var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         yield return new WaitForSeconds(stateInfo.length + crossfadeDuration);
