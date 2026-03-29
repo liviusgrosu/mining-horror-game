@@ -21,6 +21,10 @@ public class PlayerHealth : MonoBehaviour
     [Header("Consumables")]
     [SerializeField] private InventoryItem _healthBottle;
 
+    [Header("Sound Effects")]
+    [SerializeField] private AudioClip[] _gettingHitSounds;
+    private AudioSource _audioSource;
+
     [Header("Health Status UI")]
     [SerializeField] private Image _healthStatusImage;
     [SerializeField] private TMP_Text _healthStatusText;
@@ -36,6 +40,7 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
         Instance = this;
+        _audioSource = GetComponent<AudioSource>();
     }
     
     private void Start()
@@ -83,6 +88,7 @@ public class PlayerHealth : MonoBehaviour
         _currentHealth = Mathf.Max(_currentHealth - amount, 0);
         UpdateVignette();
         UpdateHealthStatus();
+        PlayHitSound();
 
         if (_currentHealth <= 0)
         {
@@ -96,6 +102,15 @@ public class PlayerHealth : MonoBehaviour
         _currentHealth = Mathf.Min(_currentHealth + amount, MaxHealth);
         UpdateVignette();
         UpdateHealthStatus();
+    }
+
+    private void PlayHitSound()
+    {
+        if (_gettingHitSounds.Length == 0 || !_audioSource)
+        {
+            return;
+        }
+        _audioSource.PlayOneShot(_gettingHitSounds[Random.Range(0, _gettingHitSounds.Length)]);
     }
 
     private void UpdateHealthStatus()
