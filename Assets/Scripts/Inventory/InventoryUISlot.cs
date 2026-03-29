@@ -42,9 +42,9 @@ public class InventoryUISlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
                 Inventory.Instance.EquipGem(item);
                 break;
             case ItemType.Consumable:
-                var playerHealth = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>();
-                playerHealth.Heal(25);
-                Inventory.Instance.Remove(item, 1);
+                PlayerHealth.Instance.UseHealthBottle();
+                // Because we're hard coding to use HP bottle, im commenting this out
+                //Inventory.Instance.Remove(item, 1);
                 break;
         }
         InventoryUI.Instance.HideTooltip();

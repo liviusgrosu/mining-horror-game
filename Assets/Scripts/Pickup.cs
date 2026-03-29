@@ -86,7 +86,7 @@ public class Pickup : MonoBehaviour
         {
             if (_hoveringWorldItem)
             {
-                _audioSource.PlayOneShot(_pickupSound);
+                _audioSource.PlayOneShot(_hoveringWorldItem.PickupSoundOverride ? _hoveringWorldItem.PickupSoundOverride : _pickupSound);
                 Inventory.Instance.Add(_hoveringWorldItem.Item);
                 Destroy(_hoveringOver);
                 _hoveringOver = null;

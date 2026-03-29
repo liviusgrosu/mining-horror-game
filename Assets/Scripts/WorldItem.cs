@@ -3,6 +3,8 @@ using UnityEngine;
 public class WorldItem : MonoBehaviour, IInteractable
 {
     public InventoryItem Item;
+    [Tooltip("Optional pickup sound override. If set, plays instead of the default pickup sound.")]
+    public AudioClip PickupSoundOverride;
 
     private Transform _outline;
 

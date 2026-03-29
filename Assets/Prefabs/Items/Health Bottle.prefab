@@ -135,6 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldItem
   Item: {fileID: 11400000, guid: 42d783dbf4dc1d142a941749cb4ac40b, type: 2}
+  PickupSoundOverride: {fileID: 8300000, guid: ada5566ab47e7dc4dbeee511e38c2e45, type: 3}
 --- !u!64 &8517339535502140872
 MeshCollider:
   m_ObjectHideFlags: 0

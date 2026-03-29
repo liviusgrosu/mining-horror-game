@@ -22,7 +22,8 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private InventoryItem _healthBottle;
 
     [Header("Sound Effects")]
-    [SerializeField] private AudioClip[] _gettingHitSounds;
+    [SerializeField] private AudioClip[] gettingHitSFX;
+    [SerializeField] private AudioClip healthBottleUseSFX;
     private AudioSource _audioSource;
 
     [Header("Health Status UI")]
@@ -67,7 +68,7 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    private void UseHealthBottle()
+    public void UseHealthBottle()
     {
         if (!_healthBottle || _currentHealth >= MaxHealth)
         {
@@ -81,6 +82,11 @@ public class PlayerHealth : MonoBehaviour
 
         Heal(25);
         Inventory.Instance.Remove(_healthBottle, 1);
+
+        if (healthBottleUseSFX && _audioSource)
+        {
+            _audioSource.PlayOneShot(healthBottleUseSFX);
+        }
     }
 
     public void TakeDamage(int amount)
@@ -106,11 +112,11 @@ public class PlayerHealth : MonoBehaviour
 
     private void PlayHitSound()
     {
-        if (_gettingHitSounds.Length == 0 || !_audioSource)
+        if (gettingHitSFX.Length == 0 || !_audioSource)
         {
             return;
         }
-        _audioSource.PlayOneShot(_gettingHitSounds[Random.Range(0, _gettingHitSounds.Length)]);
+        _audioSource.PlayOneShot(gettingHitSFX[Random.Range(0, gettingHitSFX.Length)]);
     }
 
     private void UpdateHealthStatus()
