@@ -1,10 +1,9 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
 public class Destructible : MonoBehaviour
 {
-    [SerializeField] private float[] stageHp;
+    [SerializeField] private int stageHp = 3;
     [SerializeField] private float powerRequirement;
     [SerializeField] private InventoryItem requiredGem;
     [SerializeField] private float shakeDuration = 0.25f;
@@ -19,17 +18,17 @@ public class Destructible : MonoBehaviour
     {
         get
         {
-            if (_currentStageIndex >= transform.childCount)
-            {
-                return null;
-            }
-            var renderer = transform.GetChild(_currentStageIndex).GetComponentInChildren<MeshRenderer>();
+            if (_currentStageIndex >= _stageCount) return null;
+            var target = GetStageTransform(_currentStageIndex);
+            var renderer = target.GetComponent<MeshRenderer>();
             return renderer != null ? renderer.sharedMaterial : null;
         }
     }
 
+    private int _stageCount;
+    private bool _hasChildren;
     private int _currentStageIndex;
-    private float _currentHp;
+    private int _currentHp;
     private Coroutine _shakeCoroutine;
     private AudioSource _audioSource;
     private Collider _collider;
@@ -38,23 +37,27 @@ public class Destructible : MonoBehaviour
     {
         _audioSource = GetComponent<AudioSource>();
         _collider = GetComponent<Collider>();
+        _hasChildren = transform.childCount > 0;
+        _stageCount = _hasChildren ? transform.childCount : 1;
     }
 
     private void Start()
     {
-        for (var i = 0; i < transform.childCount; i++)
+        if (_hasChildren)
         {
-            transform.GetChild(i).gameObject.SetActive(i == 0);
+            for (var i = 0; i < transform.childCount; i++)
+            {
+                SetStageVisible(i, i == 0);
+            }
         }
 
-        if (stageHp.Length > 0)
-            _currentHp = stageHp[0];
+        _currentHp = stageHp;
     }
 
     public void TakeDamage(float damage = 1f)
     {
-        _currentHp -= damage;
-        if (_currentHp <= 0f)
+        _currentHp -= (int)damage;
+        if (_currentHp <= 0)
         {
             AdvanceStage();
         }
@@ -64,11 +67,23 @@ public class Destructible : MonoBehaviour
         }
     }
 
+    private Transform GetStageTransform(int index)
+    {
+        return _hasChildren ? transform.GetChild(index) : transform;
+    }
+
+    private void SetStageVisible(int index, bool visible)
+    {
+        var target = GetStageTransform(index);
+        var meshRenderer = target.GetComponent<MeshRenderer>();
+        if (meshRenderer) meshRenderer.enabled = visible;
+    }
+
     private void ShakeCurrentStage()
     {
-        if (_currentStageIndex >= transform.childCount) return;
+        if (_currentStageIndex >= _stageCount) return;
 
-        var stageTransform = transform.GetChild(_currentStageIndex);
+        var stageTransform = GetStageTransform(_currentStageIndex);
         if (_shakeCoroutine != null)
         {
             StopCoroutine(_shakeCoroutine);
@@ -83,7 +98,7 @@ public class Destructible : MonoBehaviour
 
         while (elapsed < shakeDuration)
         {
-            var offset = UnityEngine.Random.insideUnitSphere * shakeIntensity;
+            var offset = Random.insideUnitSphere * shakeIntensity;
             target.localPosition = originalPos + offset;
             elapsed += Time.deltaTime;
             yield return null;
@@ -95,11 +110,7 @@ public class Destructible : MonoBehaviour
 
     private void AdvanceStage()
     {
-        if (_currentStageIndex < transform.childCount)
-        {
-            transform.GetChild(_currentStageIndex).gameObject.SetActive(false);
-        }
-
+        SetStageVisible(_currentStageIndex, false);
         _currentStageIndex++;
 
         if (smokeVFX != null)
@@ -111,17 +122,15 @@ public class Destructible : MonoBehaviour
         {
             _audioSource.PlayOneShot(rocksTumblingSound);
         }
-        
-        if (_currentStageIndex >= transform.childCount)
+
+        if (_currentStageIndex >= _stageCount)
         {
             _collider.enabled = false;
             return;
         }
 
-        _currentHp = _currentStageIndex < stageHp.Length ? stageHp[_currentStageIndex] : 1f;
-        transform.GetChild(_currentStageIndex).gameObject.SetActive(true);
+        _currentHp = stageHp;
+        SetStageVisible(_currentStageIndex, true);
         ShakeCurrentStage();
-
-
     }
 }

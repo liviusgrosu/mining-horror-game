@@ -10,43 +10,43 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -6.9304266
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -1.8269926
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.33633995
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071067
+      value: 0.7053856
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.7071068
+      value: -0.7053856
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.04930699
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0.049306966
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -82.003
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -54,11 +54,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 706c2e8aa8b29eb43903bbebf00718c7, type: 2}
     - target: {fileID: 919132149155446097, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       propertyPath: m_Name
-      value: rock2
+      value: Destructible Rock 2
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       propertyPath: m_TagString
-      value: Blockage Rock
+      value: Destructible
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -69,7 +69,7 @@ PrefabInstance:
       addedObject: {fileID: 9148656592589414348}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5589560890159154028}
+      addedObject: {fileID: 4042265399615853706}
   m_SourcePrefab: {fileID: 100100000, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
 --- !u!1 &779868837811642530 stripped
 GameObject:
@@ -98,7 +98,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5495902117074765545, guid: a9b6e94abedb46c4bb65e5514eaf0c9b, type: 3}
---- !u!114 &5589560890159154028
+--- !u!114 &4042265399615853706
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,10 +107,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 779868837811642530}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a6451382a744833963d68d8a53c8253, type: 3}
+  m_Script: {fileID: 11500000, guid: f4d398d6ea4dc4f4d86ad20ee2474554, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BreakableWall
-  _hp: 3
-  PowerRequirement: 2
-  soundBite: {fileID: 6422313983010601432, guid: 344c0ba16b2c6d84988f914bc10cf783, type: 3}
-  breakingSound: {fileID: 8300000, guid: a4099114abaf883469718a163397d36f, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::Destructible
+  stageHp: 3
+  powerRequirement: 1
+  requiredGem: {fileID: 0}
+  shakeDuration: 0.25
+  shakeIntensity: 0.05
+  smokeVFX: {fileID: 0}
+  rocksTumblingSound: {fileID: 8300000, guid: a4099114abaf883469718a163397d36f, type: 3}

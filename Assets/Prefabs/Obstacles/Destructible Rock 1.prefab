@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 4578457fe658d734c883eb87e4e67b5e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -9.182904
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4578457fe658d734c883eb87e4e67b5e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -1.921
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4578457fe658d734c883eb87e4e67b5e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.33633995
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4578457fe658d734c883eb87e4e67b5e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -54,11 +54,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 706c2e8aa8b29eb43903bbebf00718c7, type: 2}
     - target: {fileID: 919132149155446097, guid: 4578457fe658d734c883eb87e4e67b5e, type: 3}
       propertyPath: m_Name
-      value: rock1
+      value: Destructible Rock 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4578457fe658d734c883eb87e4e67b5e, type: 3}
       propertyPath: m_TagString
-      value: Blockage Rock
+      value: Destructible
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -69,7 +69,7 @@ PrefabInstance:
       addedObject: {fileID: 3856651822248962628}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4578457fe658d734c883eb87e4e67b5e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5353413182459431068}
+      addedObject: {fileID: 4711196080842623507}
   m_SourcePrefab: {fileID: 100100000, guid: 4578457fe658d734c883eb87e4e67b5e, type: 3}
 --- !u!1 &1233321108380729206 stripped
 GameObject:
@@ -98,7 +98,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5495902117074765545, guid: 4578457fe658d734c883eb87e4e67b5e, type: 3}
---- !u!114 &5353413182459431068
+--- !u!114 &4711196080842623507
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,10 +107,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1233321108380729206}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a6451382a744833963d68d8a53c8253, type: 3}
+  m_Script: {fileID: 11500000, guid: f4d398d6ea4dc4f4d86ad20ee2474554, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BreakableWall
-  _hp: 5
-  PowerRequirement: 1
-  soundBite: {fileID: 6422313983010601432, guid: 344c0ba16b2c6d84988f914bc10cf783, type: 3}
-  breakingSound: {fileID: 8300000, guid: a4099114abaf883469718a163397d36f, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::Destructible
+  stageHp: 3
+  powerRequirement: 1
+  requiredGem: {fileID: 0}
+  shakeDuration: 0.25
+  shakeIntensity: 0.05
+  smokeVFX: {fileID: 0}
+  rocksTumblingSound: {fileID: 8300000, guid: a4099114abaf883469718a163397d36f, type: 3}
