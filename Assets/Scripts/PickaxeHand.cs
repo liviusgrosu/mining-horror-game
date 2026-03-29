@@ -15,7 +15,7 @@ public class PickaxeHand : MonoBehaviour
     private Animator _animator;
     private Transform _camera;
 
-    [SerializeField] private GameObject sparkVFX, dustEffect, bloodVFX;
+    [SerializeField] private GameObject sparkVFX, dustEffect, bloodVFX, materialHitVFX;
     
     public LayerMask ignoreMask;
     
@@ -88,6 +88,9 @@ public class PickaxeHand : MonoBehaviour
 
                 _audioSource.PlayOneShot(pickaxeValidSound);
                 SpawnCloudEffect(hit.point);
+                var voxelRenderer = hit.collider.GetComponent<MeshRenderer>();
+                if (voxelRenderer != null)
+                    SpawnMaterialHitEffect(hit.point, voxelRenderer.sharedMaterial);
             }
             else if (hit.collider.CompareTag("Destructible"))
             {
@@ -98,9 +101,12 @@ public class PickaxeHand : MonoBehaviour
 
                 if (canDamage)
                 {
+                    var mat = destructible.CurrentStageMaterial;
                     destructible.TakeDamage();
                     _audioSource.PlayOneShot(pickaxeValidSound);
                     SpawnCloudEffect(hit.point);
+                    if (mat != null)
+                        SpawnMaterialHitEffect(hit.point, mat);
                 }
                 else
                 {
@@ -140,6 +146,22 @@ public class PickaxeHand : MonoBehaviour
     {
         var vfx = Instantiate(sparkVFX, point, Quaternion.LookRotation(normal));
         Destroy(vfx, 1f);
+    }
+
+    private void SpawnMaterialHitEffect(Vector3 point, Material mat)
+    {
+        var vfx = Instantiate(materialHitVFX, point, Quaternion.identity);
+        for (var i = 1; i <= 3; i++)
+        {
+            var gibble = vfx.transform.Find("Gibble " + i);
+            if (gibble != null)
+            {
+                var renderer = gibble.GetComponent<Renderer>();
+                if (renderer != null)
+                    renderer.material = mat;
+            }
+        }
+        Destroy(vfx, 2f);
     }
 
     private void SpawnBloodEffect(Vector3 point, Vector3 normal)
