@@ -6389,7 +6389,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3171712787432831805, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3171712787432831805, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_LocalPosition.y
@@ -13383,7 +13383,7 @@ MonoBehaviour:
   - {fileID: 3137406768630373832, guid: 8cbea20568e44f94d831f99b3e7759e0, type: 3}
   sparkVFX: {fileID: 6658963824920757796, guid: 0b52c73aa96e14841a7c2e7f84497de3, type: 3}
   dustEffect: {fileID: 4279389407353192467, guid: 9ac6ccfe6be605344822638461125101, type: 3}
-  bloodVFX: {fileID: 6658963824920757796, guid: aa773e85e028228498de7849dd5b464b, type: 3}
+  bloodVFX: {fileID: 4251621294917553905, guid: 37acab3a574bb174abda9997cc47e597, type: 3}
   ignoreMask:
     serializedVersion: 2
     m_Bits: 4
