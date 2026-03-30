@@ -20,6 +20,7 @@ public class UpgradeSubmenu : MonoBehaviour
     private bool _meetsRequirements;
     [SerializeField] private string _upgradeItemName;
     [SerializeField] private GameObject _nextUpgradeItem;
+    [SerializeField] private GameObject _noFurtherUpgradesText;
     
     public void OnEnable()
     {
@@ -51,6 +52,10 @@ public class UpgradeSubmenu : MonoBehaviour
         if (_nextUpgradeItem)
         {
             _nextUpgradeItem.SetActive(true);
+        }
+        else if (_noFurtherUpgradesText)
+        {
+            _noFurtherUpgradesText.SetActive(true);
         }
         
         Inventory.Instance.SwitchPickaxe(_upgradeItemName);
