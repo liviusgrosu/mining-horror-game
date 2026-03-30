@@ -16,6 +16,11 @@ public class Inventory : MonoBehaviour
     [SerializeField] private GameObject ironPickaxeUI;
     [SerializeField] private GameObject goldPickaxeUI;
     
+    [Header("Sound Effects")]
+    [SerializeField] private AudioClip gemAttachSound;
+    [SerializeField] private AudioClip gemDetachSound;
+    private AudioSource _audioSource;
+
     public event Action OnChanged;
 
     private int _inventoryCapacity = 8;
@@ -33,6 +38,7 @@ public class Inventory : MonoBehaviour
             return;
         }
         Instance = this;
+        _audioSource = GetComponent<AudioSource>();
     }
 
     public IReadOnlyDictionary<InventoryItem, int> Items => _items;
@@ -116,6 +122,7 @@ public class Inventory : MonoBehaviour
         }
 
         _pickaxeGems.Add(item);
+        if (_audioSource && gemAttachSound) _audioSource.PlayOneShot(gemAttachSound);
         OnChanged?.Invoke();
     }
 
@@ -131,10 +138,11 @@ public class Inventory : MonoBehaviour
             _pickaxeGems.Remove(item);
         }
         Add(item);
+        if (_audioSource && gemDetachSound) _audioSource.PlayOneShot(gemDetachSound);
         OnChanged?.Invoke();
     }
 
-    public void RemoveAllGems()
+    private void RemoveAllGems()
     {
         foreach (var item in _pickaxeGems.ToList())
         {
