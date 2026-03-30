@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItem
   Id: 7
   Name: Health Bottle
-  Description: This will help when i'm in injured
+  Description: This will help when i'm in trouble
   Icon: {fileID: 21300000, guid: 0940c8437e6043548b2b2b0900c757ff, type: 3}
   Type: 0
