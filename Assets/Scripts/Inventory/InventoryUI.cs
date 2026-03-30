@@ -7,21 +7,14 @@ public class InventoryUI : MonoBehaviour
 {
     public static InventoryUI Instance;
 
-    [SerializeField] private GameObject _tooltip;
-    [SerializeField] private TextMeshProUGUI _tooltipText;
+    [SerializeField] private TextMeshProUGUI _nameText;
+    [SerializeField] private TextMeshProUGUI _descriptionText;
+    [SerializeField] private TextMeshProUGUI _placeholderText;
     private List<InventoryUISlot> _itemUISlots;
-    private bool _tooltipVisible;
 
     private void Awake()
     {
         Instance = this;
-
-        var cg = _tooltip.GetComponent<CanvasGroup>();
-        if (cg == null)
-        {
-            cg = _tooltip.AddComponent<CanvasGroup>();
-        }
-        cg.blocksRaycasts = false;
     }
 
     private void OnEnable()
@@ -41,25 +34,20 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void ShowItemDescription(string itemName, string itemDescription)
     {
-        if (_tooltipVisible)
-        {
-            _tooltip.transform.position = Input.mousePosition + new Vector3(0, -70f, 0);
-        }
+        _nameText.gameObject.SetActive(true);
+        _descriptionText.gameObject.SetActive(true);
+        _placeholderText.gameObject.SetActive(false);
+        _nameText.text = itemName;
+        _descriptionText.text = itemDescription;
     }
 
-    public void ShowTooltip(string itemName)
+    public void HideItemDescription()
     {
-        _tooltipText.text = itemName;
-        _tooltip.SetActive(true);
-        _tooltipVisible = true;
-    }
-
-    public void HideTooltip()
-    {
-        _tooltip.SetActive(false);
-        _tooltipVisible = false;
+        _nameText.gameObject.SetActive(false);
+        _descriptionText.gameObject.SetActive(false);
+        _placeholderText.gameObject.SetActive(true);
     }
 
     private void Refresh()

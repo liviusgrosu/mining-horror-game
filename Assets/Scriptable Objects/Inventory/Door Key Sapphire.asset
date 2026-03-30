@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItem
   Id: 6
   Name: Door Key - Sapphire
+  Description: Seems like its a key to something blue?
   Icon: {fileID: 21300000, guid: 9f353a536b60cba4e8733c819f110dee, type: 3}
   Type: 2

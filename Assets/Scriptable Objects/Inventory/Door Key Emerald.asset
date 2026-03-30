@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItem
   Id: 5
   Name: Door Key - Emerald
+  Description: Seems like its a key to something green?
   Icon: {fileID: 21300000, guid: 20076a49aee87bc4999fab4e4cf5bb52, type: 3}
   Type: 2

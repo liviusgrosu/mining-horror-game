@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItem
   Id: 2
   Name: Gold Ore
+  Description: If I wasn't stuck here, I'd have a grin on my face...
   Icon: {fileID: 21300000, guid: 5bcf8e9b290de3f4f88a94505cbc7e4c, type: 3}
   Type: 1

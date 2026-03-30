@@ -17,13 +17,13 @@ public class InventoryUISlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
         var item = Inventory.Instance.GetItem(ItemId);
         if (item != null)
         {
-            InventoryUI.Instance.ShowTooltip(item.Name);
+            InventoryUI.Instance.ShowItemDescription(item.Name, item.Description);
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        InventoryUI.Instance.HideTooltip();
+        InventoryUI.Instance.HideItemDescription();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -47,7 +47,7 @@ public class InventoryUISlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
                 //Inventory.Instance.Remove(item, 1);
                 break;
         }
-        InventoryUI.Instance.HideTooltip();
+        InventoryUI.Instance.HideItemDescription();
     }
 
     public void Clear()

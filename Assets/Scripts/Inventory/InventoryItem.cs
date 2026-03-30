@@ -7,6 +7,7 @@ public class InventoryItem : ScriptableObject
 {
     public int Id;
     public string Name;
+    [TextArea] public string Description;
     public Sprite Icon;
     public ItemType Type;
 }

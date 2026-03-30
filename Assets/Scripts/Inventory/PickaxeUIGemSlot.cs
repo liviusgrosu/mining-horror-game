@@ -25,13 +25,13 @@ public class PickaxeUIGemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
         var item = Inventory.Instance.GetItem(ItemId);
         if (item != null)
         {
-            InventoryUI.Instance.ShowTooltip(item.Name);
+            InventoryUI.Instance.ShowItemDescription(item.Name, item.Description);
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        InventoryUI.Instance.HideTooltip();
+        InventoryUI.Instance.HideItemDescription();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -45,7 +45,7 @@ public class PickaxeUIGemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
         if (item != null)
         {
             Inventory.Instance.RemoveGem(item);
-            InventoryUI.Instance.HideTooltip();
+            InventoryUI.Instance.HideItemDescription();
         }
     }
 }
