@@ -95,6 +95,7 @@ public class PlayerHealth : MonoBehaviour
         UpdateVignette();
         UpdateHealthStatus();
         PlayHitSound();
+        if (ScreenShakeEffect.Instance) ScreenShakeEffect.Instance.ShakeOnce(0.15f, 0.05f);
 
         if (_currentHealth <= 0)
         {
