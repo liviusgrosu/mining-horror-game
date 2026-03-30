@@ -9,7 +9,7 @@ public class Destructible : MonoBehaviour
     [SerializeField] private float shakeDuration = 0.25f;
     [SerializeField] private float shakeIntensity = 0.05f;
     [SerializeField] private ParticleSystem smokeVFX;
-    [SerializeField] private AudioClip rocksTumblingSound;
+    [SerializeField] private AudioClip hittingSound;
 
     public float PowerRequirement => powerRequirement;
     public InventoryItem RequiredGem => requiredGem;
@@ -118,9 +118,9 @@ public class Destructible : MonoBehaviour
             smokeVFX.Play();
         }
 
-        if (_audioSource != null && rocksTumblingSound != null)
+        if (_audioSource != null && hittingSound != null)
         {
-            _audioSource.PlayOneShot(rocksTumblingSound);
+            _audioSource.PlayOneShot(hittingSound);
         }
 
         if (_currentStageIndex >= _stageCount)

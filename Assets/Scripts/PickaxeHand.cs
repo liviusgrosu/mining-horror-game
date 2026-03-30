@@ -106,7 +106,9 @@ public class PickaxeHand : MonoBehaviour
                     _audioSource.PlayOneShot(pickaxeValidSound);
                     SpawnCloudEffect(hit.point);
                     if (mat != null)
+                    {
                         SpawnMaterialHitEffect(hit.point, mat);
+                    }
                 }
                 else
                 {
