@@ -89,6 +89,8 @@ public class ZombieBehaviour : MonoBehaviour
 
     [SerializeField] private AudioClip idleSound;
     [SerializeField] private AudioClip chaseSound;
+    [SerializeField] private AudioClip takeDamageSound;
+    [SerializeField] private AudioClip dieSound;
 
     [Header("Damage Collider")]
     [SerializeField] private Collider _damageCollider;
@@ -308,6 +310,7 @@ public class ZombieBehaviour : MonoBehaviour
         _audioSource.Play();
     }
 
+
     public void TakeDamage(int amount)
     {
         if (_isDead) return;
@@ -330,6 +333,7 @@ public class ZombieBehaviour : MonoBehaviour
         _agent.isStopped = true;
         _agent.velocity = Vector3.zero;
 
+        if (takeDamageSound) _audioSource.PlayOneShot(takeDamageSound);
         animator.CrossFadeInFixedTime("Take Hit", 0.1f, 0);
         yield return new WaitForSeconds(_hitStunDuration);
 
@@ -382,6 +386,7 @@ public class ZombieBehaviour : MonoBehaviour
         }
 
         _audioSource.Stop();
+        if (dieSound) _audioSource.PlayOneShot(dieSound);
         MusicManager.Instance.FadeToAmbientMusic();
         animator.Play("Die", 0, 0f);
     }

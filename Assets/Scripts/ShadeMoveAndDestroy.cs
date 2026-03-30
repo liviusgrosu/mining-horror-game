@@ -4,7 +4,9 @@ public class ShadeMoveAndDestroy : MonoBehaviour
 {
     [SerializeField] private GameObject _shade;
     [SerializeField] private float _moveSpeed = 5f;
+    [SerializeField] private AudioClip triggerSound;
 
+    private AudioSource _audioSource;
     private Vector3 _startPosition;
     private bool _triggered;
 
@@ -38,5 +40,10 @@ public class ShadeMoveAndDestroy : MonoBehaviour
 
         _triggered = true;
         _startPosition = _shade.transform.position;
+        if (triggerSound)
+        {
+            if (!_audioSource) _audioSource = GetComponent<AudioSource>();
+            if (_audioSource) _audioSource.PlayOneShot(triggerSound);
+        }
     }
 }
