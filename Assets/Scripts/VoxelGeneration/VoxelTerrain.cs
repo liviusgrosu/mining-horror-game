@@ -7,8 +7,6 @@ using UnityEngine;
 /// </summary>
 public class VoxelTerrain : MonoBehaviour
 {
-    public static VoxelTerrain Instance;
-
     [Header("Source Model (optional — leave empty for solid cube)")]
     [SerializeField] private GameObject sourceModel;
     [SerializeField] private float voxelsPerUnit = 1f;
@@ -20,18 +18,8 @@ public class VoxelTerrain : MonoBehaviour
     [Header("Mining")]
     [SerializeField] private float mineRadius = 1.5f;
     [SerializeField] private InventoryItem oreInventoryItem;
-    
-    private readonly Dictionary<Vector3Int, VoxelChunk> _chunks = new();
 
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
+    private readonly Dictionary<Vector3Int, VoxelChunk> _chunks = new();
 
     private void Start()
     {

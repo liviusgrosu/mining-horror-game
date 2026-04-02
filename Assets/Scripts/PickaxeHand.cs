@@ -81,9 +81,10 @@ public class PickaxeHand : MonoBehaviour
         {
             if (hit.collider.CompareTag("VoxelTerrain"))
             {
-                if (VoxelTerrain.Instance != null)
+                var voxelTerrain = hit.collider.GetComponentInParent<VoxelTerrain>();
+                if (voxelTerrain != null)
                 {
-                    VoxelTerrain.Instance.Mine(hit.point);
+                    voxelTerrain.Mine(hit.point);
                 }
 
                 _audioSource.PlayOneShot(pickaxeValidSound);
