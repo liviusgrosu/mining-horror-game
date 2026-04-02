@@ -15,5 +15,5 @@ MonoBehaviour:
   Id: 1
   Name: Copper Ore
   Description: Plenty of this around
-  Icon: {fileID: 21300000, guid: 061fcb12bbac1424ab801cd7fbb4f1a7, type: 3}
+  Icon: {fileID: 21300000, guid: 0a388e8213c6eae44b98625eddc0d4e3, type: 3}
   Type: 1

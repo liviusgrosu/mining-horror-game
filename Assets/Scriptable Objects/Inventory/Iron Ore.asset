@@ -15,5 +15,5 @@ MonoBehaviour:
   Id: 3
   Name: Iron Ore
   Description: A pretty standard ore. The backbone of any society
-  Icon: {fileID: 21300000, guid: 8308184ebbca0514da0854f0e5c72abc, type: 3}
+  Icon: {fileID: 21300000, guid: 1ba020ac1510dbd48b02e142e12b86aa, type: 3}
   Type: 1

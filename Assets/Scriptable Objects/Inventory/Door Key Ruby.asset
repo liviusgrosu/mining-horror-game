@@ -15,5 +15,5 @@ MonoBehaviour:
   Id: 4
   Name: Door Key - Ruby
   Description: Seems like its a key to something red?
-  Icon: {fileID: 21300000, guid: a3ec5aa31fae5d94b878ed4c3f25e5ac, type: 3}
+  Icon: {fileID: 21300000, guid: 71c85c57663fd644d8b0ffc3b823ed7a, type: 3}
   Type: 2
