@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1c45998a0f66b34092b6388865a9543, type: 3}
-  m_Name: Death Rune
+  m_Name: Light Rune
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItem
-  Id: 8
-  Name: Death Rune
-  Description: This rune emanates violence. I might have a fighting chance...
-  Icon: {fileID: 21300000, guid: 5bf6812f2aa7d3b408a3c7ff43826f81, type: 3}
+  Id: 9
+  Name: Light Rune
+  Description: Its bright
+  Icon: {fileID: 21300000, guid: 24f94538b0442284c98f057e7730d6d6, type: 3}
   Type: 2
