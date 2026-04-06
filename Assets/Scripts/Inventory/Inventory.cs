@@ -16,6 +16,10 @@ public class Inventory : MonoBehaviour
     [SerializeField] private GameObject ironPickaxeUI;
     [SerializeField] private GameObject goldPickaxeUI;
     
+    [Header("Light Gem")]
+    [SerializeField] private InventoryItem lightGemItem;
+    [SerializeField] private Light playerLight;
+
     [Header("Sound Effects")]
     [SerializeField] private AudioClip gemAttachSound;
     [SerializeField] private AudioClip gemDetachSound;
@@ -39,6 +43,7 @@ public class Inventory : MonoBehaviour
         }
         Instance = this;
         _audioSource = GetComponent<AudioSource>();
+        if (playerLight) playerLight.enabled = false;
     }
 
     public IReadOnlyDictionary<InventoryItem, int> Items => _items;
@@ -122,6 +127,10 @@ public class Inventory : MonoBehaviour
         }
 
         _pickaxeGems.Add(item);
+        if (item == lightGemItem && playerLight)
+        {
+            playerLight.enabled = true;
+        }
         if (_audioSource && gemAttachSound) _audioSource.PlayOneShot(gemAttachSound);
         OnChanged?.Invoke();
     }
@@ -137,6 +146,7 @@ public class Inventory : MonoBehaviour
         {
             _pickaxeGems.Remove(item);
         }
+        if (item == lightGemItem && playerLight) playerLight.enabled = false;
         Add(item);
         if (_audioSource && gemDetachSound) _audioSource.PlayOneShot(gemDetachSound);
         OnChanged?.Invoke();
