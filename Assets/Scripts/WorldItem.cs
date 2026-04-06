@@ -14,7 +14,7 @@ public class WorldItem : MonoBehaviour, IInteractable
     }
 
     public void ToggleOutline(bool state)
-    {
+    {   
         _outline.gameObject.SetActive(state);
     }
 }
