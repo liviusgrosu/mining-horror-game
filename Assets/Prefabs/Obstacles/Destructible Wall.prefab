@@ -102,10 +102,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -2657295885629948399, guid: 6ec9d636efa6ff841b52ed73565f17fe, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 231eb90846843a84da6d9c57c03665f1, type: 2}
     - target: {fileID: 851526684330153524, guid: 6ec9d636efa6ff841b52ed73565f17fe, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 851526684330153524, guid: 6ec9d636efa6ff841b52ed73565f17fe, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 231eb90846843a84da6d9c57c03665f1, type: 2}
     - target: {fileID: 919132149155446097, guid: 6ec9d636efa6ff841b52ed73565f17fe, type: 3}
       propertyPath: m_Name
       value: Destructible Wall
@@ -122,6 +130,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4825471179131752883, guid: 6ec9d636efa6ff841b52ed73565f17fe, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 231eb90846843a84da6d9c57c03665f1, type: 2}
     - target: {fileID: 7603760564840547013, guid: 6ec9d636efa6ff841b52ed73565f17fe, type: 3}
       propertyPath: m_IsActive
       value: 1
