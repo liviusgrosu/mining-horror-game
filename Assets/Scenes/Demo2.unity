@@ -58746,7 +58746,7 @@ PrefabInstance:
     - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: _pathing
       value: 
-      objectReference: {fileID: 1636216270}
+      objectReference: {fileID: 195505871}
     - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: dieSound
       value: 
@@ -88754,7 +88754,7 @@ Transform:
   m_GameObject: {fileID: 358510695}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.000005602836, z: -0, w: -1}
-  m_LocalPosition: {x: 398.439, y: 32.476, z: 120.47}
+  m_LocalPosition: {x: 375.49, y: 32.476, z: 125.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -89371,7 +89371,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2093537155162346296, guid: 71642540ef46c464e92612fec2e10cb2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 396.165
+      value: 396.131
       objectReference: {fileID: 0}
     - target: {fileID: 2093537155162346296, guid: 71642540ef46c464e92612fec2e10cb2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -89379,7 +89379,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2093537155162346296, guid: 71642540ef46c464e92612fec2e10cb2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 120.216
+      value: 120.241
       objectReference: {fileID: 0}
     - target: {fileID: 2093537155162346296, guid: 71642540ef46c464e92612fec2e10cb2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -233228,7 +233228,7 @@ PrefabInstance:
     - target: {fileID: -6053141672239109407, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: cf229b02c60f9f043bda47ee99d81f34, type: 2}
+      objectReference: {fileID: 2100000, guid: 8f235f91a29197c459d5e8d9b3ba5fc1, type: 2}
     - target: {fileID: -6047755599660981165, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -235476,7 +235476,7 @@ PrefabInstance:
     - target: {fileID: 7042188252478922827, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 7a673a7e7da396542b90d74b135381c8, type: 2}
+      objectReference: {fileID: 2100000, guid: 8f235f91a29197c459d5e8d9b3ba5fc1, type: 2}
     - target: {fileID: 7045030354117346258, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
       propertyPath: m_Name
       value: Wooden Crate

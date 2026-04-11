@@ -15,7 +15,10 @@ public class PickaxeHand : MonoBehaviour
     private Animator _animator;
     private Transform _camera;
 
-    [SerializeField] private GameObject sparkVFX, dustEffect, bloodVFX, materialHitVFX;
+    [SerializeField] private GameObject sparkVFX, dustEffect, bloodVFX, lightBloodVFX, materialHitVFX;
+
+    [Header("Runes")]
+    [SerializeField] private InventoryItem deathRune;
     
     public LayerMask ignoreMask;
     
@@ -119,13 +122,21 @@ public class PickaxeHand : MonoBehaviour
             }
             else if (hit.collider.CompareTag("Enemy"))
             {
-                var shade = hit.collider.GetComponentInParent<ZombieBehaviour>();
-                if (shade != null)
+                var hasDeathRune = deathRune != null && Inventory.Instance.PickaxeGems.Contains(deathRune);
+                if (hasDeathRune)
                 {
-                    shade.TakeDamage(_currentPickaxe.GetComponent<Pickaxe>().Power * 10);
+                    var shade = hit.collider.GetComponentInParent<ZombieBehaviour>();
+                    if (shade != null)
+                    {
+                        shade.TakeDamage(_currentPickaxe.GetComponent<Pickaxe>().Power * 10);
+                    }
+                    SpawnBloodEffect(hit.point, hit.normal);
+                }
+                else
+                {
+                    SpawnLightBloodEffect(hit.point, hit.normal);
                 }
                 _audioSource.PlayOneShot(pickaxeValidSound);
-                SpawnBloodEffect(hit.point, hit.normal);
             }
             else
             {
@@ -170,6 +181,12 @@ public class PickaxeHand : MonoBehaviour
     private void SpawnBloodEffect(Vector3 point, Vector3 normal)
     {
         var vfx = Instantiate(bloodVFX, point, Quaternion.LookRotation(normal));
+        Destroy(vfx, 1f);
+    }
+
+    private void SpawnLightBloodEffect(Vector3 point, Vector3 normal)
+    {
+        var vfx = Instantiate(lightBloodVFX, point, Quaternion.LookRotation(normal));
         Destroy(vfx, 1f);
     }
 
