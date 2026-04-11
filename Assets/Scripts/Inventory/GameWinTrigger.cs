@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -6,44 +5,75 @@ using UnityEngine.UI;
 
 public class GameWinTrigger : MonoBehaviour
 {
-    [SerializeField]
-    private Image whiteScreen;
-    [SerializeField]
-    private TextMeshProUGUI winText;
-    [SerializeField]
-    private float fadeTime = 2f;
-    
+    [SerializeField] private Image blackScreen;
+    [SerializeField] private TextMeshProUGUI winText1, winText2, winText3;
+    [SerializeField] private float fadeTime = 2f;
+
     private bool _triggered;
-    
+
     private void OnTriggerEnter(Collider other)
     {
-        if (!_triggered && other.transform.CompareTag("Player"))
+        if (!_triggered && other.CompareTag("Player"))
         {
             _triggered = true;
-            StartCoroutine(StartWinScreen());    
+            StartCoroutine(StartWinScreen());
         }
     }
 
     private IEnumerator StartWinScreen()
     {
-        var i = 0f;
-        while (i < fadeTime)
-        {
-            i += Time.deltaTime;
-            whiteScreen.color = new Color(1f, 1f, 1f, i / fadeTime);
-            yield return null;
-        }
+        yield return FadeGraphic(blackScreen, 0f, 1f, fadeTime);
 
         GameManager.Instance.WinGame();
-        
-        yield return new WaitForSeconds(0.5f);
 
-        i = 0;
-        while (i < fadeTime / 2f)
+        yield return new WaitForSeconds(2f);
+        yield return FadeGraphic(winText1, 0f, 1f, fadeTime / 2f);
+
+        yield return new WaitForSeconds(2f);
+        yield return FadeGraphic(winText2, 0f, 1f, fadeTime / 2f);
+
+        yield return new WaitForSeconds(2f);
+        yield return FadeGraphic(winText3, 0f, 1f, fadeTime / 2f);
+
+        yield return new WaitForSeconds(4f);
+        yield return FadeGraphics(new Graphic[] { winText1, winText2, winText3 }, 1f, 0f, fadeTime / 2f);
+    }
+
+    private IEnumerator FadeGraphic(Graphic graphic, float fromAlpha, float toAlpha, float duration)
+    {
+        var color = graphic.color;
+        float elapsed = 0f;
+        while (elapsed < duration)
         {
-            i += Time.deltaTime;
-            winText.color = new Color(0f, 0f, 0f, i / (fadeTime / 2f));
+            elapsed += Time.deltaTime;
+            color.a = Mathf.Lerp(fromAlpha, toAlpha, elapsed / duration);
+            graphic.color = color;
             yield return null;
+        }
+        color.a = toAlpha;
+        graphic.color = color;
+    }
+
+    private IEnumerator FadeGraphics(Graphic[] graphics, float fromAlpha, float toAlpha, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Lerp(fromAlpha, toAlpha, elapsed / duration);
+            foreach (var graphic in graphics)
+            {
+                var color = graphic.color;
+                color.a = alpha;
+                graphic.color = color;
+            }
+            yield return null;
+        }
+        foreach (var graphic in graphics)
+        {
+            var color = graphic.color;
+            color.a = toAlpha;
+            graphic.color = color;
         }
     }
 }
