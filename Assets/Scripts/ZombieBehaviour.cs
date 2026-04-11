@@ -132,7 +132,10 @@ public class ZombieBehaviour : MonoBehaviour
             return;
         }
 
-        CheckIfPlayerInFov();
+        if (!GameManager.Instance.HasDied)
+        {
+            CheckIfPlayerInFov();
+        }
 
         switch (_currentState)
         {
@@ -286,12 +289,25 @@ public class ZombieBehaviour : MonoBehaviour
     public void EndChase()
     {
         if (!initiateChase) return;
-        
+
         _agent.isStopped = true;
         _checkStateElapsedTime = 0f;
         PlayIdleSound();
         _currentState = State.Check;
         initiateChase = false;
+    }
+
+    public void Disengage()
+    {
+        initiateChase = false;
+        _isAttacking = false;
+        animator.SetBool(IsAttacking, false);
+        _agent.isStopped = false;
+        _agent.speed = walkingSpeed;
+        _agent.stoppingDistance = 0f;
+        _checkStateElapsedTime = 0f;
+        PlayIdleSound();
+        _currentState = _shouldPatrol || startAtIdle ? State.Patrol : State.Return;
     }
 
     private void PlayIdleSound()

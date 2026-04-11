@@ -141,6 +141,14 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Pit Trap"))
+        {
+            TakeDamage(_currentHealth);
+        }
+    }
+
     private void UpdateVignette()
     {
         if (!_damageVignette)

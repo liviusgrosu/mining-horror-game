@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -23,6 +24,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI _entranceDoorText, _normalRockHoverText, _mineralDepositHoverText, _blockageRockHoverText;
     private bool DisplayingHoverText;
+    private Coroutine _hoverTextCoroutine;
 
     public bool HasWon, HasDied;
     public bool IsPaused;
@@ -115,12 +117,28 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(DeathBlurRoutine());
 
+        foreach (var enemy in FindObjectsByType<ZombieBehaviour>(FindObjectsSortMode.None))
+        {
+            enemy.Disengage();
+        }
+
+        var navObstacle = player.GetComponent<NavMeshObstacle>();
+        if (navObstacle) navObstacle.enabled = true;
+
         ToggleCursorLock(true);
         GameOverScreen.SetActive(true);
         UpgradeUI.SetActive(false);
         OverlayUI.SetActive(true);
 
         HasDied = true;
+
+        var bloodVFX = player.transform.Find("Other SFX/Blood - Player - VFX");
+        if (bloodVFX != null)
+        {
+            bloodVFX.gameObject.SetActive(true);
+            var ps = bloodVFX.GetComponent<ParticleSystem>();
+            if (ps != null) ps.Play();
+        }
     }
 
     private IEnumerator DeathBlurRoutine()
@@ -196,9 +214,8 @@ public class GameManager : MonoBehaviour
         }
 
         DisplayingHoverText = true;
-        // Start the fade coroutine
-        StopAllCoroutines();
-        StartCoroutine(FadeTextInAndOut(_entranceDoorText));
+        if (_hoverTextCoroutine != null) StopCoroutine(_hoverTextCoroutine);
+        _hoverTextCoroutine = StartCoroutine(FadeTextInAndOut(_entranceDoorText));
     }
     
     public void ShowBlockageRockText()
@@ -209,9 +226,8 @@ public class GameManager : MonoBehaviour
         }
 
         DisplayingHoverText = true;
-        // Start the fade coroutine
-        StopAllCoroutines();
-        StartCoroutine(FadeTextInAndOut(_blockageRockHoverText));
+        if (_hoverTextCoroutine != null) StopCoroutine(_hoverTextCoroutine);
+        _hoverTextCoroutine = StartCoroutine(FadeTextInAndOut(_blockageRockHoverText));
     }
 
     public void ShowNormalRockHoverText()
@@ -222,8 +238,8 @@ public class GameManager : MonoBehaviour
         }
 
         DisplayingHoverText = true;
-        StopAllCoroutines();
-        StartCoroutine(FadeTextInAndOut(_normalRockHoverText));
+        if (_hoverTextCoroutine != null) StopCoroutine(_hoverTextCoroutine);
+        _hoverTextCoroutine = StartCoroutine(FadeTextInAndOut(_normalRockHoverText));
     }
     
     public void ShowMineralDepositHoverText()
@@ -234,8 +250,8 @@ public class GameManager : MonoBehaviour
         }
 
         DisplayingHoverText = true;
-        StopAllCoroutines();
-        StartCoroutine(FadeTextInAndOut(_mineralDepositHoverText));
+        if (_hoverTextCoroutine != null) StopCoroutine(_hoverTextCoroutine);
+        _hoverTextCoroutine = StartCoroutine(FadeTextInAndOut(_mineralDepositHoverText));
     }
 
     private IEnumerator FadeTextInAndOut(TextMeshProUGUI text)
