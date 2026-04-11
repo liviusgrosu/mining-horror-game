@@ -18,6 +18,7 @@ TagManager:
   - VoxelTerrain
   - Destructible
   - Pit Trap
+  - Wood
   layers:
   - Default
   - TransparentFX
