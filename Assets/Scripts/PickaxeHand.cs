@@ -60,7 +60,7 @@ public class PickaxeHand : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance && GameManager.Instance.InMenu)
+        if (GameManager.Instance && (GameManager.Instance.InMenu || GameManager.Instance.HasDied))
         {
             return;
         }

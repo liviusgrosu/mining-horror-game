@@ -91,6 +91,8 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
+        if (_currentHealth <= 0) return;
+
         _currentHealth = Mathf.Max(_currentHealth - amount, 0);
         UpdateVignette();
         UpdateHealthStatus();

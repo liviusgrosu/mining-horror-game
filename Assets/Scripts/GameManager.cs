@@ -132,6 +132,11 @@ public class GameManager : MonoBehaviour
 
         HasDied = true;
 
+        if (PickaxeHand.Instance)
+        {
+            PickaxeHand.Instance.GetComponent<Animator>().Play("Hand - Death");
+        }
+
         var bloodVFX = player.transform.Find("Other SFX/Blood - Player - VFX");
         if (bloodVFX != null)
         {
