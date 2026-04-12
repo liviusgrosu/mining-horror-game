@@ -25164,8 +25164,8 @@ GameObject:
   - component: {fileID: 151304025}
   - component: {fileID: 151304024}
   m_Layer: 0
-  m_Name: Pit Trap
-  m_TagString: Pit Trap
+  m_Name: Spiked Pit
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -199183,6 +199183,7 @@ MonoBehaviour:
   _inventoryUI: {fileID: 142952587}
   _mineralStatsCanvasGroup: {fileID: 0}
   _deathPostProcessVolume: {fileID: 184783528}
+  _blackScreen: {fileID: 1529487513}
 --- !u!4 &774026015
 Transform:
   m_ObjectHideFlags: 0
@@ -302561,7 +302562,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1529487512}
   - {fileID: 1390881613}
   - {fileID: 1906863601}
   - {fileID: 1088156307}
@@ -371434,6 +371434,59 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1 &1523921689
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1523921691}
+  - component: {fileID: 1523921690}
+  m_Layer: 0
+  m_Name: Pit
+  m_TagString: Pit
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &1523921690
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523921689}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 16.711231, y: 1, z: 20.612549}
+  m_Center: {x: 0.90561485, y: 0, z: 0.8072357}
+--- !u!4 &1523921691
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523921689}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 313.92, y: 28.23, z: 114.21}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1529487511
 GameObject:
   m_ObjectHideFlags: 0
@@ -371446,7 +371499,7 @@ GameObject:
   - component: {fileID: 1529487514}
   - component: {fileID: 1529487513}
   m_Layer: 5
-  m_Name: Background
+  m_Name: Fade In Overlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -371459,12 +371512,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1529487511}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1148847619}
+  m_Father: {fileID: 2098609368}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -389781,8 +389834,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27cb268c3e505a649a22bc0ee1548f55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameWinTrigger
-  whiteScreen: {fileID: 0}
-  winText: {fileID: 0}
+  blackScreen: {fileID: 1529487513}
+  winText1: {fileID: 1390881614}
+  winText2: {fileID: 1906863602}
+  winText3: {fileID: 1088156308}
   fadeTime: 2
 --- !u!4 &1597293845
 Transform:
@@ -529943,6 +529998,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1529487512}
   - {fileID: 1148847619}
   - {fileID: 1488969635}
   - {fileID: 735760861}
@@ -551896,6 +551952,7 @@ SceneRoots:
   - {fileID: 1263922598}
   - {fileID: 1830436649}
   - {fileID: 1903211828}
+  - {fileID: 1597293845}
   - {fileID: 1933061002}
   - {fileID: 689681291}
   - {fileID: 1391032023}
@@ -551912,4 +551969,4 @@ SceneRoots:
   - {fileID: 373185456}
   - {fileID: 184783529}
   - {fileID: 151304025}
-  - {fileID: 1597293845}
+  - {fileID: 1523921691}

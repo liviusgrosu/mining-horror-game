@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -40,6 +41,7 @@ public class GameManager : MonoBehaviour
     private GameObject player;
 
     [SerializeField] private Volume _deathPostProcessVolume;
+    [SerializeField] private Image _blackScreen;
 
     private void Awake()
     {
@@ -144,6 +146,35 @@ public class GameManager : MonoBehaviour
             var ps = bloodVFX.GetComponent<ParticleSystem>();
             if (ps != null) ps.Play();
         }
+    }
+
+    public void OpenPitDeathScreen()
+    {
+        HasDied = true;
+        StartCoroutine(PitDeathRoutine());
+    }
+
+    private IEnumerator PitDeathRoutine()
+    {
+        if (_blackScreen)
+        {
+            _blackScreen.gameObject.SetActive(true);
+            var color = _blackScreen.color;
+            var elapsed = 0f; 
+            while (elapsed < 1f)
+            {
+                elapsed += Time.deltaTime;
+                color.a = Mathf.Lerp(0f, 1f, elapsed / 1f);
+                _blackScreen.color = color;
+                yield return null;
+            }
+            color.a = 1f;
+            _blackScreen.color = color;
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        OpenGameOverScreen();
     }
 
     private IEnumerator DeathBlurRoutine()

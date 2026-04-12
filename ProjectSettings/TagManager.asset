@@ -17,8 +17,9 @@ TagManager:
   - Mineable
   - VoxelTerrain
   - Destructible
-  - Pit Trap
   - Wood
+  - Spiked Trap
+  - Pit
   layers:
   - Default
   - TransparentFX

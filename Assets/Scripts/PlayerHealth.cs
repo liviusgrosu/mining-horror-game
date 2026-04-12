@@ -145,9 +145,13 @@ public class PlayerHealth : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Pit Trap"))
+        if (other.CompareTag("Spiked Trap"))
         {
             TakeDamage(_currentHealth);
+        }
+        else if (other.CompareTag("Pit"))
+        {
+            GameManager.Instance.OpenPitDeathScreen();
         }
     }
 
