@@ -53,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (GameManager.Instance)
         {
-            if (GameManager.Instance.HasWon || GameManager.Instance.InMenu || GameManager.Instance.IsPaused || ScreenShakeEffect.Instance.IsCameraShaking)
+            if (GameManager.Instance.HasWon || GameManager.Instance.InMenu || GameManager.Instance.IsPaused)
             {
                 _controller.Move(Vector3.zero);
                 return;

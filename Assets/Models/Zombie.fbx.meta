@@ -17,7 +17,10 @@ ModelImporter:
     removeConstantScaleCurves: 0
     motionNodeName: 
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: Event EnableDamageCollider has a time (1.003538) outside
+      the clip's valid range (0.000000..0.791667). It will never be firedEvent DisableDamageCollider
+      has a time (1.279874) outside the clip's valid range (0.000000..0.791667).
+      It will never be fired
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -142,14 +145,14 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.65094334
+      - time: 0.3580862
         functionName: EnableDamageCollider
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d0aa6255276abd7458760c12fa580c3d, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.8301887
+      - time: 0.49923632
         functionName: DisableDamageCollider
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d0aa6255276abd7458760c12fa580c3d, type: 3}

@@ -8,6 +8,8 @@ public class ScreenShakeEffect : MonoBehaviour
     public float Duration = 1f;
     public bool IsCameraShaking;
 
+    private Vector3 _baseLocalPosition;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -17,6 +19,7 @@ public class ScreenShakeEffect : MonoBehaviour
         }
 
         Instance = this;
+        _baseLocalPosition = transform.localPosition;
     }
     
     public void BeginShaking()
@@ -25,43 +28,41 @@ public class ScreenShakeEffect : MonoBehaviour
         StartCoroutine(Shaking());
     }
 
-    public void ShakeOnce(float duration, float intensity)
+    public void ShakeOnce(float intensity)
     {
-        StartCoroutine(ShakeForDuration(duration, intensity));
+        StartCoroutine(ShakeForDuration(intensity));
     }
 
     private IEnumerator Shaking()
     {
-        var startPosition = transform.position;
         var elapsedTime = 0f;
 
         while (elapsedTime < Duration)
         {
             elapsedTime += Time.deltaTime;
             var strength = Curve.Evaluate(elapsedTime / Duration);
-            transform.position = startPosition + Random.insideUnitSphere * strength;
+            transform.localPosition = _baseLocalPosition + Random.insideUnitSphere * strength;
             yield return null;
         }
 
-        transform.position = startPosition;
+        transform.localPosition = _baseLocalPosition;
         IsCameraShaking = false;
     }
 
-    private IEnumerator ShakeForDuration(float duration, float intensity)
+    private IEnumerator ShakeForDuration(float intensity)
     {
         IsCameraShaking = true;
-        var startPosition = transform.position;
         var elapsedTime = 0f;
 
-        while (elapsedTime < duration)
+        while (elapsedTime < Duration)
         {
             elapsedTime += Time.deltaTime;
-            var t = 1f - (elapsedTime / duration);
-            transform.position = startPosition + Random.insideUnitSphere * (intensity * t);
+            var strength = Curve.Evaluate(elapsedTime / Duration);
+            transform.localPosition = _baseLocalPosition + Random.insideUnitSphere * strength;
             yield return null;
         }
 
-        transform.position = startPosition;
+        transform.localPosition = _baseLocalPosition;
         IsCameraShaking = false;
     }
 }

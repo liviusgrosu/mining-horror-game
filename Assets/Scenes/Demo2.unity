@@ -58913,7 +58913,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: _attackRange
-      value: 2
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
+      propertyPath: runningSpeed
+      value: 3.2
       objectReference: {fileID: 0}
     - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: _attackDamage
@@ -59001,7 +59005,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3299095472076722445, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_Size.z
-      value: 1.2342377
+      value: 1.524704
       objectReference: {fileID: 0}
     - target: {fileID: 3299095472076722445, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_Enabled
@@ -59009,7 +59013,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3299095472076722445, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_Center.z
-      value: 0.16888428
+      value: 0.31411743
       objectReference: {fileID: 0}
     - target: {fileID: 6728359870712172962, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_StoppingDistance
@@ -87305,7 +87309,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
-  - component: {fileID: 330585548}
+  - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -87380,14 +87384,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0, y: 0.99615, z: -0, w: 0.08766479}
   m_LocalPosition: {x: 0, y: 0.784, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 282932407}
+  - {fileID: 751035273}
   m_Father: {fileID: 358510698}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 169.941, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87432,7 +87437,7 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!114 &330585548
+--- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87441,44 +87446,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a10c28a1f381cb41bea00729bd139f6, type: 3}
+  m_Script: {fileID: 11500000, guid: 9181767b275468142a5a67a64023af05, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ScreenShakeEffect
-  Curve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: -0.090171814
-      value: 0
-      inSlope: 1.4527378
-      outSlope: 1.4527378
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.044681784
-      value: 0.19590692
-      inSlope: -0.2038325
-      outSlope: -0.2038325
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.058047485
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -0.20506981
-      outSlope: -0.20506981
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  Duration: 1
-  IsCameraShaking: 0
+  m_EditorClassIdentifier: Assembly-CSharp::CameraHitEffect
+  maxYawOffset: 30
+  maxPitchOffset: 15
+  recoverySpeed: 3
 --- !u!1 &336090712
 GameObject:
   m_ObjectHideFlags: 0
@@ -89123,7 +89096,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.682
+  m_Volume: 0.913
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -89250,12 +89223,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cadda0e92ff63bc47aa72a5710fa896a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  MaxHealth: 100
+  MaxHealth: 100000
   _damageVignette: {fileID: 212666876}
+  _hitFlashImage: {fileID: 1529487513}
+  _hitFlashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 10.797129
+      outSlope: 10.797129
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.09243118
+      value: 0.9979913
+      inSlope: -3.1999469
+      outSlope: -3.1999469
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.09761767
+    - serializedVersion: 3
+      time: 0.993042
+      value: 0.0071411133
+      inSlope: 0.074894875
+      outSlope: 0.074894875
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.07057738
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _hitFlashDuration: 0.4
   _healthBottle: {fileID: 11400000, guid: 42d783dbf4dc1d142a941749cb4ac40b, type: 2}
   gettingHitSFX:
-  - {fileID: 8300000, guid: 58b7fe3acd6744848af9757cf093a402, type: 3}
-  - {fileID: 8300000, guid: 7e3f0de1e3558904aa2b72c081026136, type: 3}
+  - {fileID: 8300000, guid: 5cabb1ed4383515408f5da1c97d2f752, type: 3}
+  - {fileID: 8300000, guid: f9fed22262d8974419e994ff58194899, type: 3}
+  - {fileID: 8300000, guid: d2a236031d5c4934c9b9b57048967d35, type: 3}
   healthBottleUseSFX: {fileID: 8300000, guid: 45cb35b22d8842a4099d09f53c6cc4ad, type: 3}
   _healthStatusImage: {fileID: 2011915246}
   _healthStatusText: {fileID: 1034645080}
@@ -194154,6 +194163,85 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1 &751035272
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 751035273}
+  - component: {fileID: 751035274}
+  m_Layer: 0
+  m_Name: Canera Shake Effect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &751035273
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751035272}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 330585546}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &751035274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751035272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a10c28a1f381cb41bea00729bd139f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScreenShakeEffect
+  Curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.090171814
+      value: 0
+      inSlope: 1.4527378
+      outSlope: 1.4527378
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.044681784
+      value: 0.19590692
+      inSlope: -0.2038325
+      outSlope: -0.2038325
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.058047485
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.20506981
+      outSlope: -0.20506981
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  Duration: 1
+  IsCameraShaking: 0
 --- !u!1 &758042618
 GameObject:
   m_ObjectHideFlags: 0
@@ -235300,6 +235388,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: cf229b02c60f9f043bda47ee99d81f34, type: 2}
+    - target: {fileID: 1730237123630372204, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7a673a7e7da396542b90d74b135381c8, type: 2}
     - target: {fileID: 1771419289433134743, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -552477,6 +552569,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 861554845}
+  - {fileID: 184783529}
   - {fileID: 1506453930}
   - {fileID: 1861852178}
   - {fileID: 44449611}
@@ -552499,7 +552592,6 @@ SceneRoots:
   - {fileID: 1237717350}
   - {fileID: 2127585117}
   - {fileID: 373185456}
-  - {fileID: 184783529}
   - {fileID: 151304025}
   - {fileID: 1523921691}
   - {fileID: 163857}

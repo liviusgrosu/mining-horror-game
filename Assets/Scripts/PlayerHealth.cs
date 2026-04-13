@@ -18,12 +18,19 @@ public class PlayerHealth : MonoBehaviour
 
     [SerializeField] private Image _damageVignette;
 
+    [Header("Hit Flash")]
+    [SerializeField] private Image _hitFlashImage;
+    [SerializeField] private AnimationCurve _hitFlashCurve;
+    [SerializeField] private float _hitFlashDuration = 0.5f;
+    private Coroutine _hitFlashCoroutine;
+
     [Header("Consumables")]
     [SerializeField] private InventoryItem _healthBottle;
 
     [Header("Sound Effects")]
     [SerializeField] private AudioClip[] gettingHitSFX;
     [SerializeField] private AudioClip healthBottleUseSFX;
+    [SerializeField] private AudioClip deathSFX;
     private AudioSource _audioSource;
 
     [Header("Health Status UI")]
@@ -91,20 +98,34 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
-        if (_currentHealth <= 0) return;
+        if (_currentHealth <= 0)
+        {
+            return;
+        }
 
         _currentHealth = Mathf.Max(_currentHealth - amount, 0);
         Debug.Log($"Player health: {_currentHealth}/{MaxHealth}");
         UpdateVignette();
         UpdateHealthStatus();
-        PlayHitSound();
-        if (ScreenShakeEffect.Instance) ScreenShakeEffect.Instance.ShakeOnce(0.15f, 0.05f);
+
+        if (CameraHitEffect.Instance)
+        {
+            CameraHitEffect.Instance.ApplyHitRotation();
+        }
 
         if (_currentHealth <= 0)
         {
+            if (deathSFX && _audioSource)
+            {
+                _audioSource.PlayOneShot(deathSFX);
+            }
             GameManager.Instance.OpenGameOverScreen();
             enabled = false;
+            return;
         }
+        
+        PlayHitSound();
+        PlayHitFlash();
     }
 
     public void Heal(int amount)
@@ -154,6 +175,33 @@ public class PlayerHealth : MonoBehaviour
         {
             GameManager.Instance.OpenPitDeathScreen();
         }
+    }
+
+    private void PlayHitFlash()
+    {
+        if (!_hitFlashImage) return;
+
+        if (_hitFlashCoroutine != null)
+            StopCoroutine(_hitFlashCoroutine);
+
+        _hitFlashCoroutine = StartCoroutine(HitFlashRoutine());
+    }
+
+    private System.Collections.IEnumerator HitFlashRoutine()
+    {
+        var color = _hitFlashImage.color;
+        var elapsedTime = 0f;
+
+        while (elapsedTime < _hitFlashDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            var alpha = _hitFlashCurve.Evaluate(elapsedTime / _hitFlashDuration);
+            _hitFlashImage.color = new Color(color.r, color.g, color.b, alpha);
+            yield return null;
+        }
+
+        _hitFlashImage.color = new Color(color.r, color.g, color.b, 0f);
+        _hitFlashCoroutine = null;
     }
 
     private void UpdateVignette()
