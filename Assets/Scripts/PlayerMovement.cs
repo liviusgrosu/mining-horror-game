@@ -66,7 +66,8 @@ public class PlayerMovement : MonoBehaviour
 
                 _yVelocity += gravity * Time.deltaTime;
                 _controller.Move(Vector3.up * (_yVelocity * Time.deltaTime));
-                return;    
+                Look();
+                return;
             }
         }
         

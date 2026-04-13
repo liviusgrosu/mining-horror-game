@@ -35,7 +35,9 @@ public class CameraHitEffect : MonoBehaviour
         _rotationOffset = Vector3.Lerp(_rotationOffset, Vector3.zero, recoverySpeed * Time.deltaTime);
 
         if (_rotationOffset.sqrMagnitude < 0.01f)
+        {
             _rotationOffset = Vector3.zero;
+        }
 
         transform.localRotation *= Quaternion.Euler(_rotationOffset);
     }
