@@ -94,6 +94,7 @@ public class PlayerHealth : MonoBehaviour
         if (_currentHealth <= 0) return;
 
         _currentHealth = Mathf.Max(_currentHealth - amount, 0);
+        Debug.Log($"Player health: {_currentHealth}/{MaxHealth}");
         UpdateVignette();
         UpdateHealthStatus();
         PlayHitSound();

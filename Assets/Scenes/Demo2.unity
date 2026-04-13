@@ -58913,11 +58913,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: _attackRange
-      value: 1.5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: _attackDamage
-      value: 100
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 576274235228433287, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: _currentState
@@ -59000,8 +59000,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3299095472076722445, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
+      propertyPath: m_Size.z
+      value: 1.2342377
+      objectReference: {fileID: 0}
+    - target: {fileID: 3299095472076722445, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3299095472076722445, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
+      propertyPath: m_Center.z
+      value: 0.16888428
       objectReference: {fileID: 0}
     - target: {fileID: 6728359870712172962, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_StoppingDistance

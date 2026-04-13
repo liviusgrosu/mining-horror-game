@@ -393,6 +393,7 @@ public class ZombieBehaviour : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PlayerHealth.Instance.TakeDamage(_attackDamage);
+            _damageCollider.enabled = false;
         }
     }
 
