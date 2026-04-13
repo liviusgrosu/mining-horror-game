@@ -166,7 +166,7 @@ Transform:
   m_GameObject: {fileID: 163855}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 357.35, y: 28.23, z: 120.22}
+  m_LocalPosition: {x: 357.35, y: 25.05, z: 120.22}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1033,7 +1033,7 @@ MonoBehaviour:
   voxelsPerUnit: 5
   sizeInChunks: {x: 3, y: 2, z: 2}
   blockMaterial: {fileID: 0}
-  mineRadius: 5
+  mineRadius: 7
   oreInventoryItem: {fileID: 0}
 --- !u!1 &40394323
 GameObject:
@@ -8472,7 +8472,7 @@ MonoBehaviour:
   voxelsPerUnit: 5
   sizeInChunks: {x: 3, y: 2, z: 2}
   blockMaterial: {fileID: 0}
-  mineRadius: 5
+  mineRadius: 7
   oreInventoryItem: {fileID: 0}
 --- !u!1 &101186037
 GameObject:
@@ -8540,7 +8540,7 @@ MonoBehaviour:
   voxelsPerUnit: 5
   sizeInChunks: {x: 3, y: 2, z: 3}
   blockMaterial: {fileID: 0}
-  mineRadius: 5
+  mineRadius: 7
   oreInventoryItem: {fileID: 0}
 --- !u!1 &103068946
 GameObject:
@@ -89055,7 +89055,7 @@ Transform:
   m_GameObject: {fileID: 358510695}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.000005602836, z: -0, w: -1}
-  m_LocalPosition: {x: 314.3, y: 31.41, z: 91.99}
+  m_LocalPosition: {x: 373.95, y: 32.603, z: 127.29}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -136244,7 +136244,7 @@ MonoBehaviour:
   voxelsPerUnit: 5
   sizeInChunks: {x: 3, y: 2, z: 4}
   blockMaterial: {fileID: 0}
-  mineRadius: 5
+  mineRadius: 7
   oreInventoryItem: {fileID: 0}
 --- !u!1001 &564778012
 PrefabInstance:
@@ -290210,7 +290210,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8232388391494634540, guid: 9ac6ccfe6be605344822638461125101, type: 3}
       propertyPath: ShapeModule.radiusThickness
-      value: 1.0000
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8232388391494634540, guid: 9ac6ccfe6be605344822638461125101, type: 3}
       propertyPath: InitialModule.startSize.scalar
@@ -428280,7 +428280,7 @@ MonoBehaviour:
   voxelsPerUnit: 5
   sizeInChunks: {x: 2, y: 2, z: 1}
   blockMaterial: {fileID: 0}
-  mineRadius: 5
+  mineRadius: 7
   oreInventoryItem: {fileID: 0}
 --- !u!1 &1771723044
 GameObject:
@@ -446433,7 +446433,7 @@ MonoBehaviour:
   voxelsPerUnit: 5
   sizeInChunks: {x: 3, y: 2, z: 2}
   blockMaterial: {fileID: 0}
-  mineRadius: 5
+  mineRadius: 7
   oreInventoryItem: {fileID: 0}
 --- !u!1 &1864753093
 GameObject:

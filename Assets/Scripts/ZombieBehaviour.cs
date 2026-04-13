@@ -26,8 +26,10 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] private float _rotationTolerance;
 
     [Header("Idle State")]
-    [Tooltip("FOV of enemy")]
+    [Tooltip("Horizontal FOV angle of enemy (left/right)")]
     [SerializeField] private float _fov;
+    [Tooltip("Vertical sight limit above/below the enemy's eye level")]
+    [SerializeField] private float _verticalSightHeight = 2f;
     [Tooltip("How far the player needs to be from the enemy to engage")]
     [SerializeField] private float _engageDistance;
     [Tooltip("How fast the enemy will rotate back to the starting direction they were facing")]
@@ -274,10 +276,16 @@ public class ZombieBehaviour : MonoBehaviour
     {
         if (_currentState is State.Attack or State.Engage) return;
         if (!(Vector3.Distance(transform.position, _player.position) <= _engageDistance)) return;
-        var enemyToPlayer = _player.position - transform.position;
 
-        if (!(Vector3.Angle(enemyToPlayer, transform.forward) <= _fov)) return;
-        if (!Physics.Raycast(transform.position, _player.position - transform.position, out var hit, _engageDistance)) return;
+        var verticalDiff = _player.position.y - transform.position.y;
+        if (Mathf.Abs(verticalDiff) > _verticalSightHeight) return;
+
+        var enemyToPlayer = _player.position - transform.position;
+        var flatDirection = new Vector3(enemyToPlayer.x, 0f, enemyToPlayer.z);
+        var flatForward = new Vector3(transform.forward.x, 0f, transform.forward.z);
+        if (!(Vector3.Angle(flatDirection, flatForward) <= _fov)) return;
+
+        if (!Physics.Raycast(transform.position, enemyToPlayer, out var hit, _engageDistance)) return;
         if (!hit.transform.CompareTag("Player")) return;
 
         _agent.isStopped = false;
