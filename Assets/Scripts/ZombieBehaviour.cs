@@ -7,7 +7,6 @@ public class ZombieBehaviour : MonoBehaviour
 {
     private static readonly int MovementBlend = Animator.StringToHash("MovementBlend");
     private static readonly int IsAttacking = Animator.StringToHash("IsAttacking");
-    private static readonly int TakeHit = Animator.StringToHash("Take Hit");
 
     public enum State
     {
@@ -87,7 +86,9 @@ public class ZombieBehaviour : MonoBehaviour
     private float _animationTime;
     
     [SerializeField]
-    private AudioSource _audioSource;
+    private AudioSource _loopAudioSource;
+    [SerializeField]
+    private AudioSource _oneShotAudioSource;
 
     [SerializeField] private AudioClip idleSound;
     [SerializeField] private AudioClip chaseSound;
@@ -96,6 +97,10 @@ public class ZombieBehaviour : MonoBehaviour
 
     [Header("Damage Collider")]
     [SerializeField] private Collider _damageCollider;
+
+    [Header("Blood Pool")]
+    [SerializeField] private Transform _bloodPool;
+    [SerializeField] private float _bloodPoolExpandTime = 3f;
 
     [Header("Health")]
     [SerializeField] private int _maxHealth = 100;
@@ -110,7 +115,7 @@ public class ZombieBehaviour : MonoBehaviour
         _startingStoppingDistance = _agent.stoppingDistance;
         _startingRotation = transform.rotation;
         _currentState = _initialState;
-        _audioSource.loop = true;
+        _loopAudioSource.loop = true;
         _currentHealth = _maxHealth;
     }
 
@@ -321,17 +326,17 @@ public class ZombieBehaviour : MonoBehaviour
     private void PlayIdleSound()
     {
         MusicManager.Instance.FadeToAmbientMusic();
-        _audioSource.Stop();
-        _audioSource.clip = idleSound;
-        _audioSource.Play();
+        _oneShotAudioSource.Stop();
+        _oneShotAudioSource.clip = idleSound;
+        _oneShotAudioSource.Play();
     }
 
     private void PlayChaseSound()
     {
         MusicManager.Instance.PlayChaseMusic();
-        _audioSource.Stop();
-        _audioSource.clip = chaseSound;
-        _audioSource.Play();
+        _oneShotAudioSource.Stop();
+        _oneShotAudioSource.clip = chaseSound;
+        _oneShotAudioSource.Play();
     }
 
 
@@ -357,7 +362,10 @@ public class ZombieBehaviour : MonoBehaviour
         _agent.isStopped = true;
         _agent.velocity = Vector3.zero;
 
-        if (takeDamageSound) _audioSource.PlayOneShot(takeDamageSound);
+        if (takeDamageSound)
+        {
+            _oneShotAudioSource.PlayOneShot(takeDamageSound);
+        }
         animator.CrossFadeInFixedTime("Take Hit", 0.1f, 0);
         yield return new WaitForSeconds(_hitStunDuration);
 
@@ -410,9 +418,36 @@ public class ZombieBehaviour : MonoBehaviour
             col.enabled = false;
         }
 
-        _audioSource.Stop();
-        if (dieSound) _audioSource.PlayOneShot(dieSound);
+        _loopAudioSource.Stop();
+        _oneShotAudioSource.Stop();
+        if (dieSound)
+        {
+            _oneShotAudioSource.PlayOneShot(dieSound);
+        }
         MusicManager.Instance.FadeToAmbientMusic();
         animator.Play("Die", 0, 0f);
+
+        if (_bloodPool)
+            StartCoroutine(ExpandBloodPool());
+    }
+
+    private IEnumerator ExpandBloodPool()
+    {
+        yield return new WaitForSeconds(1f);
+        var elapsedTime = 0f;
+        var targetScale = new Vector3(0.3f, _bloodPool.localScale.y, 0.3f);
+
+        while (elapsedTime < _bloodPoolExpandTime)
+        {
+            elapsedTime += Time.deltaTime;
+            var t = elapsedTime / _bloodPoolExpandTime;
+            var scale = _bloodPool.localScale;
+            scale.x = Mathf.Lerp(0f, targetScale.x, t);
+            scale.z = Mathf.Lerp(0f, targetScale.z, t);
+            _bloodPool.localScale = scale;
+            yield return null;
+        }
+
+        _bloodPool.localScale = targetScale;
     }
 }
