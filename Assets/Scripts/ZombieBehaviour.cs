@@ -32,7 +32,7 @@ public class ZombieBehaviour : MonoBehaviour
     [Tooltip("How far the player needs to be from the enemy to engage")]
     [SerializeField] private float _engageDistance;
     [Tooltip("How fast the enemy will rotate back to the starting direction they were facing")]
-    [SerializeField] private float _startingRotationSpeed = 250f;
+    [SerializeField] private float _startingRotationSpeed = 500f;
 
     [Header("Check State")]
     [Tooltip("How long the enemy will wait before returning to idle state")]
@@ -40,7 +40,7 @@ public class ZombieBehaviour : MonoBehaviour
 
     [Header("Attack State")]
     [Tooltip("How fast the enemy will rotate to the player after finishing an attack")]
-    [SerializeField] private float _toPlayerRotateAttackSpeed = 250f;
+    [SerializeField] private float _toPlayerRotateAttackSpeed = 500f;
     [Tooltip("Damage dealt per attack")]
     [SerializeField] private int _attackDamage = 20;
     [Tooltip("Cooldown between attacks in seconds")]
@@ -112,6 +112,7 @@ public class ZombieBehaviour : MonoBehaviour
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _agent.angularSpeed = 500f;
         _startingStoppingDistance = _agent.stoppingDistance;
         _startingRotation = transform.rotation;
         _currentState = _initialState;
@@ -352,6 +353,13 @@ public class ZombieBehaviour : MonoBehaviour
             return;
         }
 
+        if (_currentState is not (State.Engage or State.Attack))
+        {
+            _agent.speed = runningSpeed;
+            PlayChaseSound();
+            _currentState = State.Engage;
+        }
+
         _attackCooldownTimer = 0f;
         StartCoroutine(HitStun());
     }
@@ -381,6 +389,7 @@ public class ZombieBehaviour : MonoBehaviour
             else
             {
                 _agent.isStopped = false;
+                _agent.SetDestination(_player.position);
                 animator.CrossFadeInFixedTime("Movement", 0.15f, 0);
             }
         }

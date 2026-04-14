@@ -271,7 +271,7 @@ MonoBehaviour:
   _engageDistance: 10
   _startingRotationSpeed: 250
   _checkStateTime: 2
-  _toPlayerRotateAttackSpeed: 250
+  _toPlayerRotateAttackSpeed: 100
   _attackDamage: 25
   _attackCooldown: 2
   _attackRange: 1

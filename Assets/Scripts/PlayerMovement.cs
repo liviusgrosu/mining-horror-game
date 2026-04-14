@@ -23,6 +23,12 @@ public class PlayerMovement : MonoBehaviour
 
     public bool IsSprinting => _isSprinting;
 
+    // Speed smoothing
+    [SerializeField]
+    private float speedSmoothTime = 0.15f;
+    private float _currentSpeed;
+    private float _speedSmoothVelocity;
+
     // Breathing audio
     [SerializeField]
     private AudioClip breathingSlowClip;
@@ -102,8 +108,9 @@ public class PlayerMovement : MonoBehaviour
         HandleBreathingAudio();
 
         var movementDir = transform.right * horizontal + transform.forward * vertical;
-        var speed = _isSprinting ? movementSpeed * sprintMultiplier : movementSpeed;
-        movementDir *= speed;
+        var targetSpeed = isMoving ? (_isSprinting ? movementSpeed * sprintMultiplier : movementSpeed) : 0f;
+        _currentSpeed = Mathf.SmoothDamp(_currentSpeed, targetSpeed, ref _speedSmoothVelocity, speedSmoothTime);
+        movementDir = movementDir.normalized * _currentSpeed;
 
         if (Input.GetButtonDown("Jump") && _controller.isGrounded)
         {
@@ -125,7 +132,7 @@ public class PlayerMovement : MonoBehaviour
                 _breathingAudioSource.Play();
             }
         }
-        else if (_sprintTimer >= 0.5f)
+        else if (_sprintTimer >= 1.5f)
         {
             if (_breathingAudioSource.clip != breathingSlowClip)
             {

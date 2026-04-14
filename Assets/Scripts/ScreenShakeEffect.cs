@@ -7,6 +7,8 @@ public class ScreenShakeEffect : MonoBehaviour
     public AnimationCurve Curve;
     public float Duration = 1f;
     public bool IsCameraShaking;
+    
+    public float ShakeIntensity = 0.1f;
 
     private Vector3 _baseLocalPosition;
 
@@ -20,6 +22,11 @@ public class ScreenShakeEffect : MonoBehaviour
 
         Instance = this;
         _baseLocalPosition = transform.localPosition;
+    }
+
+    private void Update()
+    {
+        transform.localPosition = _baseLocalPosition + Random.insideUnitSphere * ShakeIntensity;
     }
     
     public void BeginShaking()
