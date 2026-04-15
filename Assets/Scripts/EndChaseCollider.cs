@@ -7,7 +7,7 @@ public class EndChaseCollider : MonoBehaviour
     {
         if (other.transform.CompareTag("Enemy"))
         {
-            other.GetComponent<ShadeBehaviour>().EndChase();
+            other.GetComponent<ZombieBehaviour>().EndChase();
         }
     }
 }

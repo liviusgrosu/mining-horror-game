@@ -7,6 +7,7 @@ public class Pickup : MonoBehaviour
     [SerializeField]
     private GameObject _hoveringOver;
     private IInteractable _hoveringOverInteractable;
+    private WorldItem _hoveringWorldItem;
     
     public LayerMask ignoreMask;
     
@@ -22,6 +23,10 @@ public class Pickup : MonoBehaviour
     
     private void Start()
     {
+        if (!GameManager.Instance)
+        {
+            enabled = false;
+        }
         _camera = Camera.main.transform;
     }
     
@@ -35,13 +40,14 @@ public class Pickup : MonoBehaviour
                 GameManager.Instance.ToggleOffAllText();
                 _hoveringOverInteractable?.ToggleOutline(false);
                 _hoveringOver = hit.collider.gameObject;
+                _hoveringWorldItem = _hoveringOver.GetComponent<WorldItem>();
             }
-            
-            if (_hoveringOver.CompareTag("Mineral"))
+
+            if (_hoveringWorldItem)
             {
                 GameManager.Instance.TogglePickupIcon(true);
-                _hoveringOverInteractable = _hoveringOver.GetComponent<IInteractable>();
-                _hoveringOverInteractable?.ToggleOutline(true);
+                _hoveringOverInteractable = _hoveringWorldItem;
+                _hoveringOverInteractable.ToggleOutline(true);
             }
             else if (_hoveringOver.CompareTag("Anvil"))
             {
@@ -73,16 +79,20 @@ public class Pickup : MonoBehaviour
             GameManager.Instance.ToggleOffAllText();
             _hoveringOverInteractable?.ToggleOutline(false);
             _hoveringOver = null;
+            _hoveringWorldItem = null;
         }
 
         if (Input.GetKey(KeyCode.E) && _hoveringOver)
         {
-            if (_hoveringOver.CompareTag("Mineral") && _hoveringOverInteractable != null)
+            if (_hoveringWorldItem)
             {
-                _audioSource.PlayOneShot(_pickupSound);
-                GameManager.Instance.AddMineral(_hoveringOver.GetComponent<Mineral>().MineralName);
-                _hoveringOverInteractable = null;
+                _audioSource.PlayOneShot(_hoveringWorldItem.PickupSoundOverride ? _hoveringWorldItem.PickupSoundOverride : _pickupSound);
+                Inventory.Instance.Add(_hoveringWorldItem.Item);
                 Destroy(_hoveringOver);
+                _hoveringOver = null;
+                _hoveringWorldItem = null;
+                _hoveringOverInteractable = null;
+                return;
             }
             if (_hoveringOver.CompareTag("Mineral Deposit"))
             {

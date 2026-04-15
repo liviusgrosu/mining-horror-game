@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PickaxeHand : MonoBehaviour
@@ -16,7 +15,10 @@ public class PickaxeHand : MonoBehaviour
     private Animator _animator;
     private Transform _camera;
 
-    [SerializeField] private GameObject sparkVFX, dustEffect;
+    [SerializeField] private GameObject sparkVFX, dustEffect, bloodVFX, lightBloodVFX, materialHitVFX;
+
+    [Header("Runes")]
+    [SerializeField] private InventoryItem deathRune;
     
     public LayerMask ignoreMask;
     
@@ -58,7 +60,7 @@ public class PickaxeHand : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.InMenu)
+        if (GameManager.Instance && (GameManager.Instance.InMenu || GameManager.Instance.HasDied))
         {
             return;
         }
@@ -74,38 +76,67 @@ public class PickaxeHand : MonoBehaviour
         Destroy(_currentPickaxe);
         _currentPickaxe = Instantiate(chosenPickaxe, transform.position, transform.rotation);
         _currentPickaxe.transform.SetParent(transform);
-
-        if (name == "Gold Pickaxe")
-        {
-            GameManager.Instance.SpawnFinalEncounter();
-        }
     }
 
     public void CheckHit()
     {
         if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit, 5.0f, ~ignoreMask))
         {
-            if (hit.collider.CompareTag("Mineral Deposit"))
+            if (hit.collider.CompareTag("VoxelTerrain"))
             {
-                var wp = hit.collider.GetComponent<MineralDeposit>();
-                if (wp != null)
+                var voxelTerrain = hit.collider.GetComponentInParent<VoxelTerrain>();
+                if (voxelTerrain != null)
                 {
-                    wp.OnHit(hit.point, hit.normal, 5);
+                    voxelTerrain.Mine(hit.point);
                 }
 
                 _audioSource.PlayOneShot(pickaxeValidSound);
                 SpawnCloudEffect(hit.point);
+                var voxelRenderer = hit.collider.GetComponent<MeshRenderer>();
+                if (voxelRenderer != null)
+                    SpawnMaterialHitEffect(hit.point, voxelRenderer.sharedMaterial);
             }
-            else if (hit.collider.CompareTag("Blockage Rock") || hit.collider.CompareTag("Entrance Door"))
+            else if (hit.collider.CompareTag("Destructible"))
             {
-                var wall = hit.collider.GetComponent<BreakableWall>();
-                if (_currentPickaxe.GetComponent<Pickaxe>().Power >= wall.PowerRequirement)
-                {
-                    wall.TakeDamage();
-                }
+                var destructible = hit.collider.GetComponentInParent<Destructible>();
+                var canDamage = destructible != null
+                    && _currentPickaxe.GetComponent<Pickaxe>().Power >= destructible.PowerRequirement
+                    && (destructible.RequiredGem == null || Inventory.Instance.PickaxeGems.Contains(destructible.RequiredGem));
 
+                if (canDamage)
+                {
+                    var mat = destructible.CurrentStageMaterial;
+                    destructible.TakeDamage();
+                    _audioSource.PlayOneShot(pickaxeValidSound);
+                    SpawnCloudEffect(hit.point);
+                    if (mat != null)
+                    {
+                        SpawnMaterialHitEffect(hit.point, mat);
+                    }
+                }
+                else
+                {
+                    _audioSource.PlayOneShot(pickaxeInvalidSound);
+                    SpawnSparkEffect(hit.point, hit.normal);
+                }
+            }
+            else if (hit.collider.CompareTag("Enemy"))
+            {
+                var hasDeathRune = deathRune != null && Inventory.Instance.PickaxeGems.Contains(deathRune);
+                if (hasDeathRune)
+                {
+                    var shade = hit.collider.GetComponentInParent<ZombieBehaviour>();
+                    if (shade != null)
+                    {
+                        shade.TakeDamage(_currentPickaxe.GetComponent<Pickaxe>().Power * 10);
+                    }
+                    SpawnBloodEffect(hit.point, hit.normal);
+                }
+                else
+                {
+                    SpawnLightBloodEffect(hit.point, hit.normal);
+                }
                 _audioSource.PlayOneShot(pickaxeValidSound);
-                SpawnCloudEffect(hit.point);
             }
             else
             {
@@ -128,6 +159,34 @@ public class PickaxeHand : MonoBehaviour
     private void SpawnSparkEffect(Vector3 point, Vector3 normal)
     {
         var vfx = Instantiate(sparkVFX, point, Quaternion.LookRotation(normal));
+        Destroy(vfx, 1f);
+    }
+
+    private void SpawnMaterialHitEffect(Vector3 point, Material mat)
+    {
+        var vfx = Instantiate(materialHitVFX, point, Quaternion.identity);
+        for (var i = 1; i <= 3; i++)
+        {
+            var gibble = vfx.transform.Find("Gibble " + i);
+            if (gibble != null)
+            {
+                var renderer = gibble.GetComponent<Renderer>();
+                if (renderer != null)
+                    renderer.material = mat;
+            }
+        }
+        Destroy(vfx, 2f);
+    }
+
+    private void SpawnBloodEffect(Vector3 point, Vector3 normal)
+    {
+        var vfx = Instantiate(bloodVFX, point, Quaternion.LookRotation(normal));
+        Destroy(vfx, 1f);
+    }
+
+    private void SpawnLightBloodEffect(Vector3 point, Vector3 normal)
+    {
+        var vfx = Instantiate(lightBloodVFX, point, Quaternion.LookRotation(normal));
         Destroy(vfx, 1f);
     }
 

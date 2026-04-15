@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,26 +14,24 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _questionMarkIcon;
     [SerializeField] private GameObject _pickupIcon;
     
-    public Dictionary<string, int> MineralCounts = new();
-
     public GameObject OverlayUI;
     public GameObject UpgradeUI;
     public GameObject GameOverScreen;
     
     public bool InMenu;
-
-    public GameObject monster1Patrol, monster1Chase, monster2Chase;
-    public GameObject rockBlockage1;
+    
     private bool triggeredFirstChase, triggeredSecondChase;
 
     [SerializeField]
     private TextMeshProUGUI _entranceDoorText, _normalRockHoverText, _mineralDepositHoverText, _blockageRockHoverText;
     private bool DisplayingHoverText;
+    private Coroutine _hoverTextCoroutine;
 
     public bool HasWon, HasDied;
     public bool IsPaused;
 
     [SerializeField] private GameObject _controlsOverlay;
+    [SerializeField] private GameObject _inventoryUI;
 
     [SerializeField] private CanvasGroup _mineralStatsCanvasGroup;
     private Coroutine _mineralStatsCoroutine;
@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     private GameObject player;
 
     [SerializeField] private Volume _deathPostProcessVolume;
+    [SerializeField] private Image _blackScreen;
 
     private void Awake()
     {
@@ -51,10 +52,6 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-        
-        MineralCounts.Add("Copper", 0);
-        MineralCounts.Add("Silver", 0);
-        MineralCounts.Add("Gold", 0);
     }
 
     private void Update()
@@ -67,7 +64,7 @@ public class GameManager : MonoBehaviour
                 return;
             }
 
-            TogglePause();
+            ToggleInventory();
         }
     }
 
@@ -80,90 +77,6 @@ public class GameManager : MonoBehaviour
             _mineralStatsCanvasGroup.alpha = 0f;
         
         player = GameObject.Find("Player");
-    }
-    
-    public void AddMineral(string mineral)
-    {
-        MineralCounts[mineral]++;
-        GameObject.Find($"{mineral} Stat").GetComponentInChildren<TextMeshProUGUI>().text = MineralCounts[mineral].ToString();
-
-        ShowMineralStats();
-
-        if (mineral == "Gold" && !triggeredFirstChase)
-        {
-            monster1Patrol.SetActive(false);
-            monster1Chase.SetActive(true);
-            rockBlockage1.SetActive(true);
-            triggeredFirstChase = true;
-            ScreenShakeEffect.Instance.BeginShaking();
-            OtherSFXManager.Instance.PlayEarthQuakeEffect();
-        }
-    }
-
-    private void ShowMineralStats()
-    {
-        if (_mineralStatsCanvasGroup == null) return;
-
-        const float displayDuration = 3f;
-
-        if (_mineralStatsVisible)
-        {
-            // Already showing — just reset the timer, don't restart the fade
-            _mineralStatsTimer = displayDuration;
-            return;
-        }
-
-        if (_mineralStatsCoroutine != null)
-            StopCoroutine(_mineralStatsCoroutine);
-
-        _mineralStatsCoroutine = StartCoroutine(MineralStatsFadeRoutine(displayDuration));
-    }
-
-    private IEnumerator MineralStatsFadeRoutine(float displayDuration)
-    {
-        const float fadeDuration = 0.3f;
-
-        // Fade in
-        var elapsed = 0f;
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            _mineralStatsCanvasGroup.alpha = Mathf.Lerp(0f, 1f, elapsed / fadeDuration);
-            yield return null;
-        }
-        _mineralStatsCanvasGroup.alpha = 1f;
-        _mineralStatsVisible = true;
-
-        // Wait, using a timer that can be reset externally
-        _mineralStatsTimer = displayDuration;
-        while (_mineralStatsTimer > 0f)
-        {
-            _mineralStatsTimer -= Time.deltaTime;
-            yield return null;
-        }
-
-        // Fade out
-        _mineralStatsVisible = false;
-        elapsed = 0f;
-        while (elapsed < fadeDuration)
-        {
-            elapsed += Time.deltaTime;
-            _mineralStatsCanvasGroup.alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
-            yield return null;
-        }
-        _mineralStatsCanvasGroup.alpha = 0f;
-        _mineralStatsCoroutine = null;
-    }
-
-    public void SpawnFinalEncounter()
-    {
-        if (triggeredSecondChase)
-        {
-            return;
-        }
-        monster1Chase.SetActive(false);
-        monster2Chase.SetActive(true);
-        triggeredSecondChase = true;
     }
     
     public void TogglePickupIcon(bool state)
@@ -206,12 +119,62 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(DeathBlurRoutine());
 
+        foreach (var enemy in FindObjectsByType<ZombieBehaviour>(FindObjectsSortMode.None))
+        {
+            enemy.Disengage();
+        }
+
+        var navObstacle = player.GetComponent<NavMeshObstacle>();
+        if (navObstacle) navObstacle.enabled = true;
+
         ToggleCursorLock(true);
         GameOverScreen.SetActive(true);
         UpgradeUI.SetActive(false);
         OverlayUI.SetActive(true);
 
         HasDied = true;
+
+        if (PickaxeHand.Instance)
+        {
+            PickaxeHand.Instance.GetComponent<Animator>().Play("Hand - Death");
+        }
+
+        var bloodVFX = player.transform.Find("Other SFX/Blood - Player - VFX");
+        if (bloodVFX != null)
+        {
+            bloodVFX.gameObject.SetActive(true);
+            var ps = bloodVFX.GetComponent<ParticleSystem>();
+            if (ps != null) ps.Play();
+        }
+    }
+
+    public void OpenPitDeathScreen()
+    {
+        HasDied = true;
+        StartCoroutine(PitDeathRoutine());
+    }
+
+    private IEnumerator PitDeathRoutine()
+    {
+        if (_blackScreen)
+        {
+            _blackScreen.gameObject.SetActive(true);
+            var color = _blackScreen.color;
+            var elapsed = 0f; 
+            while (elapsed < 1f)
+            {
+                elapsed += Time.deltaTime;
+                color.a = Mathf.Lerp(0f, 1f, elapsed / 1f);
+                _blackScreen.color = color;
+                yield return null;
+            }
+            color.a = 1f;
+            _blackScreen.color = color;
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        OpenGameOverScreen();
     }
 
     private IEnumerator DeathBlurRoutine()
@@ -246,8 +209,28 @@ public class GameManager : MonoBehaviour
     {
         IsPaused = !IsPaused;
 
-        if (_controlsOverlay != null)
+        if (_controlsOverlay)
+        {
             _controlsOverlay.SetActive(IsPaused);
+        }
+
+        ToggleCursorLock(IsPaused);
+        Time.timeScale = IsPaused ? 0f : 1f;
+    }
+
+    public void ToggleInventory()
+    {
+        IsPaused = !IsPaused;
+
+        if (_inventoryUI)
+        {
+            _inventoryUI.SetActive(IsPaused);
+        }
+
+        if (IsPaused && PickupNotification.Instance)
+        {
+            PickupNotification.Instance.ClearAll();
+        }
 
         ToggleCursorLock(IsPaused);
         Time.timeScale = IsPaused ? 0f : 1f;
@@ -267,9 +250,8 @@ public class GameManager : MonoBehaviour
         }
 
         DisplayingHoverText = true;
-        // Start the fade coroutine
-        StopAllCoroutines();
-        StartCoroutine(FadeTextInAndOut(_entranceDoorText));
+        if (_hoverTextCoroutine != null) StopCoroutine(_hoverTextCoroutine);
+        _hoverTextCoroutine = StartCoroutine(FadeTextInAndOut(_entranceDoorText));
     }
     
     public void ShowBlockageRockText()
@@ -280,9 +262,8 @@ public class GameManager : MonoBehaviour
         }
 
         DisplayingHoverText = true;
-        // Start the fade coroutine
-        StopAllCoroutines();
-        StartCoroutine(FadeTextInAndOut(_blockageRockHoverText));
+        if (_hoverTextCoroutine != null) StopCoroutine(_hoverTextCoroutine);
+        _hoverTextCoroutine = StartCoroutine(FadeTextInAndOut(_blockageRockHoverText));
     }
 
     public void ShowNormalRockHoverText()
@@ -293,8 +274,8 @@ public class GameManager : MonoBehaviour
         }
 
         DisplayingHoverText = true;
-        StopAllCoroutines();
-        StartCoroutine(FadeTextInAndOut(_normalRockHoverText));
+        if (_hoverTextCoroutine != null) StopCoroutine(_hoverTextCoroutine);
+        _hoverTextCoroutine = StartCoroutine(FadeTextInAndOut(_normalRockHoverText));
     }
     
     public void ShowMineralDepositHoverText()
@@ -305,8 +286,8 @@ public class GameManager : MonoBehaviour
         }
 
         DisplayingHoverText = true;
-        StopAllCoroutines();
-        StartCoroutine(FadeTextInAndOut(_mineralDepositHoverText));
+        if (_hoverTextCoroutine != null) StopCoroutine(_hoverTextCoroutine);
+        _hoverTextCoroutine = StartCoroutine(FadeTextInAndOut(_mineralDepositHoverText));
     }
 
     private IEnumerator FadeTextInAndOut(TextMeshProUGUI text)

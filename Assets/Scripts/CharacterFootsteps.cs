@@ -7,6 +7,9 @@ public class CharacterFootsteps : MonoBehaviour
 
     [Header("Stone Footstep Sounds")]
     public AudioClip[] stoneSounds;
+    
+    [Header("Wood Footstep Sounds")]
+    public AudioClip[] woodSounds;
 
     [Header("Footstep Settings")]
     [Tooltip("Time in seconds between each footstep when walking")]
@@ -21,11 +24,9 @@ public class CharacterFootsteps : MonoBehaviour
     [Tooltip("How far down to raycast to detect the surface")]
     public float raycastDistance = 1.5f;
 
-    [Tooltip("Tag applied to gravel surfaces in the scene")]
     public string gravelTag = "Gravel";
-
-    [Tooltip("Tag applied to stone surfaces in the scene")]
     public string stoneTag = "Stone";
+    public string woodTag = "Wood";
 
     private AudioSource _audioSource;
     private CharacterController _characterController;
@@ -96,12 +97,14 @@ public class CharacterFootsteps : MonoBehaviour
             {
                 return gravelSounds;
             }
-
+            if (tag == woodTag)
+            {
+                return woodSounds;
+            }
             if (tag == stoneTag)
             {
                 return stoneSounds;
             }
-
             return stoneSounds;
         }
         return stoneSounds;

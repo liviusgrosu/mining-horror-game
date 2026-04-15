@@ -41,11 +41,7 @@ public class EnemyFootsteps : MonoBehaviour
 
     void Awake()
     {
-        _audioSource = GetComponent<AudioSource>();
         agent = GetComponent<NavMeshAgent>();
-
-        _audioSource.playOnAwake = false;
-        _audioSource.loop = false;
     }
 
     private void Update()
@@ -59,7 +55,7 @@ public class EnemyFootsteps : MonoBehaviour
 
         if (speed > 0.1f)
         {
-            float currentInterval = speed > runSpeedThreshold ? runStepInterval : walkStepInterval;
+            var currentInterval = speed > runSpeedThreshold ? runStepInterval : walkStepInterval;
 
             stepTimer += Time.deltaTime;
 
@@ -71,7 +67,6 @@ public class EnemyFootsteps : MonoBehaviour
         }
         else
         {
-            // Reset timer so the first step plays immediately on movement
             stepTimer = walkStepInterval;
         }
     }
@@ -113,7 +108,9 @@ public class EnemyFootsteps : MonoBehaviour
     private AudioClip GetRandomClip(AudioClip[] sounds)
     {
         if (sounds.Length == 1)
+        {
             return sounds[0];
+        }
 
         if (sounds != lastSoundSet)
         {
