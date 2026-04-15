@@ -116,7 +116,6 @@ public class ZombieBehaviour : MonoBehaviour
         _startingStoppingDistance = _agent.stoppingDistance;
         _startingRotation = transform.rotation;
         _currentState = _initialState;
-        _loopAudioSource.loop = true;
         _currentHealth = _maxHealth;
     }
 
@@ -327,17 +326,17 @@ public class ZombieBehaviour : MonoBehaviour
     private void PlayIdleSound()
     {
         MusicManager.Instance.FadeToAmbientMusic();
-        _oneShotAudioSource.Stop();
-        _oneShotAudioSource.clip = idleSound;
-        _oneShotAudioSource.Play();
+        _loopAudioSource.Stop();
+        _loopAudioSource.clip = idleSound;
+        _loopAudioSource.Play();
     }
 
     private void PlayChaseSound()
     {
         MusicManager.Instance.PlayChaseMusic();
-        _oneShotAudioSource.Stop();
-        _oneShotAudioSource.clip = chaseSound;
-        _oneShotAudioSource.Play();
+        _loopAudioSource.Stop();
+        _loopAudioSource.clip = chaseSound;
+        _loopAudioSource.Play();
     }
 
 

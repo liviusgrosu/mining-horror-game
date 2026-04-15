@@ -95,8 +95,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void MovePlayer()
     {
-        var horizontal = Input.GetAxis("Horizontal");
-        var vertical = Input.GetAxis("Vertical");
+        var horizontal = Input.GetAxisRaw("Horizontal");
+        var vertical = Input.GetAxisRaw("Vertical");
 
         if (_controller.isGrounded && _yVelocity < 0)
         {
@@ -108,8 +108,16 @@ public class PlayerMovement : MonoBehaviour
         HandleBreathingAudio();
 
         var movementDir = transform.right * horizontal + transform.forward * vertical;
-        var targetSpeed = isMoving ? (_isSprinting ? movementSpeed * sprintMultiplier : movementSpeed) : 0f;
-        _currentSpeed = Mathf.SmoothDamp(_currentSpeed, targetSpeed, ref _speedSmoothVelocity, speedSmoothTime);
+        if (!isMoving)
+        {
+            _currentSpeed = 0f;
+            _speedSmoothVelocity = 0f;
+        }
+        else
+        {
+            var targetSpeed = _isSprinting ? movementSpeed * sprintMultiplier : movementSpeed;
+            _currentSpeed = Mathf.SmoothDamp(_currentSpeed, targetSpeed, ref _speedSmoothVelocity, speedSmoothTime);
+        }
         movementDir = movementDir.normalized * _currentSpeed;
 
         if (Input.GetButtonDown("Jump") && _controller.isGrounded)
