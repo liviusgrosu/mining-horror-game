@@ -5054,7 +5054,7 @@ GameObject:
   - component: {fileID: 1693875}
   - component: {fileID: 1693874}
   m_Layer: 5
-  m_Name: Upgrade Btn
+  m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52120,12 +52120,12 @@ GameObject:
   - component: {fileID: 195505870}
   - component: {fileID: 195505871}
   m_Layer: 0
-  m_Name: Enemy Pathing (1)
+  m_Name: Enemy Pathing 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &195505870
 Transform:
   m_ObjectHideFlags: 0
@@ -57455,6 +57455,10 @@ PrefabInstance:
     - target: {fileID: 1897831492293649868, guid: ff289e53c1af41d449d0f89ab1cf8ae0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 170.354
+      objectReference: {fileID: 0}
+    - target: {fileID: 4711196080842623507, guid: ff289e53c1af41d449d0f89ab1cf8ae0, type: 3}
+      propertyPath: powerRequirement
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -64059,11 +64063,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7490492891687829689, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_Name
-      value: Zombie (1)
+      value: Zombie 2
       objectReference: {fileID: 0}
     - target: {fileID: 7490492891687829689, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -87074,7 +87078,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &318207705
 Transform:
   m_ObjectHideFlags: 0
@@ -94368,8 +94372,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 358510695}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.38268787, z: -0, w: -0.9238778}
-  m_LocalPosition: {x: 289.6, y: 33.26, z: 97.63}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.000005036592}
+  m_LocalPosition: {x: 391.45, y: 32.31, z: 121.87}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -94378,7 +94382,7 @@ Transform:
   - {fileID: 2078130978}
   - {fileID: 1731946517}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 314.999, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 179.999, z: 0}
 --- !u!114 &358510699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94391,11 +94395,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04685ac2292085c49946d7cb97071b69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  movementSpeed: 3
+  movementSpeed: 2
   gravity: -18
   sprintMultiplier: 1.8
-  maxSprintTime: 5
+  maxSprintTime: 9
   sprintCooldown: 6
+  speedSmoothTime: 0.15
   breathingSlowClip: {fileID: 8300000, guid: ecf5b94292ddfc142aca39f9e9563421, type: 3}
   breathingHeavyClip: {fileID: 8300000, guid: 50fb3a4f920eb9f43b348ad691bc29d5, type: 3}
   mouseSensitivity: 100
@@ -94556,7 +94561,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cadda0e92ff63bc47aa72a5710fa896a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  MaxHealth: 25
+  MaxHealth: 100
   _damageVignette: {fileID: 212666876}
   _hitFlashImage: {fileID: 1529487513}
   _hitFlashCurve:
@@ -114071,6 +114076,73 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 938395246332356078, guid: 6c205d6e2cd918c458965cc7c5a21586, type: 3}
   m_PrefabInstance: {fileID: 499348696}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &508839240
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 508839241}
+  - component: {fileID: 508839243}
+  - component: {fileID: 508839242}
+  m_Layer: 0
+  m_Name: Zombie Trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &508839241
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508839240}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 161.73, y: 24.534979, z: 103.29}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 833911169}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &508839242
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508839240}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 63.04901, y: 19.599907, z: 54.927208}
+  m_Center: {x: -2.7842102, y: 9.299953, z: 3.7942848}
+--- !u!114 &508839243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508839240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ca089ae3bfc1a343968f4ee11a06258, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ZombieActivationZone
+  zombie: {fileID: 980687692}
 --- !u!1 &508943235
 GameObject:
   m_ObjectHideFlags: 0
@@ -206272,7 +206344,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &773510301
 Transform:
   m_ObjectHideFlags: 0
@@ -217410,10 +217482,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 239925622}
   - {fileID: 1820711858}
+  - {fileID: 239925622}
   - {fileID: 1636216271}
   - {fileID: 195505870}
+  - {fileID: 508839241}
   - {fileID: 2137701562}
   - {fileID: 1236574499}
   - {fileID: 1506197804}
@@ -240161,7 +240234,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8813307426333900930, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8813307426333900930, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -241105,7 +241178,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -5079257972361157649, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -5079257972361157649, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -241953,7 +242026,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -776344431432551122, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -776344431432551122, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -242737,7 +242810,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2751403694056452994, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2751403694056452994, guid: f2f24bce6b9407848a5256aece04469d, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -256372,7 +256445,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &926551066
 RectTransform:
   m_ObjectHideFlags: 0
@@ -277751,6 +277824,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 976807579}
   m_Mesh: {fileID: 1238041930}
+--- !u!1 &980687692 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7490492891687829689, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
+  m_PrefabInstance: {fileID: 2063378769}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &981775726
 GameObject:
   m_ObjectHideFlags: 0
@@ -285064,6 +285142,10 @@ PrefabInstance:
     - target: {fileID: 779868837811642530, guid: cde5b74ef3a249c41afe7ef614b7ad34, type: 3}
       propertyPath: m_Name
       value: Destructible Rocks (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042265399615853706, guid: cde5b74ef3a249c41afe7ef614b7ad34, type: 3}
+      propertyPath: powerRequirement
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -296395,7 +296477,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1034297998
 Transform:
   m_ObjectHideFlags: 0
@@ -298972,7 +299054,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1103624101
 Transform:
   m_ObjectHideFlags: 0
@@ -337127,7 +337209,7 @@ GameObject:
   - component: {fileID: 1236574497}
   - component: {fileID: 1236574496}
   m_Layer: 0
-  m_Name: ShadeTrigger
+  m_Name: Shade Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -409742,12 +409824,12 @@ GameObject:
   - component: {fileID: 1636216271}
   - component: {fileID: 1636216270}
   m_Layer: 0
-  m_Name: Enemy Pathing
+  m_Name: Enemy Pathing 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1636216270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -436918,6 +437000,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Destructible Rocks (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 4042265399615853706, guid: cde5b74ef3a249c41afe7ef614b7ad34, type: 3}
+      propertyPath: powerRequirement
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -455483,7 +455569,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1864753094
 Transform:
   m_ObjectHideFlags: 0
@@ -484744,6 +484830,10 @@ PrefabInstance:
     - target: {fileID: 779868837811642530, guid: cde5b74ef3a249c41afe7ef614b7ad34, type: 3}
       propertyPath: m_Name
       value: Destructible Rocks (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4042265399615853706, guid: cde5b74ef3a249c41afe7ef614b7ad34, type: 3}
+      propertyPath: powerRequirement
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -529098,7 +529188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7490492891687829689, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_Name
-      value: Zombie (2)
+      value: Zombie 1
       objectReference: {fileID: 0}
     - target: {fileID: 7490492891687829689, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_IsActive
