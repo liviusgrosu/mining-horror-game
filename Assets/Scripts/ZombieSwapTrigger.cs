@@ -6,7 +6,12 @@ public class ZombieSwapTrigger : MonoBehaviour
     [SerializeField] private GameObject zombieToEnable;
 
     private bool _triggered;
-    
+
+    private void Awake()
+    {
+        gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (_triggered && !other.CompareTag("Player"))

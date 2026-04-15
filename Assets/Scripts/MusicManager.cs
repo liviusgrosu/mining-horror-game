@@ -26,8 +26,8 @@ public class MusicManager : MonoBehaviour
         Instance = this;
         _audioSource = GetComponent<AudioSource>();
     }
-    
-    public void PlayAmbientMusic()
+
+    private void Start()
     {
         if (_audioSource.clip == _ambientMusic)
         {

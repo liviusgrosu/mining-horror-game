@@ -160,6 +160,11 @@ public class Inventory : MonoBehaviour
             {
                 _pickaxeGems.Remove(item);
             }
+
+            if (item == lightGemItem && playerLight)
+            {
+                playerLight.enabled = false;
+            }
             Add(item);
         }
     }

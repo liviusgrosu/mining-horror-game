@@ -29,6 +29,8 @@ public class PlayerMovement : MonoBehaviour
     private float _currentSpeed;
     private float _speedSmoothVelocity;
 
+    [SerializeField] private float startBreathingDelay = 5f;
+    
     // Breathing audio
     [SerializeField]
     private AudioClip breathingSlowClip;
@@ -140,7 +142,7 @@ public class PlayerMovement : MonoBehaviour
                 _breathingAudioSource.Play();
             }
         }
-        else if (_sprintTimer >= 1.5f)
+        else if (_sprintTimer >= startBreathingDelay)
         {
             if (_breathingAudioSource.clip != breathingSlowClip)
             {
