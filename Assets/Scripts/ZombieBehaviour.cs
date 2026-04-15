@@ -279,19 +279,39 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void CheckIfPlayerInFov()
     {
-        if (_currentState is State.Attack or State.Engage) return;
-        if (!(Vector3.Distance(transform.position, _player.position) <= _engageDistance)) return;
+        if (_currentState is State.Attack or State.Engage)
+        {
+            return;
+        }
+
+        if (!(Vector3.Distance(transform.position, _player.position) <= _engageDistance))
+        {
+            return;
+        }
 
         var verticalDiff = _player.position.y - transform.position.y;
-        if (Mathf.Abs(verticalDiff) > _verticalSightHeight) return;
+        if (Mathf.Abs(verticalDiff) > _verticalSightHeight)
+        {
+            return;
+        }
 
         var enemyToPlayer = _player.position - transform.position;
         var flatDirection = new Vector3(enemyToPlayer.x, 0f, enemyToPlayer.z);
         var flatForward = new Vector3(transform.forward.x, 0f, transform.forward.z);
-        if (!(Vector3.Angle(flatDirection, flatForward) <= _fov)) return;
+        if (!(Vector3.Angle(flatDirection, flatForward) <= _fov))
+        {
+            return;
+        }
 
-        if (!Physics.Raycast(transform.position, enemyToPlayer, out var hit, _engageDistance)) return;
-        if (!hit.transform.CompareTag("Player")) return;
+        if (!Physics.Raycast(transform.position, enemyToPlayer, out var hit, _engageDistance))
+        {
+            return;
+        }
+
+        if (!hit.transform.CompareTag("Player"))
+        {
+            return;
+        }
 
         _agent.isStopped = false;
         _agent.speed = runningSpeed;
@@ -301,7 +321,10 @@ public class ZombieBehaviour : MonoBehaviour
 
     public void EndChase()
     {
-        if (!initiateChase) return;
+        if (!initiateChase)
+        {
+            return;
+        }
 
         _agent.isStopped = true;
         _checkStateElapsedTime = 0f;

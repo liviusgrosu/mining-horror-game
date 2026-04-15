@@ -67,7 +67,6 @@ public class EnemyFootsteps : MonoBehaviour
         }
         else
         {
-            // Reset timer so the first step plays immediately on movement
             stepTimer = walkStepInterval;
         }
     }
@@ -109,7 +108,9 @@ public class EnemyFootsteps : MonoBehaviour
     private AudioClip GetRandomClip(AudioClip[] sounds)
     {
         if (sounds.Length == 1)
+        {
             return sounds[0];
+        }
 
         if (sounds != lastSoundSet)
         {
