@@ -10,7 +10,6 @@ public class PlayerVisibility : MonoBehaviour
     [SerializeField] private LayerMask _occlusionMask = ~0;
 
     [Header("Ambient")]
-
     [SerializeField] [Range(0f, 0.5f)] private float _ambientBase = 0.1f;
 
     [Header("Light Contribution")]
@@ -37,7 +36,7 @@ public class PlayerVisibility : MonoBehaviour
         RefreshLightCache();
     }
 
-    private void RefreshLightCache()
+    public void RefreshLightCache()
     {
         _stealthLights.Clear();
         _stealthLights.AddRange(FindObjectsOfType<StealthLight>());
@@ -73,22 +72,13 @@ public class PlayerVisibility : MonoBehaviour
                 continue;
             }
 
-            if (light.type == LightType.Rectangle || light.type == LightType.Disc)
-            {
-                var localPlayer = light.transform.InverseTransformPoint(playerPos);
-                if (localPlayer.z < 0f)
-                {
-                    continue;
-                }
-            }
-
             var effectivePos = GetEffectiveLightPoint(light, playerPos);
-            if (light.type == LightType.Rectangle || light.type == LightType.Disc)
+            if (effectivePos == null)
             {
-                effectivePos += (playerPos - effectivePos).normalized * 0.05f;
+                continue;
             }
-            var distance = Vector3.Distance(playerPos, effectivePos);
 
+            var distance = Vector3.Distance(playerPos, effectivePos.Value);
             if (distance > stealthLight.DetectionRange)
             {
                 continue;
@@ -108,50 +98,53 @@ public class PlayerVisibility : MonoBehaviour
                 coneFactor = 1f - (angleToPlayer / halfSpotAngle);
             }
 
-            var direction = (effectivePos - playerPos).normalized;
+            var direction = (effectivePos.Value - playerPos).normalized;
             if (Physics.Raycast(playerPos, direction, distance, _occlusionMask))
             {
                 continue;
             }
 
             var t = 1f - (distance / stealthLight.DetectionRange);
-            var falloff = stealthLight.FalloffCurve.Evaluate(t);
-            var contribution = stealthLight.MaxContribution * falloff * coneFactor;
-            total += contribution;
+            total += stealthLight.MaxContribution * stealthLight.FalloffCurve.Evaluate(t) * coneFactor;
         }
 
         return Mathf.Clamp01(total);
     }
 
-    private static Vector3 GetEffectiveLightPoint(Light light, Vector3 playerPos)
+    private static Vector3? GetEffectiveLightPoint(Light light, Vector3 playerPos)
     {
-        if (light.type == LightType.Rectangle)
+        if (light.type is not (LightType.Rectangle or LightType.Disc))
         {
-            var t = light.transform;
-            var localPlayer = t.InverseTransformPoint(playerPos);
-            var halfW = light.areaSize.x * 0.5f;
-            var halfH = light.areaSize.y * 0.5f;
-            var closest = new Vector3(
-                Mathf.Clamp(localPlayer.x, -halfW, halfW),
-                Mathf.Clamp(localPlayer.y, -halfH, halfH),
-                0f
-            );
-            return t.TransformPoint(closest);
+            return light.transform.position;
+        }
+        
+        var localPlayer = light.transform.InverseTransformPoint(playerPos);
+        if (localPlayer.z < 0f)
+        {
+            return null;
         }
 
-        if (light.type == LightType.Disc)
+        Vector3 closest;
+        if (light.type == LightType.Rectangle)
         {
-            var t = light.transform;
-            var localPlayer = t.InverseTransformPoint(playerPos);
-            var radius = light.areaSize.x * 0.5f;
+            closest = new Vector3(
+                Mathf.Clamp(localPlayer.x, -light.areaSize.x * 0.5f, light.areaSize.x * 0.5f),
+                Mathf.Clamp(localPlayer.y, -light.areaSize.y * 0.5f, light.areaSize.y * 0.5f),
+                0f
+            );
+        }
+        else
+        {
             var onPlane = new Vector2(localPlayer.x, localPlayer.y);
+            var radius = light.areaSize.x * 0.5f;
             if (onPlane.magnitude > radius)
             {
                 onPlane = onPlane.normalized * radius;
             }
-            return t.TransformPoint(new Vector3(onPlane.x, onPlane.y, 0f));
+            closest = new Vector3(onPlane.x, onPlane.y, 0f);
         }
 
-        return light.transform.position;
+        var worldPoint = light.transform.TransformPoint(closest);
+        return worldPoint + (playerPos - worldPoint).normalized * 0.05f;
     }
 }
