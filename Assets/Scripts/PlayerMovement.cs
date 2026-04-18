@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Movement")]
     private CharacterController _controller;
     [SerializeField]
     private float movementSpeed = 6f;
@@ -10,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private float gravity = -18f;
 
     // Sprinting
+    [Header("Sprinting")]
     [SerializeField]
     private float sprintMultiplier = 1.8f;
     [SerializeField]
@@ -29,20 +31,23 @@ public class PlayerMovement : MonoBehaviour
     private float _currentSpeed;
     private float _speedSmoothVelocity;
 
+    [Header("Breathing Audio")]
     [SerializeField] private float startBreathingDelay = 5f;
-    
-    // Breathing audio
     [SerializeField]
     private AudioClip breathingSlowClip;
     [SerializeField]
     private AudioClip breathingHeavyClip;
     private AudioSource _breathingAudioSource;
 
+    [Header("Mouse")]
     // Looking
     private Camera _camera;
     private float _yRotation;
     [SerializeField]
     private float mouseSensitivity = 100f;
+    
+    [Header("-DEBUG-")]
+    private bool unlimitedSprint = false;
 
     void Start()
     {
@@ -178,6 +183,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (wantsToSprint)
         {
+            if (unlimitedSprint)
+            {
+                return;
+            }
+            
             _isSprinting = true;
             _sprintTimer += Time.deltaTime;
 
