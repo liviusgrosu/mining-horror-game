@@ -96,3 +96,9 @@ sysinfo.txt
 # Blender #
 # ======= #
 *.blend1
+
+# ======= #
+# Claude  #
+# ======= #
+CLAUDE.md
+.claude
