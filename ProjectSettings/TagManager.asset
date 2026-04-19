@@ -20,6 +20,9 @@ TagManager:
   - Wood
   - Spiked Trap
   - Pit
+  - Metal
+  - Carpet
+  - Grass
   layers:
   - Default
   - TransparentFX
