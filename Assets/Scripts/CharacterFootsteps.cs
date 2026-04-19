@@ -23,6 +23,7 @@ public class CharacterFootsteps : MonoBehaviour
     [Header("Footstep Settings")]
     public float stepInterval = 0.45f;
     public float sprintStepInterval = 0.3f;
+    public float crouchStepInterval = 0.65f;
 
     [Range(0f, 1f)]
     public float footstepVolume = 0.8f;
@@ -46,10 +47,12 @@ public class CharacterFootsteps : MonoBehaviour
     [SerializeField] private float _metalNoise = 0.85f;
     [SerializeField] private float _walkSpeedMultiplier = 0.5f;
     [SerializeField] private float _sprintSpeedMultiplier = 1.5f;
+    [SerializeField] private float _crouchSpeedMultiplier = 0.2f;
 
     private AudioSource _audioSource;
     private CharacterController _characterController;
     private PlayerMovement _playerMovement;
+    private int _ignoreSelfMask;
 
     private float _stepTimer;
     private int _lastClipIndex = -1;
@@ -64,6 +67,7 @@ public class CharacterFootsteps : MonoBehaviour
 
         _audioSource.playOnAwake = false;
         _audioSource.loop = false;
+        _ignoreSelfMask = ~(1 << gameObject.layer);
     }
 
     private void Update()
@@ -80,7 +84,8 @@ public class CharacterFootsteps : MonoBehaviour
         {
             _stepTimer += Time.deltaTime;
 
-            var currentInterval = _playerMovement != null && _playerMovement.IsSprinting ? sprintStepInterval : stepInterval;
+            var currentInterval = _playerMovement != null && _playerMovement.IsCrouching ? crouchStepInterval :
+                                  _playerMovement != null && _playerMovement.IsSprinting ? sprintStepInterval : stepInterval;
 
             if (_stepTimer >= currentInterval)
             {
@@ -98,9 +103,8 @@ public class CharacterFootsteps : MonoBehaviour
     private void EmitFootstepNoise()
     {
         var surfaceNoise = GetSurfaceNoiseLevel();
-        var speedMultiplier = _playerMovement != null && _playerMovement.IsSprinting
-            ? _sprintSpeedMultiplier
-            : _walkSpeedMultiplier;
+        var speedMultiplier = _playerMovement && _playerMovement.IsCrouching ? _crouchSpeedMultiplier :
+                              _playerMovement && _playerMovement.IsSprinting ? _sprintSpeedMultiplier : _walkSpeedMultiplier;
 
         _lastNoiseRadius = _baseNoiseRadius * surfaceNoise * speedMultiplier;
         NoiseEmitter.Emit(transform.position, _lastNoiseRadius);
@@ -108,7 +112,7 @@ public class CharacterFootsteps : MonoBehaviour
 
     private float GetSurfaceNoiseLevel()
     {
-        if (!Physics.Raycast(transform.position, Vector3.down, out var hit, raycastDistance))
+        if (!Physics.Raycast(transform.position, Vector3.down, out var hit, raycastDistance, _ignoreSelfMask))
         {
             return _stoneNoise;
         }
@@ -152,7 +156,7 @@ public class CharacterFootsteps : MonoBehaviour
 
     private AudioClip[] GetSoundSetForSurface()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out var hit, raycastDistance))
+        if (Physics.Raycast(transform.position, Vector3.down, out var hit, raycastDistance, _ignoreSelfMask))
         {
             var tag = hit.collider.tag;
 
