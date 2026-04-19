@@ -21,7 +21,10 @@ public class PickaxeHand : MonoBehaviour
     [SerializeField] private InventoryItem deathRune;
     
     public LayerMask ignoreMask;
-    
+
+    [Header("Noise")]
+    [SerializeField] private float _miningNoiseRadius = 12f;
+
     private AudioSource _audioSource;
     
     [SerializeField]
@@ -90,6 +93,7 @@ public class PickaxeHand : MonoBehaviour
                     voxelTerrain.Mine(hit.point);
                 }
 
+                NoiseEmitter.Emit(hit.point, _miningNoiseRadius);
                 _audioSource.PlayOneShot(pickaxeValidSound);
                 SpawnCloudEffect(hit.point);
                 var voxelRenderer = hit.collider.GetComponent<MeshRenderer>();
@@ -107,6 +111,7 @@ public class PickaxeHand : MonoBehaviour
                 {
                     var mat = destructible.CurrentStageMaterial;
                     destructible.TakeDamage();
+                    NoiseEmitter.Emit(hit.point, _miningNoiseRadius);
                     _audioSource.PlayOneShot(pickaxeValidSound);
                     SpawnCloudEffect(hit.point);
                     if (mat != null)
