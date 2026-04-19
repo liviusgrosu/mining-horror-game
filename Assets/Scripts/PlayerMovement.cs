@@ -10,6 +10,20 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float gravity = -18f;
 
+    // Crouching
+    [Header("Crouching")]
+    [SerializeField] private float crouchSpeedMultiplier = 0.5f;
+    [SerializeField] private float crouchHeight = 1f;
+    [SerializeField] private float crouchTransitionSpeed = 8f;
+    private bool _isCrouching;
+    private float _standingHeight;
+    private Vector3 _standingCenter;
+    private float _standingCameraHeight;
+    private float _crouchCameraTargetY;
+    private float _currentCameraOffset;
+
+    public bool IsCrouching => _isCrouching;
+
     // Sprinting
     [Header("Sprinting")]
     [SerializeField]
@@ -40,7 +54,6 @@ public class PlayerMovement : MonoBehaviour
     private AudioSource _breathingAudioSource;
 
     [Header("Mouse")]
-    // Looking
     private Camera _camera;
     private float _yRotation;
     [SerializeField]
@@ -53,6 +66,13 @@ public class PlayerMovement : MonoBehaviour
     {
         _controller = GetComponent<CharacterController>();
         _camera = Camera.main;
+        _standingHeight = _controller.height;
+        _standingCenter = _controller.center;
+        _standingCameraHeight = _camera.transform.localPosition.y;
+
+        var capsuleBottom = _standingCenter.y - _standingHeight / 2f;
+        var proportion = (_standingCameraHeight - capsuleBottom) / _standingHeight;
+        _crouchCameraTargetY = capsuleBottom + proportion * crouchHeight;
 
         _breathingAudioSource = gameObject.AddComponent<AudioSource>();
         _breathingAudioSource.loop = true;
@@ -111,6 +131,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         var isMoving = horizontal != 0f || vertical != 0f;
+        HandleCrouch();
         HandleSprint(isMoving);
         HandleBreathingAudio();
 
@@ -122,7 +143,8 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            var targetSpeed = _isSprinting ? movementSpeed * sprintMultiplier : movementSpeed;
+            var targetSpeed = _isCrouching ? movementSpeed * crouchSpeedMultiplier :
+                          _isSprinting ? movementSpeed * sprintMultiplier : movementSpeed;
             _currentSpeed = Mathf.SmoothDamp(_currentSpeed, targetSpeed, ref _speedSmoothVelocity, speedSmoothTime);
         }
         movementDir = movementDir.normalized * _currentSpeed;
@@ -135,6 +157,35 @@ public class PlayerMovement : MonoBehaviour
         _yVelocity += gravity * Time.deltaTime;
         var velocity = movementDir + Vector3.up * _yVelocity;
         _controller.Move(velocity * Time.deltaTime);
+    }
+
+    private void HandleCrouch()
+    {
+        var wantsToCrouch = Input.GetKey(KeyCode.LeftControl);
+
+        if (wantsToCrouch && !_isCrouching)
+        {
+            _isCrouching = true;
+            _isSprinting = false;
+            _controller.height = crouchHeight;
+            _controller.center = _standingCenter + Vector3.up * ((crouchHeight - _standingHeight) / 2f);
+        }
+        else if (!wantsToCrouch && _isCrouching)
+        {
+            if (!Physics.Raycast(transform.position + Vector3.up * crouchHeight, Vector3.up, _standingHeight - crouchHeight + 0.1f))
+            {
+                _isCrouching = false;
+                _controller.height = _standingHeight;
+                _controller.center = _standingCenter;
+            }
+        }
+
+        var targetY = _isCrouching ? _crouchCameraTargetY : _standingCameraHeight;
+        _currentCameraOffset = Mathf.Lerp(_currentCameraOffset, targetY, crouchTransitionSpeed * Time.deltaTime);
+
+        var cameraPos = _camera.transform.localPosition;
+        cameraPos.y = _currentCameraOffset;
+        _camera.transform.localPosition = cameraPos;
     }
 
     private void HandleBreathingAudio()
