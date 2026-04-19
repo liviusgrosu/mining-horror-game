@@ -23,7 +23,7 @@ public class CharacterFootsteps : MonoBehaviour
     [Header("Footstep Settings")]
     public float stepInterval = 0.45f;
     public float sprintStepInterval = 0.3f;
-    public float crouchStepInterval = 0.65f;
+    public float crouchStepInterval = 0.9f;
 
     [Range(0f, 1f)]
     public float footstepVolume = 0.8f;
@@ -84,8 +84,11 @@ public class CharacterFootsteps : MonoBehaviour
         {
             _stepTimer += Time.deltaTime;
 
-            var currentInterval = _playerMovement != null && _playerMovement.IsCrouching ? crouchStepInterval :
-                                  _playerMovement != null && _playerMovement.IsSprinting ? sprintStepInterval : stepInterval;
+            var currentInterval = _playerMovement.IsCrouching 
+                ? crouchStepInterval 
+                : _playerMovement.IsSprinting 
+                    ? sprintStepInterval 
+                    : stepInterval;
 
             if (_stepTimer >= currentInterval)
             {
@@ -96,7 +99,7 @@ public class CharacterFootsteps : MonoBehaviour
         }
         else
         {
-            _stepTimer = stepInterval;
+            _stepTimer = 0f;
         }
     }
 
