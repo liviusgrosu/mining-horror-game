@@ -93,7 +93,7 @@ public class PickaxeHand : MonoBehaviour
                     voxelTerrain.Mine(hit.point);
                 }
 
-                NoiseEmitter.Emit(hit.point, _miningNoiseRadius);
+                NoiseEmitter.Emit(hit.point, _miningNoiseRadius, hit.collider.tag);
                 _audioSource.PlayOneShot(pickaxeValidSound);
                 SpawnCloudEffect(hit.point);
                 var voxelRenderer = hit.collider.GetComponent<MeshRenderer>();
@@ -111,7 +111,7 @@ public class PickaxeHand : MonoBehaviour
                 {
                     var mat = destructible.CurrentStageMaterial;
                     destructible.TakeDamage();
-                    NoiseEmitter.Emit(hit.point, _miningNoiseRadius);
+                    NoiseEmitter.Emit(hit.point, _miningNoiseRadius, hit.collider.tag);
                     _audioSource.PlayOneShot(pickaxeValidSound);
                     SpawnCloudEffect(hit.point);
                     if (mat != null)

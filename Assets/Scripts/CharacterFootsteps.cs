@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class CharacterFootsteps : MonoBehaviour
 {
@@ -20,22 +22,28 @@ public class CharacterFootsteps : MonoBehaviour
     [Header("Metal Footstep Sounds")]
     public AudioClip[] metalSounds;
     
-    [Header("Footstep Settings")]
-    public float stepInterval = 0.45f;
-    public float sprintStepInterval = 0.3f;
-    public float crouchStepInterval = 0.9f;
+    
+    [Header("Speed Sound Multipliers")]
+    [SerializeField] private float _walkSpeedMultiplier = 0.5f;
+    [SerializeField] private float _sprintSpeedMultiplier = 1.5f;
+    [SerializeField] private float _crouchSpeedMultiplier = 0.2f;
 
+    [Header("Speed Volumes")]
     [Range(0f, 1f)]
-    public float footstepVolume = 0.8f;
+    public float walkingVolumeMultiplier = 0.8f;
+    [Range(0f, 1f)]
+    public float sprintVolumeMultiplier = 1f;
+    [Range(0f, 1f)]
+    public float crouchVolumeMultiplier = 0.5f;
 
     public float raycastDistance = 1.5f;
 
-    public string gravelTag = "Gravel";
-    public string stoneTag = "Stone";
-    public string woodTag = "Wood";
-    public string grassTag = "Grass";
-    public string carpetTag = "Carpet";
-    public string metalTag = "Metal";
+    private const string GravelTag = "Gravel";
+    private const string StoneTag = "Stone";
+    private const string WoodTag = "Wood";
+    private const string GrassTag = "Grass";
+    private const string CarpetTag = "Carpet";
+    private const string MetalTag = "Metal";
 
     [Header("Noise")]
     [SerializeField] private float _baseNoiseRadius = 8f;
@@ -45,9 +53,11 @@ public class CharacterFootsteps : MonoBehaviour
     [SerializeField] private float _grassNoise = 0.4f;
     [SerializeField] private float _carpetNoise = 0.3f;
     [SerializeField] private float _metalNoise = 0.85f;
-    [SerializeField] private float _walkSpeedMultiplier = 0.5f;
-    [SerializeField] private float _sprintSpeedMultiplier = 1.5f;
-    [SerializeField] private float _crouchSpeedMultiplier = 0.2f;
+    
+    [Header("Speed Frequencies")]
+    public float stepInterval = 0.45f;
+    public float sprintStepInterval = 0.3f;
+    public float crouchStepInterval = 0.9f;
 
     private AudioSource _audioSource;
     private CharacterController _characterController;
@@ -105,44 +115,44 @@ public class CharacterFootsteps : MonoBehaviour
 
     private void EmitFootstepNoise()
     {
-        var surfaceNoise = GetSurfaceNoiseLevel();
+        var (surfaceNoise, surfaceTag) = GetSurfaceNoiseLevel();
         var speedMultiplier = _playerMovement && _playerMovement.IsCrouching ? _crouchSpeedMultiplier :
                               _playerMovement && _playerMovement.IsSprinting ? _sprintSpeedMultiplier : _walkSpeedMultiplier;
 
         _lastNoiseRadius = _baseNoiseRadius * surfaceNoise * speedMultiplier;
-        NoiseEmitter.Emit(transform.position, _lastNoiseRadius);
+        NoiseEmitter.Emit(transform.position, _lastNoiseRadius, surfaceTag);
     }
 
-    private float GetSurfaceNoiseLevel()
+    private (float, string) GetSurfaceNoiseLevel()
     {
         if (!Physics.Raycast(transform.position, Vector3.down, out var hit, raycastDistance, _ignoreSelfMask))
         {
-            return _stoneNoise;
+            return (_stoneNoise, StoneTag);
         }
 
         var tag = hit.collider.tag;
 
-        if (tag == gravelTag)
+        if (tag == GravelTag)
         {
-            return _gravelNoise;
+            return (_gravelNoise, GravelTag);
         }
-        if (tag == woodTag)
+        if (tag == WoodTag)
         {
-            return _woodNoise;
+            return (_woodNoise, WoodTag);
         }
-        if (tag == grassTag)
+        if (tag == GrassTag)
         {
-            return _grassNoise;
+            return (_grassNoise, GrassTag);
         }
-        if (tag == carpetTag)
+        if (tag == CarpetTag)
         {
-            return _carpetNoise;
+            return (_carpetNoise, CarpetTag);
         }
-        if (tag == metalTag)
+        if (tag == MetalTag)
         {
-            return _metalNoise;
+            return (_metalNoise, MetalTag);
         }
-        return _stoneNoise;
+        return (_stoneNoise, StoneTag);
     }
 
     private void PlayFootstepForSurface()
@@ -154,7 +164,13 @@ public class CharacterFootsteps : MonoBehaviour
             return;
         }
 
-        _audioSource.PlayOneShot(GetRandomClip(soundSet), footstepVolume);
+        var volume = _playerMovement && _playerMovement.IsCrouching
+            ? crouchVolumeMultiplier
+            : _playerMovement && _playerMovement.IsSprinting
+                ? sprintVolumeMultiplier
+                : walkingVolumeMultiplier;
+
+        _audioSource.PlayOneShot(GetRandomClip(soundSet), volume);
     }
 
     private AudioClip[] GetSoundSetForSurface()
@@ -163,27 +179,27 @@ public class CharacterFootsteps : MonoBehaviour
         {
             var tag = hit.collider.tag;
 
-            if (tag == gravelTag)
+            if (tag == GravelTag)
             {
                 return gravelSounds;
             }
-            if (tag == woodTag)
+            if (tag == WoodTag)
             {
                 return woodSounds;
             }
-            if (tag == stoneTag)
+            if (tag == StoneTag)
             {
                 return stoneSounds;
             }
-            if (tag == grassTag)
+            if (tag == GrassTag)
             {
                 return grassSounds;
             }
-            if (tag == carpetTag)
+            if (tag == CarpetTag)
             {
                 return carpetSounds;
             }
-            if (tag == metalTag)
+            if (tag == MetalTag)
             {
                 return metalSounds;
             }

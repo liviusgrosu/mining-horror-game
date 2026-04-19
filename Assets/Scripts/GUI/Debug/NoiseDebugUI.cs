@@ -19,7 +19,7 @@ public class NoiseDebugUI : MonoBehaviour
         NoiseEmitter.OnNoise -= HandleNoise;
     }
 
-    private void HandleNoise(Vector3 position, float radius)
+    private void HandleNoise(Vector3 position, float radius, string _)
     {
         _text.text = $"{radius:F2}";
     }

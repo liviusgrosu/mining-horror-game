@@ -26,7 +26,7 @@ public class EnemyFootsteps : MonoBehaviour
     public float raycastDistance = 1.5f;
 
     [Tooltip("Tag applied to gravel surfaces in the scene")]
-    public string gravelTag = "Gravel";
+    public string _gravelTag = "Gravel";
 
     [Tooltip("Tag applied to stone surfaces in the scene")]
     public string stoneTag = "Stone";
@@ -90,7 +90,7 @@ public class EnemyFootsteps : MonoBehaviour
         {
             var tag = hit.collider.tag;
 
-            if (tag == gravelTag)
+            if (tag == _gravelTag)
             {
                 return gravelSounds;
             }

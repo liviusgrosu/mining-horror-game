@@ -80,7 +80,7 @@ public class ZombieBehaviour : MonoBehaviour
     private Animator animator;
 
     private float _animationTime;
-    
+
     [Header("Audio")]
     [SerializeField]
     private AudioSource _loopAudioSource;
@@ -106,13 +106,30 @@ public class ZombieBehaviour : MonoBehaviour
     private bool _isDead;
     private bool _isTakingHit;
 
-    [Header("Debug")] [SerializeField] private bool neverEngage;
+    [Header("Debug")] 
+    [SerializeField] private bool neverEngage;
+    [SerializeField] private bool shutUpPlease;
+    [SerializeField] private bool stayInPlace;
     
     [Header("Legacy (DO NOT USE)")]
     [SerializeField] 
     private bool initiateChase;
     [SerializeField]
     private bool startAtIdle;
+    
+    private void Awake()
+    {
+        _agent = GetComponent<NavMeshAgent>();
+        _agent.angularSpeed = 500f;
+        _startingStoppingDistance = _agent.stoppingDistance;
+        _startingRotation = transform.rotation;
+        _currentState = _initialState;
+        _currentHealth = _maxHealth;
+        
+        // Debugging
+        _loopAudioSource.enabled = !shutUpPlease;
+        walkingSpeed = stayInPlace ? 0f : walkingSpeed;
+    }
     
     private void OnEnable()
     {
@@ -124,7 +141,7 @@ public class ZombieBehaviour : MonoBehaviour
         NoiseEmitter.OnNoise -= HandleNoise;
     }
 
-    private void HandleNoise(Vector3 position, float radius)
+    private void HandleNoise(Vector3 position, float radius, string _)
     {
         if (_currentState is State.Engage or State.Attack)
         {
@@ -141,16 +158,6 @@ public class ZombieBehaviour : MonoBehaviour
         _agent.speed = walkingSpeed;
         _agent.stoppingDistance = 0f;
         _currentState = State.Investigate;
-    }
-
-    private void Awake()
-    {
-        _agent = GetComponent<NavMeshAgent>();
-        _agent.angularSpeed = 500f;
-        _startingStoppingDistance = _agent.stoppingDistance;
-        _startingRotation = transform.rotation;
-        _currentState = _initialState;
-        _currentHealth = _maxHealth;
     }
 
     private void Start()
