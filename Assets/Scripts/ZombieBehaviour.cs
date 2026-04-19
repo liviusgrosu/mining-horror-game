@@ -15,7 +15,8 @@ public class ZombieBehaviour : MonoBehaviour
         Engage,
         Attack,
         Check,
-        Return
+        Return,
+        Investigate
     }
 
     [Header("General")]
@@ -55,7 +56,6 @@ public class ZombieBehaviour : MonoBehaviour
 
     [SerializeField]
     private State _initialState = State.Idle;
-    [SerializeField]
     private State _currentState = State.Idle;
     private Transform _player;
     private NavMeshAgent _agent;
@@ -68,23 +68,20 @@ public class ZombieBehaviour : MonoBehaviour
     private Quaternion _startingRotation;
     private float _checkStateElapsedTime;
     private float _getDistanceFromPlayer => Vector3.Distance(transform.position, _player.position);
+    private Vector3 _investigateTarget;
 
     // Patrolling values
     private bool _shouldPatrol => _initialState == State.Patrol;
     [SerializeField]
-    private EnemyPathing _pathing;
+    private EnemyPathing _pathing;  
     private int _currentPointIndex = 0;
 
-    [SerializeField]
-    private bool startAtIdle;
-
-    [SerializeField] private bool initiateChase;
-    
     [SerializeField]
     private Animator animator;
 
     private float _animationTime;
     
+    [Header("Audio")]
     [SerializeField]
     private AudioSource _loopAudioSource;
     [SerializeField]
@@ -108,7 +105,44 @@ public class ZombieBehaviour : MonoBehaviour
     private int _currentHealth;
     private bool _isDead;
     private bool _isTakingHit;
+
+    [Header("Debug")] [SerializeField] private bool neverEngage;
     
+    [Header("Legacy (DO NOT USE)")]
+    [SerializeField] 
+    private bool initiateChase;
+    [SerializeField]
+    private bool startAtIdle;
+    
+    private void OnEnable()
+    {
+        NoiseEmitter.OnNoise += HandleNoise;
+    }
+
+    private void OnDisable()
+    {
+        NoiseEmitter.OnNoise -= HandleNoise;
+    }
+
+    private void HandleNoise(Vector3 position, float radius)
+    {
+        if (_currentState is State.Engage or State.Attack)
+        {
+            return;
+        }
+
+        if (Vector3.Distance(transform.position, position) > radius)
+        {
+            return;
+        }
+
+        _investigateTarget = position;
+        _agent.isStopped = false;
+        _agent.speed = walkingSpeed;
+        _agent.stoppingDistance = 0f;
+        _currentState = State.Investigate;
+    }
+
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -163,6 +197,9 @@ public class ZombieBehaviour : MonoBehaviour
                 break;
             case State.Return:
                 ReturnState();
+                break;
+            case State.Investigate:
+                InvestigateState();
                 break;
         }
     }
@@ -266,6 +303,20 @@ public class ZombieBehaviour : MonoBehaviour
         }
     }
 
+    private void InvestigateState()
+    {
+        animator.SetFloat(MovementBlend, 0.5f, 0.1f, Time.deltaTime);
+        _agent.SetDestination(_investigateTarget);
+
+        if (Vector3.Distance(transform.position, _investigateTarget) <= _agent.stoppingDistance + 1f)
+        {
+            _agent.ResetPath();
+            _agent.isStopped = true;
+            _checkStateElapsedTime = 0f;
+            _currentState = State.Check;
+        }
+    }
+
     private void ReturnState()
     {
         animator.SetFloat(MovementBlend, 0.5f, 0.1f, Time.deltaTime);
@@ -309,6 +360,11 @@ public class ZombieBehaviour : MonoBehaviour
         }
 
         if (!hit.transform.CompareTag("Player"))
+        {
+            return;
+        }
+
+        if (neverEngage)
         {
             return;
         }
@@ -375,7 +431,7 @@ public class ZombieBehaviour : MonoBehaviour
             return;
         }
 
-        if (_currentState is not (State.Engage or State.Attack))
+        if (!neverEngage && _currentState is not (State.Engage or State.Attack))
         {
             _agent.speed = runningSpeed;
             PlayChaseSound();

@@ -54,6 +54,7 @@ public class CharacterFootsteps : MonoBehaviour
     private float _stepTimer;
     private int _lastClipIndex = -1;
     private AudioClip[] _lastSoundSet;
+    private float _lastNoiseRadius;
 
     void Awake()
     {
@@ -101,7 +102,8 @@ public class CharacterFootsteps : MonoBehaviour
             ? _sprintSpeedMultiplier
             : _walkSpeedMultiplier;
 
-        NoiseEmitter.Emit(transform.position, _baseNoiseRadius * surfaceNoise * speedMultiplier);
+        _lastNoiseRadius = _baseNoiseRadius * surfaceNoise * speedMultiplier;
+        NoiseEmitter.Emit(transform.position, _lastNoiseRadius);
     }
 
     private float GetSurfaceNoiseLevel()
@@ -181,6 +183,19 @@ public class CharacterFootsteps : MonoBehaviour
             return stoneSounds;
         }
         return stoneSounds;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (_lastNoiseRadius <= 0f)
+        {
+            return;
+        }
+
+        Gizmos.color = new Color(1f, 0.5f, 0f, 0.3f);
+        Gizmos.DrawSphere(transform.position, _lastNoiseRadius);
+        Gizmos.color = new Color(1f, 0.5f, 0f, 1f);
+        Gizmos.DrawWireSphere(transform.position, _lastNoiseRadius);
     }
 
     private AudioClip GetRandomClip(AudioClip[] sounds)
