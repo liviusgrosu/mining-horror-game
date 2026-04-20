@@ -23,6 +23,7 @@ TagManager:
   - Metal
   - Carpet
   - Grass
+  - Fence
   layers:
   - Default
   - TransparentFX

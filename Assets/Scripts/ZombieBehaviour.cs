@@ -106,7 +106,15 @@ public class ZombieBehaviour : MonoBehaviour
     private bool _isDead;
     private bool _isTakingHit;
 
-    [Header("Debug")] 
+    [Header("Sound Occlusion")]
+    [SerializeField] private LayerMask _occlusionMask;
+    [SerializeField] private float _hardSurfaceAttenuation = 0.5f;
+
+    private bool _gizmoNoiseActive;
+    private bool _gizmoNoiseHeard;
+    private Vector3 _gizmoNoisePosition;
+
+    [Header("Debug")]
     [SerializeField] private bool neverEngage;
     [SerializeField] private bool shutUpPlease;
     [SerializeField] private bool stayInPlace;
@@ -148,7 +156,33 @@ public class ZombieBehaviour : MonoBehaviour
             return;
         }
 
-        if (Vector3.Distance(transform.position, position) > radius)
+        var direction = position - transform.position;
+
+        if (direction.magnitude > radius)
+        {
+            return;
+        }
+
+        var effectiveRadius = radius;
+
+        if (Physics.Raycast(transform.position, direction.normalized, out var hit, direction.magnitude, _occlusionMask))
+        {
+            if (hit.collider.CompareTag("Stone") || 
+                hit.collider.CompareTag("Wood")  || 
+                hit.collider.CompareTag("Grass") ||
+                hit.collider.CompareTag("Metal") ||
+                hit.collider.CompareTag("Gravel"))
+            {
+                effectiveRadius *= _hardSurfaceAttenuation;
+            }
+        }
+
+        var heard = direction.magnitude <= effectiveRadius;
+        _gizmoNoiseActive = true;
+        _gizmoNoiseHeard = heard;
+        _gizmoNoisePosition = position;
+
+        if (!heard)
         {
             return;
         }
@@ -543,5 +577,16 @@ public class ZombieBehaviour : MonoBehaviour
         }
 
         _bloodPool.localScale = targetScale;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!_gizmoNoiseActive)
+        {
+            return;
+        }
+
+        Gizmos.color = _gizmoNoiseHeard ? Color.green : Color.red;
+        Gizmos.DrawLine(_gizmoNoisePosition, transform.position);
     }
 }
