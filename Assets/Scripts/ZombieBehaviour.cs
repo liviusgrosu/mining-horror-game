@@ -26,13 +26,10 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] private float _rotationTolerance;
 
     [Header("Idle State")]
-    [Tooltip("Horizontal FOV angle of enemy (left/right)")]
     [SerializeField] private float _fov;
-    [Tooltip("Vertical sight limit above/below the enemy's eye level")]
     [SerializeField] private float _verticalSightHeight = 2f;
-    [Tooltip("How far the player needs to be from the enemy to engage")]
-    [SerializeField] private float _engageDistance;
-    [Tooltip("How fast the enemy will rotate back to the starting direction they were facing")]
+    [SerializeField] private float _litEngageDistance;
+    [SerializeField] private float _darkEngageDistance = 2f;
     [SerializeField] private float _startingRotationSpeed = 500f;
 
     [Header("Check State")]
@@ -287,7 +284,7 @@ public class ZombieBehaviour : MonoBehaviour
             _currentState = State.Attack;
         }
 
-        if (!initiateChase && _getDistanceFromPlayer > _engageDistance)
+        if (!initiateChase && _getDistanceFromPlayer > _litEngageDistance)
         {
             _agent.ResetPath();
             _agent.isStopped = true;
@@ -376,7 +373,10 @@ public class ZombieBehaviour : MonoBehaviour
             return;
         }
 
-        if (!(Vector3.Distance(transform.position, _player.position) <= _engageDistance))
+        var visibility = PlayerVisibility.Instance ? PlayerVisibility.Instance.VisibilityValue : 1f;
+        var effectiveEngageDistance = Mathf.Lerp(_darkEngageDistance, _litEngageDistance, visibility);
+
+        if (!(_getDistanceFromPlayer <= effectiveEngageDistance))
         {
             return;
         }
@@ -395,7 +395,7 @@ public class ZombieBehaviour : MonoBehaviour
             return;
         }
 
-        if (!Physics.Raycast(transform.position, enemyToPlayer, out var hit, _engageDistance))
+        if (!Physics.Raycast(transform.position, enemyToPlayer, out var hit, effectiveEngageDistance))
         {
             return;
         }
