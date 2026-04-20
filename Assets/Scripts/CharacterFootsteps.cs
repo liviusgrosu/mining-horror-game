@@ -59,6 +59,10 @@ public class CharacterFootsteps : MonoBehaviour
     public float sprintStepInterval = 0.3f;
     public float crouchStepInterval = 0.9f;
 
+    [Header("Landing")]
+    [SerializeField] private float _landingMinVelocity = 1f;
+    [SerializeField] private float _landingMaxVelocity = 10f;
+
     private AudioSource _audioSource;
     private CharacterController _characterController;
     private PlayerMovement _playerMovement;
@@ -68,6 +72,7 @@ public class CharacterFootsteps : MonoBehaviour
     private int _lastClipIndex = -1;
     private AudioClip[] _lastSoundSet;
     private float _lastNoiseRadius;
+    private bool _wasGrounded;
 
     void Awake()
     {
@@ -82,6 +87,7 @@ public class CharacterFootsteps : MonoBehaviour
 
     private void Update()
     {
+        HandleLanding();
         HandleFootsteps();
     }
 
@@ -111,6 +117,34 @@ public class CharacterFootsteps : MonoBehaviour
         {
             _stepTimer = 0f;
         }
+    }
+
+    private void HandleLanding()
+    {
+        var isGrounded = _characterController.isGrounded;
+
+        if (!_wasGrounded && isGrounded)
+        {
+            var fallSpeed = Mathf.Abs(_characterController.velocity.y);
+            var t = Mathf.InverseLerp(_landingMinVelocity, _landingMaxVelocity, fallSpeed);
+            var volume = Mathf.Lerp(crouchVolumeMultiplier, sprintVolumeMultiplier, t);
+
+            var soundSet = GetSoundSetForSurface();
+            if (soundSet != null && soundSet.Length >= 2)
+            {
+                var clip1 = GetRandomClip(soundSet);
+                var clip2 = GetRandomClip(soundSet);
+                _audioSource.PlayOneShot(clip1, volume);
+                _audioSource.PlayOneShot(clip2, volume);
+            }
+
+            var speedMultiplier = Mathf.Lerp(_crouchSpeedMultiplier, _sprintSpeedMultiplier, t);
+            var (surfaceNoise, surfaceTag) = GetSurfaceNoiseLevel();
+            _lastNoiseRadius = _baseNoiseRadius * surfaceNoise * speedMultiplier;
+            NoiseEmitter.Emit(transform.position, _lastNoiseRadius, surfaceTag);
+        }
+
+        _wasGrounded = isGrounded;
     }
 
     private void EmitFootstepNoise()
