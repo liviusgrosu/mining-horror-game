@@ -32,6 +32,7 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] private float _darkEngageDistance = 2f;
     [SerializeField] private float _litInvestigationDistance = 8f;
     [SerializeField] private float _darkInvestigationDistance = 2f;
+    [SerializeField] private float _proximityEngageDistance = 2f;
     [SerializeField] private float _startingRotationSpeed = 500f;
 
     [Header("Check State")]
@@ -108,6 +109,7 @@ public class ZombieBehaviour : MonoBehaviour
     [Header("Sound Occlusion")]
     [SerializeField] private LayerMask _occlusionMask;
     [SerializeField] private float _hardSurfaceAttenuation = 0.5f;
+    [SerializeField] [Range(0f, 1f)] private float _noiseEngageRatio = 0.35f;
 
     private bool _gizmoNoiseActive;
     private bool _gizmoNoiseHeard;
@@ -117,6 +119,8 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] private bool neverEngage;
     [SerializeField] private bool shutUpPlease;
     [SerializeField] private bool stayInPlace;
+    [SerializeField] private bool isBlind;
+    [SerializeField] private bool isDeaf;
     
     [Header("Legacy (DO NOT USE)")]
     [SerializeField] 
@@ -150,6 +154,11 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void HandleNoise(Vector3 position, float radius, string _)
     {
+        if (isDeaf)
+        {
+            return;
+        }
+
         if (_currentState is State.Engage or State.Attack)
         {
             return;
@@ -186,6 +195,15 @@ public class ZombieBehaviour : MonoBehaviour
             return;
         }
 
+        if (!neverEngage && direction.magnitude <= effectiveRadius * _noiseEngageRatio)
+        {
+            _agent.isStopped = false;
+            _agent.speed = runningSpeed;
+            PlayChaseSound();
+            _currentState = State.Engage;
+            return;
+        }
+
         _investigateTarget = position;
         _agent.isStopped = false;
         _agent.speed = walkingSpeed;
@@ -215,10 +233,12 @@ public class ZombieBehaviour : MonoBehaviour
 
         if (!GameManager.Instance.HasDied)
         {
-            CheckIfPlayerInFov();
-            CheckIfPlayerLit();
+            if (!isBlind)
+            {
+                CheckIfPlayerInFov();
+                CheckIfPlayerLit();
+            }
         }
-
         switch (_currentState)
         {
             case State.Idle:

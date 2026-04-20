@@ -246,7 +246,10 @@ MonoBehaviour:
   _rotationTolerance: 10
   _fov: 45
   _verticalSightHeight: 2
-  _engageDistance: 10
+  _litEngageDistance: 15
+  _darkEngageDistance: 2
+  _litInvestigationDistance: 25
+  _darkInvestigationDistance: 5
   _startingRotationSpeed: 250
   _checkStateTime: 2
   _toPlayerRotateAttackSpeed: 100
@@ -254,7 +257,7 @@ MonoBehaviour:
   _attackCooldown: 2
   _attackRange: 1
   _movementThreshold: 0.1
-  _initialState: 1
+  _initialState: 0
   runningSpeed: 3.2
   walkingSpeed: 0.75
   _pathing: {fileID: 0}
@@ -270,9 +273,15 @@ MonoBehaviour:
   _bloodPoolExpandTime: 6
   _maxHealth: 40
   _hitStunDuration: 0.5
+  _occlusionMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _hardSurfaceAttenuation: 0.5
   neverEngage: 0
-  shutUpPlease: 0
+  shutUpPlease: 1
   stayInPlace: 0
+  isBlind: 0
+  isDeaf: 0
   initiateChase: 0
   startAtIdle: 0
 --- !u!114 &7219305988573877170
