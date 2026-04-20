@@ -53,6 +53,13 @@ public class PlayerMovement : MonoBehaviour
     private AudioClip breathingHeavyClip;
     private AudioSource _breathingAudioSource;
 
+    [Header("Head Bob")]
+    [SerializeField] private float _bobAmountY = 0.05f;
+    [SerializeField] private float _bobAmountX = 0.025f;
+    [SerializeField] private float _bobSmooth = 10f;
+    private float _bobTimer;
+    private CharacterFootsteps _footsteps;
+
     [Header("Leaning")]
     [SerializeField] private float _leanDistance = 0.5f;
     [SerializeField] private float _leanTilt = 15f;
@@ -82,6 +89,7 @@ public class PlayerMovement : MonoBehaviour
         var proportion = (_standingCameraHeight - capsuleBottom) / _standingHeight;
         _crouchCameraTargetY = capsuleBottom + proportion * crouchHeight;
 
+        _footsteps = GetComponent<CharacterFootsteps>();
         _breathingAudioSource = gameObject.AddComponent<AudioSource>();
         _breathingAudioSource.loop = true;
         _breathingAudioSource.playOnAwake = false;
@@ -114,6 +122,7 @@ public class PlayerMovement : MonoBehaviour
         
         MovePlayer();
         HandleLean();
+        HandleHeadBob();
         Look();
     }
 
@@ -151,6 +160,26 @@ public class PlayerMovement : MonoBehaviour
         _currentLean = Mathf.Lerp(_currentLean, targetLean, _leanSpeed * Time.deltaTime);
     }
 
+    private void HandleHeadBob()
+    {
+        var isMoving = _controller.velocity.magnitude > 0.1f && _controller.isGrounded;
+
+        if (isMoving && _footsteps)
+        {
+            var currentInterval = _isCrouching
+                ? _footsteps.crouchStepInterval
+                : _isSprinting
+                    ? _footsteps.sprintStepInterval
+                    : _footsteps.stepInterval;
+
+            _bobTimer += Time.deltaTime / currentInterval;
+        }
+        else
+        {
+            _bobTimer = 0f;
+        }
+    }
+
     private void Look()
     {
         var mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * mouseSensitivity;
@@ -160,9 +189,13 @@ public class PlayerMovement : MonoBehaviour
         _yRotation = Mathf.Clamp(_yRotation, -80f, 80f);
         _camera.transform.localRotation = Quaternion.Euler(_yRotation, 0f, -_currentLean * _leanTilt);
 
-        var leanOffset = transform.right * (_currentLean * _leanDistance);
+        var bobY = Mathf.Sin(_bobTimer * Mathf.PI * 2f) * _bobAmountY;
+        var bobX = Mathf.Cos(_bobTimer * Mathf.PI) * _bobAmountX;
+
+        var targetY = _isCrouching ? _crouchCameraTargetY : _standingCameraHeight;
         var cameraPos = _camera.transform.localPosition;
-        cameraPos.x = _currentLean * _leanDistance;
+        cameraPos.x = Mathf.Lerp(cameraPos.x, (_currentLean * _leanDistance) + bobX, _bobSmooth * Time.deltaTime);
+        cameraPos.y = Mathf.Lerp(cameraPos.y, _currentCameraOffset + bobY, _bobSmooth * Time.deltaTime);
         _camera.transform.localPosition = cameraPos;
 
         transform.Rotate(Vector3.up * mouseX);
