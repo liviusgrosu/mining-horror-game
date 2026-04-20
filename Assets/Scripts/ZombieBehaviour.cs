@@ -30,6 +30,8 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] private float _verticalSightHeight = 2f;
     [SerializeField] private float _litEngageDistance;
     [SerializeField] private float _darkEngageDistance = 2f;
+    [SerializeField] private float _litInvestigationDistance = 8f;
+    [SerializeField] private float _darkInvestigationDistance = 2f;
     [SerializeField] private float _startingRotationSpeed = 500f;
 
     [Header("Check State")]
@@ -214,6 +216,7 @@ public class ZombieBehaviour : MonoBehaviour
         if (!GameManager.Instance.HasDied)
         {
             CheckIfPlayerInFov();
+            CheckIfPlayerLit();
         }
 
         switch (_currentState)
@@ -376,7 +379,7 @@ public class ZombieBehaviour : MonoBehaviour
         var visibility = PlayerVisibility.Instance ? PlayerVisibility.Instance.VisibilityValue : 1f;
         var effectiveEngageDistance = Mathf.Lerp(_darkEngageDistance, _litEngageDistance, visibility);
 
-        if (!(_getDistanceFromPlayer <= effectiveEngageDistance))
+        if (_getDistanceFromPlayer > effectiveEngageDistance)
         {
             return;
         }
@@ -414,6 +417,39 @@ public class ZombieBehaviour : MonoBehaviour
         _agent.speed = runningSpeed;
         PlayChaseSound();
         _currentState = State.Engage;
+    }
+
+    private void CheckIfPlayerLit()
+    {
+        if (_currentState is State.Engage or State.Attack or State.Investigate)
+        {
+            return;
+        }
+
+        var visibility = PlayerVisibility.Instance ? PlayerVisibility.Instance.VisibilityValue : 1f;
+        var effectiveInvestigationDistance = Mathf.Lerp(_darkInvestigationDistance, _litInvestigationDistance, visibility);
+        
+        if (_getDistanceFromPlayer > effectiveInvestigationDistance)
+        {
+            return;
+        }
+
+        var directionToPlayer = _player.position - transform.position;
+        if (!Physics.Raycast(transform.position, directionToPlayer.normalized, out var hit, effectiveInvestigationDistance))
+        {
+            return;
+        }
+
+        if (!hit.transform.CompareTag("Player"))
+        {
+            return;
+        }
+
+        _investigateTarget = _player.position;
+        _agent.isStopped = false;
+        _agent.speed = walkingSpeed;
+        _agent.stoppingDistance = 0f;
+        _currentState = State.Investigate;
     }
 
     public void EndChase()
