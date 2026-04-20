@@ -53,12 +53,20 @@ public class PlayerMovement : MonoBehaviour
     private AudioClip breathingHeavyClip;
     private AudioSource _breathingAudioSource;
 
+    [Header("Leaning")]
+    [SerializeField] private float _leanDistance = 0.5f;
+    [SerializeField] private float _leanTilt = 15f;
+    [SerializeField] private float _leanSpeed = 8f;
+    [SerializeField] private float _leanWallBuffer = 0.2f;
+    [SerializeField] private LayerMask _leanObstacleMask = ~0;
+    private float _currentLean;
+
     [Header("Mouse")]
     private Camera _camera;
     private float _yRotation;
     [SerializeField]
     private float mouseSensitivity = 100f;
-    
+
     [Header("-DEBUG-")]
     private bool unlimitedSprint = false;
 
@@ -105,18 +113,58 @@ public class PlayerMovement : MonoBehaviour
         }
         
         MovePlayer();
+        HandleLean();
         Look();
+    }
+
+    private void HandleLean()
+    {
+        var leanInput = 0f;
+        if (Input.GetKey(KeyCode.Q))
+        {
+            leanInput = -1f;
+        }
+        else if (Input.GetKey(KeyCode.E))
+        {
+            leanInput = 1f;
+        }
+
+        var targetLean = leanInput;
+
+        if (leanInput != 0f)
+        {
+            var leanDirection = transform.right * leanInput;
+            if (Physics.Raycast(transform.position, leanDirection, out var hit, _leanDistance + _leanWallBuffer, _leanObstacleMask))
+            {
+                var availableDistance = hit.distance - _leanWallBuffer;
+                if (availableDistance <= 0f)
+                {
+                    targetLean = 0f;
+                }
+                else
+                {
+                    targetLean = leanInput * (availableDistance / _leanDistance);
+                }
+            }
+        }
+
+        _currentLean = Mathf.Lerp(_currentLean, targetLean, _leanSpeed * Time.deltaTime);
     }
 
     private void Look()
     {
         var mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * mouseSensitivity;
         var mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * mouseSensitivity;
-        
+
         _yRotation -= mouseY;
         _yRotation = Mathf.Clamp(_yRotation, -80f, 80f);
-        _camera.transform.localRotation = Quaternion.Euler(_yRotation, 0f, 0f);
-        
+        _camera.transform.localRotation = Quaternion.Euler(_yRotation, 0f, -_currentLean * _leanTilt);
+
+        var leanOffset = transform.right * (_currentLean * _leanDistance);
+        var cameraPos = _camera.transform.localPosition;
+        cameraPos.x = _currentLean * _leanDistance;
+        _camera.transform.localPosition = cameraPos;
+
         transform.Rotate(Vector3.up * mouseX);
     }
 

@@ -60,15 +60,6 @@ public class PlayerHealth : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            TakeDamage(10);
-        }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Heal(10);
-        }
-        
         if (Input.GetKeyDown(KeyCode.H) && !GameManager.Instance.IsPaused)
         {
             UseHealthBottle();
