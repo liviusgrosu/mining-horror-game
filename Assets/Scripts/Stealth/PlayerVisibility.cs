@@ -16,6 +16,7 @@ public class PlayerVisibility : MonoBehaviour
     [SerializeField] private float _smoothSpeed = 5f;
 
     public float VisibilityValue { get; private set; } = 1f;
+    public float VisibilityMultiplier { get; set; } = 1f;
 
     private float _targetVisibility = 1f;
     private float _timeSinceLastUpdate;
@@ -51,7 +52,7 @@ public class PlayerVisibility : MonoBehaviour
             _targetVisibility = ComputeVisibility();
         }
 
-        VisibilityValue = Mathf.Lerp(VisibilityValue, _targetVisibility, _smoothSpeed * Time.deltaTime);
+        VisibilityValue = Mathf.Lerp(VisibilityValue, _targetVisibility, _smoothSpeed * Time.deltaTime) * Mathf.Clamp01(VisibilityMultiplier);
     }
 
     private float ComputeVisibility()
