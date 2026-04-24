@@ -8,6 +8,7 @@ public class DampeningGem : MonoBehaviour
     [SerializeField] [Range(0f, 1f)] private float _dampenedVolumeMultiplier = 0.2f;
     [SerializeField] private CharacterFootsteps _footsteps;
 
+    private float _timer;
     private bool _isActive;
 
     private void Update()
@@ -17,9 +18,14 @@ public class DampeningGem : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2) && !_isActive)
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            StartCoroutine(ActivateDampening());
+            _timer = _duration;
+
+            if (!_isActive)
+            {
+                StartCoroutine(ActivateDampening());
+            }
         }
     }
 
@@ -30,7 +36,11 @@ public class DampeningGem : MonoBehaviour
         _footsteps.DampenedVolumeMultiplier = _dampenedVolumeMultiplier;
         _footsteps.IsDampened = true;
 
-        yield return new WaitForSeconds(_duration);
+        while (_timer > 0f)
+        {
+            _timer -= Time.deltaTime;
+            yield return null;
+        }
 
         _footsteps.IsDampened = false;
         _isActive = false;

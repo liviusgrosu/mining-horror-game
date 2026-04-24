@@ -12,6 +12,7 @@ public class InvisibilityGem : MonoBehaviour
     [SerializeField] private float _transparentAlpha = 0.3f;
     [SerializeField] private List<Renderer> _excludeRenderers;
 
+    private float _timer;
     private bool _isActive;
     private readonly List<MaterialState> _savedStates = new();
 
@@ -33,9 +34,14 @@ public class InvisibilityGem : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) && !_isActive)
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            StartCoroutine(ActivateInvisibility());
+            _timer = _duration;
+
+            if (!_isActive)
+            {
+                StartCoroutine(ActivateInvisibility());
+            }
         }
     }
 
@@ -83,7 +89,11 @@ public class InvisibilityGem : MonoBehaviour
             PlayerVisibility.Instance.VisibilityMultiplier = _visibilityReduction;
         }
 
-        yield return new WaitForSeconds(_duration);
+        while (_timer > 0f)
+        {
+            _timer -= Time.deltaTime;
+            yield return null;
+        }
 
         yield return StartCoroutine(LerpAlpha(_transparentAlpha, 1f, _fadeOutTime));
 
