@@ -6,6 +6,8 @@ using UnityEngine.Rendering;
 public class InvisibilityGem : MonoBehaviour
 {
     [SerializeField] private float _duration = 5f;
+    [SerializeField] private float _fadeInTime = 0.5f;
+    [SerializeField] private float _fadeOutTime = 0.5f;
     [SerializeField] private float _visibilityReduction = 0.25f;
     [SerializeField] private float _transparentAlpha = 0.3f;
     [SerializeField] private List<Renderer> _excludeRenderers;
@@ -64,9 +66,17 @@ public class InvisibilityGem : MonoBehaviour
                 };
                 _savedStates.Add(state);
 
-                SetMaterialTransparent(mat);
+                mat.SetFloat("_Surface", 1f);
+                mat.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
+                mat.SetFloat("_DstBlend", (float)BlendMode.OneMinusSrcAlpha);
+                mat.SetFloat("_ZWrite", 0f);
+                mat.renderQueue = (int)RenderQueue.Transparent;
+                mat.SetOverrideTag("RenderType", "Transparent");
+                mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
             }
         }
+
+        yield return StartCoroutine(LerpAlpha(1f, _transparentAlpha, _fadeInTime));
 
         if (PlayerVisibility.Instance)
         {
@@ -75,33 +85,40 @@ public class InvisibilityGem : MonoBehaviour
 
         yield return new WaitForSeconds(_duration);
 
+        if (PlayerVisibility.Instance)
+        {
+            PlayerVisibility.Instance.VisibilityMultiplier = 1f;
+        }
+
+        yield return StartCoroutine(LerpAlpha(_transparentAlpha, 1f, _fadeOutTime));
+
         foreach (var state in _savedStates)
         {
             RestoreMaterial(state);
         }
         _savedStates.Clear();
 
-        if (PlayerVisibility.Instance)
-        {
-            PlayerVisibility.Instance.VisibilityMultiplier = 1f;
-        }
-
         _isActive = false;
     }
 
-    private void SetMaterialTransparent(Material mat)
+    private IEnumerator LerpAlpha(float from, float to, float time)
     {
-        mat.SetFloat("_Surface", 1f);
-        mat.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
-        mat.SetFloat("_DstBlend", (float)BlendMode.OneMinusSrcAlpha);
-        mat.SetFloat("_ZWrite", 0f);
-        mat.renderQueue = (int)RenderQueue.Transparent;
-        mat.SetOverrideTag("RenderType", "Transparent");
-        mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        var elapsed = 0f;
+        while (elapsed < time)
+        {
+            elapsed += Time.deltaTime;
+            var t = Mathf.Clamp01(elapsed / time);
+            var alpha = Mathf.Lerp(from, to, t);
 
-        var color = mat.GetColor("_BaseColor");
-        color.a = _transparentAlpha;
-        mat.SetColor("_BaseColor", color);
+            foreach (var state in _savedStates)
+            {
+                var color = state.BaseColor;
+                color.a = alpha;
+                state.Material.SetColor("_BaseColor", color);
+            }
+
+            yield return null;
+        }
     }
 
     private void RestoreMaterial(MaterialState state)
