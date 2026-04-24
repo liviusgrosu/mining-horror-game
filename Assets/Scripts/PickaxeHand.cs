@@ -6,12 +6,12 @@ using UnityEngine;
 public class PickaxeHand : MonoBehaviour
 {
     public static PickaxeHand Instance;
-    
+
     [SerializeField]
     private List<GameObject> _pickAxes;
     private GameObject _currentPickaxe;
     private int _pickaxeIndex = -1;
-    
+
     private Animator _animator;
     private Transform _camera;
 
@@ -19,7 +19,7 @@ public class PickaxeHand : MonoBehaviour
 
     [Header("Runes")]
     [SerializeField] private InventoryItem deathRune;
-    
+
     public LayerMask ignoreMask;
 
     [Header("Noise")]
@@ -67,6 +67,7 @@ public class PickaxeHand : MonoBehaviour
         {
             return;
         }
+
         if (Input.GetMouseButtonDown(0))
         {
             _animator.SetTrigger("Swing");

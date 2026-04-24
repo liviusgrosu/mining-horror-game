@@ -75,7 +75,10 @@ public class GameManager : MonoBehaviour
 
         if (_mineralStatsCanvasGroup != null)
             _mineralStatsCanvasGroup.alpha = 0f;
-        
+
+        if (_deathPostProcessVolume != null)
+            _deathPostProcessVolume.gameObject.SetActive(false);
+
         player = GameObject.Find("Player");
     }
     
