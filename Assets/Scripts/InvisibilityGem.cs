@@ -8,7 +8,7 @@ public class InvisibilityGem : MonoBehaviour
     [SerializeField] private float _duration = 5f;
     [SerializeField] private float _fadeInTime = 0.5f;
     [SerializeField] private float _fadeOutTime = 0.5f;
-    [SerializeField] private float _visibilityReduction = 0.25f;
+    [SerializeField] private float _visibilityReduction;
     [SerializeField] private float _transparentAlpha = 0.3f;
     [SerializeField] private List<Renderer> _excludeRenderers;
 
@@ -85,12 +85,12 @@ public class InvisibilityGem : MonoBehaviour
 
         yield return new WaitForSeconds(_duration);
 
+        yield return StartCoroutine(LerpAlpha(_transparentAlpha, 1f, _fadeOutTime));
+
         if (PlayerVisibility.Instance)
         {
             PlayerVisibility.Instance.VisibilityMultiplier = 1f;
         }
-
-        yield return StartCoroutine(LerpAlpha(_transparentAlpha, 1f, _fadeOutTime));
 
         foreach (var state in _savedStates)
         {

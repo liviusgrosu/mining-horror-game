@@ -1,0 +1,38 @@
+using System.Collections;
+using UnityEngine;
+
+public class DampeningGem : MonoBehaviour
+{
+    [SerializeField] private float _duration = 5f;
+    [SerializeField] private float _dampenedSpeedMultiplier = 0.1f;
+    [SerializeField] [Range(0f, 1f)] private float _dampenedVolumeMultiplier = 0.2f;
+    [SerializeField] private CharacterFootsteps _footsteps;
+
+    private bool _isActive;
+
+    private void Update()
+    {
+        if (GameManager.Instance && (GameManager.Instance.InMenu || GameManager.Instance.HasDied))
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2) && !_isActive)
+        {
+            StartCoroutine(ActivateDampening());
+        }
+    }
+
+    private IEnumerator ActivateDampening()
+    {
+        _isActive = true;
+        _footsteps.DampenedSpeedMultiplier = _dampenedSpeedMultiplier;
+        _footsteps.DampenedVolumeMultiplier = _dampenedVolumeMultiplier;
+        _footsteps.IsDampened = true;
+
+        yield return new WaitForSeconds(_duration);
+
+        _footsteps.IsDampened = false;
+        _isActive = false;
+    }
+}

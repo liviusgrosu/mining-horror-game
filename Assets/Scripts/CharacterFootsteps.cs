@@ -63,6 +63,10 @@ public class CharacterFootsteps : MonoBehaviour
     [SerializeField] private float _landingMinVelocity = 1f;
     [SerializeField] private float _landingMaxVelocity = 10f;
 
+    public bool IsDampened { get; set; }
+    public float DampenedSpeedMultiplier { get; set; }
+    public float DampenedVolumeMultiplier { get; set; }
+
     private AudioSource _audioSource;
     private CharacterController _characterController;
     private PlayerMovement _playerMovement;
@@ -150,8 +154,13 @@ public class CharacterFootsteps : MonoBehaviour
     private void EmitFootstepNoise()
     {
         var (surfaceNoise, surfaceTag) = GetSurfaceNoiseLevel();
-        var speedMultiplier = _playerMovement && _playerMovement.IsCrouching ? _crouchSpeedMultiplier :
-                              _playerMovement && _playerMovement.IsSprinting ? _sprintSpeedMultiplier : _walkSpeedMultiplier;
+        var speedMultiplier = IsDampened
+            ? DampenedSpeedMultiplier
+            : _playerMovement && _playerMovement.IsCrouching
+                ? _crouchSpeedMultiplier
+                : _playerMovement && _playerMovement.IsSprinting
+                    ? _sprintSpeedMultiplier
+                    : _walkSpeedMultiplier;
 
         _lastNoiseRadius = _baseNoiseRadius * surfaceNoise * speedMultiplier;
         NoiseEmitter.Emit(transform.position, _lastNoiseRadius, surfaceTag);
@@ -198,11 +207,13 @@ public class CharacterFootsteps : MonoBehaviour
             return;
         }
 
-        var volume = _playerMovement && _playerMovement.IsCrouching
-            ? crouchVolumeMultiplier
-            : _playerMovement && _playerMovement.IsSprinting
-                ? sprintVolumeMultiplier
-                : walkingVolumeMultiplier;
+        var volume = IsDampened
+            ? DampenedVolumeMultiplier
+            : _playerMovement && _playerMovement.IsCrouching
+                ? crouchVolumeMultiplier
+                : _playerMovement && _playerMovement.IsSprinting
+                    ? sprintVolumeMultiplier
+                    : walkingVolumeMultiplier;
 
         _audioSource.PlayOneShot(GetRandomClip(soundSet), volume);
     }
