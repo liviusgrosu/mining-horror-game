@@ -182,8 +182,8 @@ GameObject:
   - component: {fileID: 4954914387349031558}
   - component: {fileID: 709963321788759483}
   - component: {fileID: 5684825438201821007}
-  m_Layer: 0
-  m_Name: Enemy
+  m_Layer: 11
+  m_Name: Zombie - Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -250,6 +250,7 @@ MonoBehaviour:
   _darkEngageDistance: 2
   _litInvestigationDistance: 25
   _darkInvestigationDistance: 5
+  _proximityEngageDistance: 2
   _startingRotationSpeed: 250
   _checkStateTime: 2
   _toPlayerRotateAttackSpeed: 100
@@ -277,6 +278,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   _hardSurfaceAttenuation: 0.5
+  _noiseEngageRatio: 0.35
   neverEngage: 0
   shutUpPlease: 1
   stayInPlace: 0
