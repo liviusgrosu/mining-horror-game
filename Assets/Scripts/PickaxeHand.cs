@@ -17,6 +17,9 @@ public class PickaxeHand : MonoBehaviour
     private Animator _animator;
     private Transform _camera;
 
+    private bool _hasPendingHit;
+    private RaycastHit _pendingHit;
+
     [SerializeField] private GameObject sparkVFX, dustEffect, bloodVFX, lightBloodVFX, materialHitVFX;
 
     [Header("Runes")]
@@ -75,7 +78,8 @@ public class PickaxeHand : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (Physics.Raycast(_camera.position, _camera.forward, _hitRange, ~ignoreMask))
+            _hasPendingHit = Physics.Raycast(_camera.position, _camera.forward, out _pendingHit, _hitRange, ~ignoreMask);
+            if (_hasPendingHit)
             {
                 _animator.SetTrigger("SwingHit");
             }
@@ -97,8 +101,10 @@ public class PickaxeHand : MonoBehaviour
 
     public void CheckHit()
     {
-        if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit, _hitRange, ~ignoreMask))
+        if (_hasPendingHit)
         {
+            var hit = _pendingHit;
+            _hasPendingHit = false;
             if (hit.collider.CompareTag("VoxelTerrain"))
             {
                 var voxelTerrain = hit.collider.GetComponentInParent<VoxelTerrain>();
