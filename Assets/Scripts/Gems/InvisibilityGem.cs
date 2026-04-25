@@ -10,7 +10,6 @@ public class InvisibilityGem : MonoBehaviour
     [SerializeField] private float _fadeOutTime = 0.5f;
     [SerializeField] private float _visibilityReduction;
     [SerializeField] private float _transparentAlpha = 0.3f;
-    [SerializeField] private List<Renderer> _excludeRenderers;
 
     private float _timer;
     private bool _isActive;
@@ -64,7 +63,7 @@ public class InvisibilityGem : MonoBehaviour
         var renderers = GetComponentsInChildren<Renderer>();
         foreach (var renderer in renderers)
         {
-            if (!renderer || _excludeRenderers.Contains(renderer))
+            if (!renderer)
             {
                 continue;
             }

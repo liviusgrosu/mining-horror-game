@@ -9,6 +9,8 @@ public class PickaxeHand : MonoBehaviour
 
     [SerializeField]
     private List<GameObject> _pickAxes;
+    [SerializeField]
+    private Transform _pickaxeParent;
     private GameObject _currentPickaxe;
     private int _pickaxeIndex = -1;
 
@@ -21,6 +23,9 @@ public class PickaxeHand : MonoBehaviour
     [SerializeField] private InventoryItem deathRune;
 
     public LayerMask ignoreMask;
+
+    [SerializeField]
+    private float _hitRange = 5f;
 
     [Header("Noise")]
     [SerializeField] private float _miningNoiseRadius = 12f;
@@ -70,7 +75,14 @@ public class PickaxeHand : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            _animator.SetTrigger("Swing");
+            if (Physics.Raycast(_camera.position, _camera.forward, _hitRange, ~ignoreMask))
+            {
+                _animator.SetTrigger("SwingHit");
+            }
+            else
+            {
+                _animator.SetTrigger("SwingMiss");
+            }
         }
     }
 
@@ -78,13 +90,14 @@ public class PickaxeHand : MonoBehaviour
     {
         var chosenPickaxe = _pickAxes.Find(pickaxe => pickaxe.name == name);
         Destroy(_currentPickaxe);
-        _currentPickaxe = Instantiate(chosenPickaxe, transform.position, Quaternion.Euler(chosenPickaxe.transform.rotation.eulerAngles));
-        _currentPickaxe.transform.SetParent(transform);
+        var parent = _pickaxeParent ? _pickaxeParent : transform;
+        _currentPickaxe = Instantiate(chosenPickaxe, parent.position, Quaternion.Euler(chosenPickaxe.transform.rotation.eulerAngles));
+        _currentPickaxe.transform.SetParent(parent);
     }
 
     public void CheckHit()
     {
-        if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit, 5.0f, ~ignoreMask))
+        if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit, _hitRange, ~ignoreMask))
         {
             if (hit.collider.CompareTag("VoxelTerrain"))
             {
