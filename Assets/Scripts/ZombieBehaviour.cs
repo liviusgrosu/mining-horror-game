@@ -69,6 +69,7 @@ public class ZombieBehaviour : MonoBehaviour
     private float _checkStateElapsedTime;
     private float _getDistanceFromPlayer => Vector3.Distance(transform.position, _player.position);
     private Vector3 _investigateTarget;
+    private float _lastNoiseTime;
 
     // Patrolling values
     private bool _shouldPatrol => _initialState == State.Patrol;
@@ -195,8 +196,6 @@ public class ZombieBehaviour : MonoBehaviour
             return;
         }
         
-        Debug.Log($"{direction.magnitude} <= {effectiveRadius * _noiseEngageRatio}");
-
         var isPlayerNoise = sourceTag != "Decoy";
 
         if (isPlayerNoise && !neverEngage && direction.magnitude <= effectiveRadius * _noiseEngageRatio)
@@ -214,10 +213,12 @@ public class ZombieBehaviour : MonoBehaviour
             var distToCurrent = Vector3.Distance(transform.position, _investigateTarget);
             if (distToNew >= distToCurrent)
             {
+                _lastNoiseTime = Time.time;
                 return;
             }
         }
 
+        _lastNoiseTime = Time.time;
         _investigateTarget = position;
         _agent.isStopped = false;
         _agent.speed = walkingSpeed;
@@ -382,9 +383,17 @@ public class ZombieBehaviour : MonoBehaviour
     {
         animator.SetFloat(MovementBlend, 0.5f, 0.1f, Time.deltaTime);
         _agent.SetDestination(_investigateTarget);
-
-        if (Vector3.Distance(transform.position, _investigateTarget) <= _agent.stoppingDistance + 1f)
+        
+        if (Vector3.Distance(transform.position, _investigateTarget) <= _agent.stoppingDistance + 1.5f)
         {
+            var noiseStoppedTime = Time.time - _lastNoiseTime;
+            if (noiseStoppedTime < 1.5f)
+            {
+                _agent.isStopped = true;
+                animator.SetFloat(MovementBlend, 0f, 0.1f, Time.deltaTime);
+                return;
+            }
+
             _agent.ResetPath();
             _agent.isStopped = true;
             _checkStateElapsedTime = 0f;

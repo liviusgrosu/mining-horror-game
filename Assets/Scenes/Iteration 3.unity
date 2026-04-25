@@ -13076,10 +13076,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DecoyGem
   _lifetime: 30
   _decoyPrefab: {fileID: 2683464398577271850, guid: 861045de637c2fc4dbcee7d95d07ba32, type: 3}
-  _spawnDistance: 2
-  _groundMask:
+  _previewPrefab: {fileID: 6111545916753776259, guid: 8f187686af977594487be1331a639450, type: 3}
+  _invalidPreviewPrefab: {fileID: 6111545916753776259, guid: 2d8aecaedf6317541a74a7b00d5f12a3, type: 3}
+  _validDistance: 10
+  _maxPreviewDistance: 20
+  _validLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 512
+  _ignoreLayers:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!114 &1802208905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14987,7 +14993,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7490492891687829689, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15807,7 +15813,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7490492891687829689, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
