@@ -26,6 +26,11 @@ public class DampeningGem : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
+            if (!GemSelectionUI.Instance.TryConsumeUse(GemType.Dampening))
+            {
+                return;
+            }
+
             _timer = _duration;
 
             if (!_isActive)

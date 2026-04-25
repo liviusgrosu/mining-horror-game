@@ -109,6 +109,11 @@ public class DecoyGem : MonoBehaviour
 
     private void SpawnDecoy()
     {
+        if (!GemSelectionUI.Instance.TryConsumeUse(GemType.Decoy))
+        {
+            return;
+        }
+
         if (_activeDecoy)
         {
             Destroy(_activeDecoy);

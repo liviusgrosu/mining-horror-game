@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,15 @@ public class GemSelectionUI : MonoBehaviour
     [SerializeField] private Image _invisibilityRing;
     [SerializeField] private Image _dampenRing;
     [SerializeField] private Image _decoyRing;
+    [SerializeField] private TMP_Text _invisibilityCountText;
+    [SerializeField] private TMP_Text _dampenCountText;
+    [SerializeField] private TMP_Text _decoyCountText;
+
+    private const int MaxUses = 2;
+
+    private int _invisibilityUses = MaxUses;
+    private int _dampenUses = MaxUses;
+    private int _decoyUses = MaxUses;
 
     public GemType SelectedGem { get; private set; } = GemType.None;
     public bool IsOpen { get; private set; }
@@ -30,6 +40,7 @@ public class GemSelectionUI : MonoBehaviour
         _dampenButton.onClick.AddListener(() => SelectGem(GemType.Dampening));
         _decoyButton.onClick.AddListener(() => SelectGem(GemType.Decoy));
         RefreshRings();
+        RefreshUsageUI();
     }
 
     public void OpenScreen()
@@ -44,6 +55,34 @@ public class GemSelectionUI : MonoBehaviour
         _gemScreen.SetActive(false);
     }
 
+    public bool TryConsumeUse(GemType type)
+    {
+        switch (type)
+        {
+            case GemType.Invisibility:
+                if (_invisibilityUses <= 0) { return false; }
+                _invisibilityUses--;
+                if (_invisibilityUses == 0 && SelectedGem == GemType.Invisibility) { SelectedGem = GemType.None; }
+                break;
+            case GemType.Dampening:
+                if (_dampenUses <= 0) { return false; }
+                _dampenUses--;
+                if (_dampenUses == 0 && SelectedGem == GemType.Dampening) { SelectedGem = GemType.None; }
+                break;
+            case GemType.Decoy:
+                if (_decoyUses <= 0) { return false; }
+                _decoyUses--;
+                if (_decoyUses == 0 && SelectedGem == GemType.Decoy) { SelectedGem = GemType.None; }
+                break;
+            default:
+                return false;
+        }
+
+        RefreshRings();
+        RefreshUsageUI();
+        return true;
+    }
+
     private void SelectGem(GemType type)
     {
         SelectedGem = type;
@@ -55,5 +94,16 @@ public class GemSelectionUI : MonoBehaviour
         _invisibilityRing.enabled = SelectedGem == GemType.Invisibility;
         _dampenRing.enabled = SelectedGem == GemType.Dampening;
         _decoyRing.enabled = SelectedGem == GemType.Decoy;
+    }
+
+    private void RefreshUsageUI()
+    {
+        _invisibilityCountText.text = _invisibilityUses.ToString();
+        _dampenCountText.text = _dampenUses.ToString();
+        _decoyCountText.text = _decoyUses.ToString();
+
+        _invisibilityButton.interactable = _invisibilityUses > 0;
+        _dampenButton.interactable = _dampenUses > 0;
+        _decoyButton.interactable = _decoyUses > 0;
     }
 }

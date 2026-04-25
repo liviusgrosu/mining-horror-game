@@ -42,6 +42,11 @@ public class InvisibilityGem : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
+            if (!GemSelectionUI.Instance.TryConsumeUse(GemType.Invisibility))
+            {
+                return;
+            }
+
             _timer = _duration;
 
             if (!_isActive)
