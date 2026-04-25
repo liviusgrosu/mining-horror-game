@@ -40,7 +40,7 @@ public class PickaxeUI : MonoBehaviour
         {
             var gem = Inventory.Instance.PickaxeGems[i];
             _pickaxeGemUISlots[i].Icon.sprite = gem.Icon;
-            _pickaxeGemUISlots[i].ItemId = gem.Id;
+            _pickaxeGemUISlots[i].Item = gem;
         }
     }
 }

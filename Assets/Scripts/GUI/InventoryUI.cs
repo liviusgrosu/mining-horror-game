@@ -63,16 +63,16 @@ public class InventoryUI : MonoBehaviour
         // Populate inventory slots
         foreach (var (item, quantity) in Inventory.Instance.Items)
         {
-            var slot = _itemUISlots.Find(s => s.ItemId == item.Id);
+            var slot = _itemUISlots.Find(s => s.Item == item);
             if (slot && slot.Quantity)
             {
                 slot.Quantity.text = quantity.ToString();
                 continue;
             }
 
-            var nextEmptySlot = _itemUISlots.Find(s => s.ItemId == -1);
+            var nextEmptySlot = _itemUISlots.Find(s => !s.Item);
             nextEmptySlot.Icon.sprite = item.Icon;
-            nextEmptySlot.ItemId = item.Id;
+            nextEmptySlot.Item = item;
             nextEmptySlot.Quantity.text = quantity.ToString();
         }
     }

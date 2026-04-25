@@ -187,22 +187,5 @@ public class Inventory : MonoBehaviour
         OnChanged?.Invoke();
     }
 
-    public InventoryItem GetItem(int id)
-    {
-        foreach (var item in _items.Keys)
-        {
-            if (item.Id == id)
-            {
-                return item;
-            }
-        }
-        foreach (var item in _pickaxeGems)
-        {
-            if (item.Id == id)
-            {
-                return item;
-            }
-        }
-        return null;
-    }
+
 }

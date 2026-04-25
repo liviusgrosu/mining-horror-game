@@ -5,28 +5,24 @@ using UnityEngine.UI;
 
 public class PickaxeUIGemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    public int ItemId = -1;
+    public InventoryItem Item;
     public Image Icon;
     public Sprite EmptySprite;
-    
+
     public void Clear()
     {
-        ItemId = -1;
+        Item = null;
         Icon.sprite = EmptySprite;
     }
-    
+
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (ItemId == -1)
+        if (!Item)
         {
             return;
         }
 
-        var item = Inventory.Instance.GetItem(ItemId);
-        if (item != null)
-        {
-            InventoryUI.Instance.ShowItemDescription(item.Name, item.Description);
-        }
+        InventoryUI.Instance.ShowItemDescription(Item.Name, Item.Description);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -36,16 +32,12 @@ public class PickaxeUIGemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (ItemId == -1)
+        if (!Item)
         {
             return;
         }
 
-        var item = Inventory.Instance.GetItem(ItemId);
-        if (item != null)
-        {
-            Inventory.Instance.RemoveGem(item);
-            InventoryUI.Instance.HideItemDescription();
-        }
+        Inventory.Instance.RemoveGem(Item);
+        InventoryUI.Instance.HideItemDescription();
     }
 }

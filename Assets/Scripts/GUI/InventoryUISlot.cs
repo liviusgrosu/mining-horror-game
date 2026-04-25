@@ -5,20 +5,16 @@ using UnityEngine.UI;
 
 public class InventoryUISlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    public int ItemId = -1;
+    public InventoryItem Item = null;
     public Image Icon;
     public TextMeshProUGUI Quantity;
     public Sprite EmptySprite;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (ItemId == -1) return;
+        if (!Item) return;
 
-        var item = Inventory.Instance.GetItem(ItemId);
-        if (item != null)
-        {
-            InventoryUI.Instance.ShowItemDescription(item.Name, item.Description);
-        }
+        InventoryUI.Instance.ShowItemDescription(Item.Name, Item.Description);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -28,23 +24,18 @@ public class InventoryUISlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (ItemId == -1)
+        if (!Item)
         {
             return;
         }
 
-        var item = Inventory.Instance.GetItem(ItemId);
-        if (item == null) return;
-
-        switch (item.Type)
+        switch (Item.Type)
         {
             case ItemType.GemSlot:
-                Inventory.Instance.EquipGem(item);
+                Inventory.Instance.EquipGem(Item);
                 break;
             case ItemType.Consumable:
                 PlayerHealth.Instance.UseHealthBottle();
-                // Because we're hard coding to use HP bottle, im commenting this out
-                //Inventory.Instance.Remove(item, 1);
                 break;
         }
         InventoryUI.Instance.HideItemDescription();
@@ -52,7 +43,7 @@ public class InventoryUISlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void Clear()
     {
-        ItemId = -1;
+        Item = null;
         Icon.sprite = EmptySprite;
         if (Quantity)
         {
