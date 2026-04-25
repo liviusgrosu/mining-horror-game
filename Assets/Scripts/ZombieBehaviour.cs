@@ -152,7 +152,7 @@ public class ZombieBehaviour : MonoBehaviour
         NoiseEmitter.OnNoise -= HandleNoise;
     }
 
-    private void HandleNoise(Vector3 position, float radius, string _)
+    private void HandleNoise(Vector3 position, float radius, string sourceTag)
     {
         if (isDeaf)
         {
@@ -194,14 +194,28 @@ public class ZombieBehaviour : MonoBehaviour
         {
             return;
         }
+        
+        Debug.Log($"{direction.magnitude} <= {effectiveRadius * _noiseEngageRatio}");
 
-        if (!neverEngage && direction.magnitude <= effectiveRadius * _noiseEngageRatio)
+        var isPlayerNoise = sourceTag != "Decoy";
+
+        if (isPlayerNoise && !neverEngage && direction.magnitude <= effectiveRadius * _noiseEngageRatio)
         {
             _agent.isStopped = false;
             _agent.speed = runningSpeed;
             PlayChaseSound();
             _currentState = State.Engage;
             return;
+        }
+
+        if (_currentState == State.Investigate)
+        {
+            var distToNew = Vector3.Distance(transform.position, position);
+            var distToCurrent = Vector3.Distance(transform.position, _investigateTarget);
+            if (distToNew >= distToCurrent)
+            {
+                return;
+            }
         }
 
         _investigateTarget = position;
