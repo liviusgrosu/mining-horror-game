@@ -66,6 +66,24 @@ public class GameManager : MonoBehaviour
 
             ToggleInventory();
         }
+        
+        if (!HasDied && !HasWon)
+        {
+            if (!InMenu && Input.GetKeyDown(KeyCode.Tab))
+            {
+                IsPaused = true;
+                InMenu = true;
+                GemSelectionUI.Instance.OpenScreen();
+                ToggleCursorLock(true);
+            }
+            else if (Input.GetKeyUp(KeyCode.Tab))
+            {
+                IsPaused = false;
+                InMenu = false;
+                GemSelectionUI.Instance.CloseScreen();
+                ToggleCursorLock(false);
+            }
+        }
     }
 
     public void Start()

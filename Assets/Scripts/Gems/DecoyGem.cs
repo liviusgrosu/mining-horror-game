@@ -27,12 +27,19 @@ public class DecoyGem : MonoBehaviour
             return;
         }
 
-        if (Input.GetKey(KeyCode.Alpha3))
+        var gemUI = GemSelectionUI.Instance;
+        if (!gemUI || gemUI.IsOpen || gemUI.SelectedGem != GemType.Decoy)
+        {
+            DestroyPreview();
+            return;
+        }
+
+        if (Input.GetKey(KeyCode.F))
         {
             UpdatePreview();
         }
 
-        if (Input.GetKeyUp(KeyCode.Alpha3))
+        if (Input.GetKeyUp(KeyCode.F))
         {
             if (_currentState == PreviewState.Valid)
             {

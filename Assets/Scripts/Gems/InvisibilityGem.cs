@@ -34,7 +34,13 @@ public class InvisibilityGem : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        var gemUI = GemSelectionUI.Instance;
+        if (!gemUI || gemUI.IsOpen || gemUI.SelectedGem != GemType.Invisibility)
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
         {
             _timer = _duration;
 

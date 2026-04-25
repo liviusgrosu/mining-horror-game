@@ -18,7 +18,13 @@ public class DampeningGem : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        var gemUI = GemSelectionUI.Instance;
+        if (!gemUI || gemUI.IsOpen || gemUI.SelectedGem != GemType.Dampening)
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
         {
             _timer = _duration;
 
