@@ -20,6 +20,9 @@ public class PickaxeHand : MonoBehaviour
     private bool _hasPendingHit;
     private RaycastHit _pendingHit;
 
+    private Vector3 _lastNoisePosition;
+    private float _lastNoiseRadius;
+
     [SerializeField] private GameObject sparkVFX, dustEffect, bloodVFX, lightBloodVFX, materialHitVFX;
 
     [Header("Runes")]
@@ -113,6 +116,8 @@ public class PickaxeHand : MonoBehaviour
                     voxelTerrain.Mine(hit.point);
                 }
 
+                _lastNoisePosition = hit.point;
+                _lastNoiseRadius = _miningNoiseRadius;
                 NoiseEmitter.Emit(hit.point, _miningNoiseRadius, hit.collider.tag);
                 _audioSource.PlayOneShot(pickaxeValidSound);
                 SpawnCloudEffect(hit.point);
@@ -131,6 +136,8 @@ public class PickaxeHand : MonoBehaviour
                 {
                     var mat = destructible.CurrentStageMaterial;
                     destructible.TakeDamage();
+                    _lastNoisePosition = hit.point;
+                    _lastNoiseRadius = _miningNoiseRadius;
                     NoiseEmitter.Emit(hit.point, _miningNoiseRadius, hit.collider.tag);
                     _audioSource.PlayOneShot(pickaxeValidSound);
                     SpawnCloudEffect(hit.point);
@@ -166,6 +173,9 @@ public class PickaxeHand : MonoBehaviour
             else
             {
                 _audioSource.PlayOneShot(pickaxeInvalidSound);
+                _lastNoisePosition = hit.point;
+                _lastNoiseRadius = _miningNoiseRadius;
+                NoiseEmitter.Emit(hit.point, _miningNoiseRadius, hit.collider.tag);
                 SpawnSparkEffect(hit.point, hit.normal);
             }
         }
@@ -197,7 +207,9 @@ public class PickaxeHand : MonoBehaviour
             {
                 var renderer = gibble.GetComponent<Renderer>();
                 if (renderer != null)
+                {
                     renderer.material = mat;
+                }
             }
         }
         Destroy(vfx, 2f);
@@ -218,5 +230,17 @@ public class PickaxeHand : MonoBehaviour
     public void PlayUpgradePickupSound()
     {
         _audioSource.PlayOneShot(pickaxeUpgradeSound);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (_lastNoiseRadius <= 0f)
+        {
+            return;
+        }
+        Gizmos.color = new Color(1f, 0.5f, 0f, 0.3f);
+        Gizmos.DrawSphere(_lastNoisePosition, _lastNoiseRadius);
+        Gizmos.color = new Color(1f, 0.5f, 0f, 1f);
+        Gizmos.DrawWireSphere(_lastNoisePosition, _lastNoiseRadius);
     }
 }
