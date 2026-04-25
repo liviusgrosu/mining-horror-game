@@ -19,11 +19,12 @@ public class GemSelectionUI : MonoBehaviour
     [SerializeField] private TMP_Text _dampenCountText;
     [SerializeField] private TMP_Text _decoyCountText;
 
-    private const int MaxUses = 2;
+    [SerializeField]
+    private int maxUses = 10;
 
-    private int _invisibilityUses = MaxUses;
-    private int _dampenUses = MaxUses;
-    private int _decoyUses = MaxUses;
+    private int _invisibilityUses;
+    private int _dampenUses;
+    private int _decoyUses;
 
     public GemType SelectedGem { get; private set; } = GemType.None;
     public bool IsOpen { get; private set; }
@@ -31,6 +32,7 @@ public class GemSelectionUI : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        _invisibilityUses = _dampenUses = _decoyUses = maxUses;
     }
 
     private void Start()
@@ -81,6 +83,24 @@ public class GemSelectionUI : MonoBehaviour
         RefreshRings();
         RefreshUsageUI();
         return true;
+    }
+
+    public void RestoreUse(GemType type)
+    {
+        switch (type)
+        {
+            case GemType.Invisibility:
+                _invisibilityUses = Mathf.Min(_invisibilityUses + 1, maxUses);
+                break;
+            case GemType.Dampening:
+                _dampenUses = Mathf.Min(_dampenUses + 1, maxUses);
+                break;
+            case GemType.Decoy:
+                _decoyUses = Mathf.Min(_decoyUses + 1, maxUses);
+                break;
+        }
+        RefreshRings();
+        RefreshUsageUI();
     }
 
     private void SelectGem(GemType type)

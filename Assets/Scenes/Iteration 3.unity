@@ -18196,6 +18196,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gem Esseence Dust - Invisibility
       objectReference: {fileID: 0}
+    - target: {fileID: 8351128871035999258, guid: 10373cc4d7096224289e2253fadf41ce, type: 3}
+      propertyPath: Item
+      value: 
+      objectReference: {fileID: 11400000, guid: 53422e7be8449ae4f9c90e6d96c07ae8, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18253,6 +18257,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gem Esseence Dust - Silence
       objectReference: {fileID: 0}
+    - target: {fileID: 3802144150653012459, guid: 831e556b89312734799b36bc2b09e762, type: 3}
+      propertyPath: Item
+      value: 
+      objectReference: {fileID: 11400000, guid: 5f3d6b75025ba0d4ea3d52f51dd35ebe, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18310,6 +18318,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gem Esseence Dust - Decoy
       objectReference: {fileID: 0}
+    - target: {fileID: 7137453780817653191, guid: aacecfdbe9e9fd34d997bff5421dbe37, type: 3}
+      propertyPath: Item
+      value: 
+      objectReference: {fileID: 11400000, guid: 4fdbb9a8ab21caf488da1fee3e5a897d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -29,14 +29,18 @@ public class InventoryUISlot : MonoBehaviour, IPointerEnterHandler, IPointerExit
             return;
         }
 
-        switch (Item.Type)
+        if (Item is GemEssenceDustItem dustItem)
         {
-            case ItemType.GemSlot:
-                Inventory.Instance.EquipGem(Item);
-                break;
-            case ItemType.Consumable:
-                PlayerHealth.Instance.UseHealthBottle();
-                break;
+            GemSelectionUI.Instance.RestoreUse(dustItem.GemType);
+            Inventory.Instance.Remove(Item, 1);
+        }
+        else if (Item.Type == ItemType.GemSlot)
+        {
+            Inventory.Instance.EquipGem(Item);
+        }
+        else if (Item.Type == ItemType.Consumable)
+        {
+            PlayerHealth.Instance.UseHealthBottle();
         }
         InventoryUI.Instance.HideItemDescription();
     }

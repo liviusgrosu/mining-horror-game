@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1c45998a0f66b34092b6388865a9543, type: 3}
+  m_Script: {fileID: 11500000, guid: dfcd85a5dca9de84c8d2239e645c87b3, type: 3}
   m_Name: Gem Essence Dust - Decoy
-  m_EditorClassIdentifier: Assembly-CSharp::InventoryItem
+  m_EditorClassIdentifier: Assembly-CSharp::GemEssenceDustItem
   Name: Gem Essence Dust - Decoy
   Description: Used to recharge the decoy ability
   Icon: {fileID: 21300000, guid: 4525cf1382c2f334daee4316c111e280, type: 3}
   Type: 0
+  GemType: 3
