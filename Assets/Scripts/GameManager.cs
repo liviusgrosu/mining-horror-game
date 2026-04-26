@@ -140,7 +140,7 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(DeathBlurRoutine());
 
-        foreach (var enemy in FindObjectsByType<ZombieBehaviour>(FindObjectsSortMode.None))
+        foreach (var enemy in FindObjectsByType<EnemyAI>(FindObjectsSortMode.None))
         {
             enemy.Disengage();
         }

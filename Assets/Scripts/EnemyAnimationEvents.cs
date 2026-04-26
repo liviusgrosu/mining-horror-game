@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ZombieAnimationEvents : MonoBehaviour
+public class EnemyAnimationEvents : MonoBehaviour
 {
     private EnemyCombat _combat;
 

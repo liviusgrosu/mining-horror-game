@@ -6,7 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(EnemyHealth))]
 [RequireComponent(typeof(EnemyCombat))]
 [RequireComponent(typeof(EnemyAudio))]
-public class ZombieBehaviour : MonoBehaviour
+public class EnemyAI : MonoBehaviour
 {
     private static readonly int MovementBlend = Animator.StringToHash("MovementBlend");
     private static readonly int IsAttacking = Animator.StringToHash("IsAttacking");
@@ -31,7 +31,6 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] private float _rotationTolerance;
 
     [Header("Idle State")]
-    [SerializeField] private float _proximityEngageDistance = 2f;
     [SerializeField] private float _startingRotationSpeed = 500f;
 
     [Header("Check State")]
@@ -51,9 +50,6 @@ public class ZombieBehaviour : MonoBehaviour
     [Header("Attack State")]
     [Tooltip("How fast the enemy will rotate to the player after finishing an attack")]
     [SerializeField] private float _toPlayerRotateAttackSpeed = 500f;
-
-    [SerializeField] private float _movementThreshold = 0.1f;
-    private bool _wasMoving;
 
     [SerializeField]
     private State _initialState = State.Idle;
@@ -76,7 +72,6 @@ public class ZombieBehaviour : MonoBehaviour
     private Vector3 _currentSearchPoint;
     private Vector3 _suspicionTarget;
     private float _suspicionElapsedTime;
-    private State _lastDebugState;
 
     private bool _shouldPatrol => _initialState == State.Patrol;
     [SerializeField]
@@ -85,8 +80,6 @@ public class ZombieBehaviour : MonoBehaviour
 
     [SerializeField]
     private Animator animator;
-
-    private float _animationTime;
 
     [Header("Debug")]
     [SerializeField] private bool neverEngage;
