@@ -65,6 +65,7 @@ public class EnemyAI : MonoBehaviour
     private float _checkStateElapsedTime;
     private float _getDistanceFromPlayer => Vector3.Distance(transform.position, _perception.Player.position);
     private Vector3 _investigateTarget;
+    private bool _investigatingPlayer;
     private float _lastNoiseTime;
     private float _searchElapsedTime;
     private float _searchPauseTimer;
@@ -197,25 +198,25 @@ public class EnemyAI : MonoBehaviour
         {
             if (s.Kind == StimulusKind.Sound)
             {
-                // TODO: This needs to be redone. It makes sense for decoy
-                // But if the player is making noise right next to the enemy and is already investigating,
-                // then the enemy just ignores it cause _investigateTarget is closer then to the player.
-                // We need to factor in sound source (decoy/player)
                 if (_currentState == State.Investigate)
                 {
-                    var distToNew = Vector3.Distance(transform.position, s.Position);
-                    var distToCurrent = Vector3.Distance(transform.position, _investigateTarget);
                     _lastNoiseTime = Time.time;
-                    if (distToNew >= distToCurrent)
+                    var trackingPlayerLive = _investigatingPlayer && s.FromPlayer;
+                    if (!trackingPlayerLive)
                     {
-                        return;
+                        var distToNew = Vector3.Distance(transform.position, s.Position);
+                        var distToCurrent = Vector3.Distance(transform.position, _investigateTarget);
+                        if (distToNew >= distToCurrent)
+                        {
+                            return;
+                        }
                     }
                 }
                 else
                 {
                     _lastNoiseTime = Time.time;
                 }
-                EnterInvestigate(s.Position);
+                EnterInvestigate(s.Position, s.FromPlayer);
                 return;
             }
 
@@ -223,7 +224,7 @@ public class EnemyAI : MonoBehaviour
             {
                 return;
             }
-            EnterInvestigate(s.Position);
+            EnterInvestigate(s.Position, s.FromPlayer);
             return;
         }
 
@@ -232,7 +233,7 @@ public class EnemyAI : MonoBehaviour
             // TODO: If post-engage, immediatly go into engage
             if (_currentState is State.Investigate or State.Searching)
             {
-                EnterInvestigate(s.Position);
+                EnterInvestigate(s.Position, s.FromPlayer);
                 return;
             }
 
@@ -247,9 +248,10 @@ public class EnemyAI : MonoBehaviour
         _currentState = State.Engage;
     }
 
-    private void EnterInvestigate(Vector3 target)
+    private void EnterInvestigate(Vector3 target, bool fromPlayer)
     {
         _investigateTarget = target;
+        _investigatingPlayer = fromPlayer;
         _movement.WalkTo(target);
         _currentState = State.Investigate;
     }
