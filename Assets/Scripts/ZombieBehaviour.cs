@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
-using UnityEngine.AI;
 
 [RequireComponent(typeof(EnemyPerception))]
+[RequireComponent(typeof(EnemyMovement))]
 public class ZombieBehaviour : MonoBehaviour
 {
     private static readonly int MovementBlend = Animator.StringToHash("MovementBlend");
@@ -64,14 +65,10 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField]
     private State _initialState = State.Idle;
     private State _currentState = State.Idle;
-    private NavMeshAgent _agent;
     private EnemyPerception _perception;
-    [SerializeField] private float runningSpeed = 2.5f;
-    [SerializeField] private float walkingSpeed = 1f;
+    private EnemyMovement _movement;
 
-    
     private Vector3 _startingPosition;
-    private float _startingStoppingDistance;
     private Quaternion _startingRotation;
     private float _checkStateElapsedTime;
     private float _getDistanceFromPlayer => Vector3.Distance(transform.position, _perception.Player.position);
@@ -124,31 +121,18 @@ public class ZombieBehaviour : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool neverEngage;
     [SerializeField] private bool shutUpPlease;
-    [SerializeField] private bool stayInPlace;
-    [SerializeField] private MeshRenderer _debugStateRenderer;
-    [SerializeField] private Material _idleDebugMaterial;
-    [SerializeField] private Material _patrolDebugMaterial;
-    [SerializeField] private Material _engageDebugMaterial;
-    [SerializeField] private Material _attackDebugMaterial;
-    [SerializeField] private Material _checkDebugMaterial;
-    [SerializeField] private Material _returnDebugMaterial;
-    [SerializeField] private Material _investigateDebugMaterial;
-    [SerializeField] private Material _searchingDebugMaterial;
-    [SerializeField] private Material _suspiciousDebugMaterial;
-
+    [SerializeField] private TextMeshProUGUI _stateText;
+    [SerializeField] private TextMeshProUGUI _sightStimulusText;
+    [SerializeField] private TextMeshProUGUI _hearingStimulusText;
+    
     private void Awake()
     {
-        _agent = GetComponent<NavMeshAgent>();
         _perception = GetComponent<EnemyPerception>();
-        _agent.angularSpeed = 500f;
-        _startingStoppingDistance = _agent.stoppingDistance;
+        _movement = GetComponent<EnemyMovement>();
         _startingRotation = transform.rotation;
         _currentState = _initialState;
         _currentHealth = _maxHealth;
-        
-        // Debugging
         _loopAudioSource.enabled = !shutUpPlease;
-        walkingSpeed = stayInPlace ? 0f : walkingSpeed;
     }
     
     private void OnEnable()
@@ -173,6 +157,45 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void OnStimulus(Stimulus s)
     {
+        // ----- DEBUG ----- 
+        if (s.Kind == StimulusKind.Sight)
+        {
+            var tier = "";
+            switch (s.Tier)
+            {
+                case StimulusTier.Strong:
+                    tier = "<color=\"red\">Strng</color>";
+                    break;
+                case StimulusTier.Moderate:
+                    tier = "<color=\"yellow\">Moder</color>";
+                    break;
+                case StimulusTier.Faint:
+                    tier = "<color=\"green\">Faint</color>";
+                    break;
+            }
+            _sightStimulusText.text = $"Sight:{tier}";
+        }
+        
+        if (s.Kind == StimulusKind.Sound)
+        {
+            var tier = "";
+            switch (s.Tier)
+            {
+                case StimulusTier.Strong:
+                    tier = "<color=\"red\">Strng</color>";
+                    break;
+                case StimulusTier.Moderate:
+                    tier = "<color=\"yellow\">Moder</color>";
+                    break;
+                case StimulusTier.Faint:
+                    tier = "<color=\"green\">Faint</color>";
+                    break;
+            }
+            _hearingStimulusText.text = $"Sound:{tier}";
+        }
+        
+        // ---------------- 
+        
         if (_isDead || _isTakingHit || !_toggle)
         {
             return;
@@ -237,8 +260,7 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void EnterEngage()
     {
-        _agent.isStopped = false;
-        _agent.speed = runningSpeed;
+        _movement.RunTo(_perception.Player.position);
         PlayChaseSound();
         _currentState = State.Engage;
     }
@@ -246,22 +268,33 @@ public class ZombieBehaviour : MonoBehaviour
     private void EnterInvestigate(Vector3 target)
     {
         _investigateTarget = target;
-        _agent.isStopped = false;
-        _agent.speed = walkingSpeed;
-        _agent.stoppingDistance = 0f;
+        _movement.WalkTo(target);
         _currentState = State.Investigate;
     }
 
     private void EnterSuspicious(Vector3 target)
     {
         _suspicionTarget = target;
-        _agent.isStopped = true;
-        _agent.ResetPath();
+        _movement.Cancel();
         if (_currentState != State.Suspicious)
         {
             _suspicionElapsedTime = 0f;
         }
         _currentState = State.Suspicious;
+    }
+
+    private void EnterPatrolOrReturn()
+    {
+        if (_shouldPatrol)
+        {
+            SetPathingDestination();
+            _currentState = State.Patrol;
+        }
+        else
+        {
+            _movement.WalkTo(_startingPosition);
+            _currentState = State.Return;
+        }
     }
 
     private void Start()
@@ -282,6 +315,8 @@ public class ZombieBehaviour : MonoBehaviour
         {
             return;
         }
+
+        _stateText.text = _currentState.ToString();
 
         switch (_currentState)
         {
@@ -313,33 +348,6 @@ public class ZombieBehaviour : MonoBehaviour
                 SuspiciousState();
                 break;
         }
-
-        if (_debugStateRenderer && _currentState != _lastDebugState)
-        {
-            _lastDebugState = _currentState;
-            var mat = GetStateDebugMaterial(_currentState);
-            if (mat)
-            {
-                _debugStateRenderer.sharedMaterial = mat;
-            }
-        }
-    }
-
-    private Material GetStateDebugMaterial(State state)
-    {
-        return state switch
-        {
-            State.Idle        => _idleDebugMaterial,
-            State.Patrol      => _patrolDebugMaterial,
-            State.Engage      => _engageDebugMaterial,
-            State.Attack      => _attackDebugMaterial,
-            State.Check       => _checkDebugMaterial,
-            State.Return      => _returnDebugMaterial,
-            State.Investigate => _investigateDebugMaterial,
-            State.Searching   => _searchingDebugMaterial,
-            State.Suspicious  => _suspiciousDebugMaterial,
-            _                 => null
-        };
     }
 
     private void IdleState()
@@ -354,9 +362,8 @@ public class ZombieBehaviour : MonoBehaviour
     private void PatrolState()
     {
         animator.SetFloat(MovementBlend, 0.5f, 0.1f, Time.deltaTime);
-        
-        var distanceToDestination = Vector3.Distance(transform.position, _agent.destination);
-        if (distanceToDestination <= _agent.stoppingDistance + 1)
+
+        if (_movement.HasArrived(1f))
         {
             _currentPointIndex = (_currentPointIndex + 1) % _pathing.Points.Count;
             SetPathingDestination();
@@ -365,18 +372,17 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void SetPathingDestination()
     {
-        _agent.SetDestination(_pathing.Points[_currentPointIndex].position);
+        _movement.WalkTo(_pathing.Points[_currentPointIndex].position);
     }
 
     private void EngageState()
     {
         animator.SetFloat(MovementBlend, 1f, 0.1f, Time.deltaTime);
-        _agent.SetDestination(_perception.Player.position);
+        _movement.SetDestination(_perception.Player.position);
 
         if (_getDistanceFromPlayer <= _attackRange)
         {
-            _agent.velocity = Vector3.zero;
-            _agent.isStopped = true;
+            _movement.HardStop();
             _isAttacking = true;
             _attackCooldownTimer = 0f;
             animator.SetBool(IsAttacking, true);
@@ -386,8 +392,7 @@ public class ZombieBehaviour : MonoBehaviour
 
         if (_getDistanceFromPlayer > _perception.MaxEngageDistance)
         {
-            _agent.ResetPath();
-            _agent.isStopped = true;
+            _movement.Cancel();
             _checkStateElapsedTime = 0f;
             _currentState = State.Check;
             PlayIdleSound();
@@ -413,7 +418,7 @@ public class ZombieBehaviour : MonoBehaviour
         {
             _isAttacking = false;
             animator.SetBool(IsAttacking, false);
-            _agent.isStopped = false;
+            _movement.Resume();
             _currentState = State.Engage;
             return;
         }
@@ -433,30 +438,27 @@ public class ZombieBehaviour : MonoBehaviour
 
         if (_checkStateElapsedTime >= _checkStateTime)
         {
-            _agent.isStopped = false;
-            _agent.speed = walkingSpeed;
-            _agent.stoppingDistance = 0f;
             _checkStateElapsedTime = 0f;
-            _currentState = _shouldPatrol ? State.Patrol : State.Return;
+            EnterPatrolOrReturn();
         }
     }
 
     private void InvestigateState()
     {
         animator.SetFloat(MovementBlend, 0.5f, 0.1f, Time.deltaTime);
-        _agent.SetDestination(_investigateTarget);
+        _movement.SetDestination(_investigateTarget);
 
-        if (Vector3.Distance(transform.position, _investigateTarget) <= _agent.stoppingDistance + 1.5f)
+        if (_movement.HasArrived(1.5f))
         {
             var noiseStoppedTime = Time.time - _lastNoiseTime;
             if (noiseStoppedTime < 1.5f)
             {
-                _agent.isStopped = true;
+                _movement.Halt();
                 animator.SetFloat(MovementBlend, 0f, 0.1f, Time.deltaTime);
                 return;
             }
 
-            _agent.ResetPath();
+            _movement.Cancel();
             _searchElapsedTime = 0f;
             _searchPauseTimer = 0f;
             _hasSearchPoint = false;
@@ -464,28 +466,23 @@ public class ZombieBehaviour : MonoBehaviour
         }
     }
 
-    private void  SearchingState()
+    private void SearchingState()
     {
         _searchElapsedTime += Time.deltaTime;
 
         if (_searchElapsedTime >= _searchDuration)
         {
-            _agent.isStopped = false;
-            _agent.speed = walkingSpeed;
-            _agent.stoppingDistance = 0f;
-            _currentState = _shouldPatrol ? State.Patrol : State.Return;
+            EnterPatrolOrReturn();
             return;
         }
 
         if (!_hasSearchPoint)
         {
             animator.SetFloat(MovementBlend, 0f, 0.1f, Time.deltaTime);
-            if (TryFindSearchPoint(out var newPoint))
+            if (_movement.TrySampleRandomPoint(_investigateTarget, _searchRadius, out var newPoint))
             {
                 _currentSearchPoint = newPoint;
-                _agent.isStopped = false;
-                _agent.speed = walkingSpeed;
-                _agent.SetDestination(_currentSearchPoint);
+                _movement.WalkTo(_currentSearchPoint);
                 _hasSearchPoint = true;
             }
             return;
@@ -498,7 +495,7 @@ public class ZombieBehaviour : MonoBehaviour
         }
 
         animator.SetFloat(MovementBlend, 0f, 0.1f, Time.deltaTime);
-        _agent.isStopped = true;
+        _movement.Halt();
         _searchPauseTimer += Time.deltaTime;
         if (_searchPauseTimer >= _searchPauseTime)
         {
@@ -522,37 +519,17 @@ public class ZombieBehaviour : MonoBehaviour
         _suspicionElapsedTime += Time.deltaTime;
         if (_suspicionElapsedTime >= _suspicionDuration)
         {
-            _agent.isStopped = false;
-            _agent.speed = walkingSpeed;
-            _agent.stoppingDistance = 0f;
-            _currentState = _shouldPatrol ? State.Patrol : State.Return;
+            EnterPatrolOrReturn();
         }
-    }
-
-    private bool TryFindSearchPoint(out Vector3 point)
-    {
-        for (var attempt = 0; attempt < 8; attempt++)
-        {
-            var offset = UnityEngine.Random.insideUnitSphere * _searchRadius;
-            offset.y = 0f;
-            var candidate = _investigateTarget + offset;
-            if (NavMesh.SamplePosition(candidate, out var hit, _searchRadius, NavMesh.AllAreas))
-            {
-                point = hit.position;
-                return true;
-            }
-        }
-        point = Vector3.zero;
-        return false;
     }
 
     private void ReturnState()
     {
         animator.SetFloat(MovementBlend, 0.5f, 0.1f, Time.deltaTime);
-        _agent.SetDestination(_startingPosition);
+        _movement.SetDestination(_startingPosition);
         if (Vector3.Distance(transform.position, _startingPosition) < 0.15f)
         {
-            _agent.stoppingDistance = _startingStoppingDistance;
+            _movement.RestoreInitialStoppingDistance();
             _currentState = State.Idle;
         }
     }
@@ -561,12 +538,9 @@ public class ZombieBehaviour : MonoBehaviour
     {
         _isAttacking = false;
         animator.SetBool(IsAttacking, false);
-        _agent.isStopped = false;
-        _agent.speed = walkingSpeed;
-        _agent.stoppingDistance = 0f;
         _checkStateElapsedTime = 0f;
         PlayIdleSound();
-        _currentState = _shouldPatrol ? State.Patrol : State.Return;
+        EnterPatrolOrReturn();
     }
 
     private void PlayIdleSound()
@@ -600,9 +574,7 @@ public class ZombieBehaviour : MonoBehaviour
 
         if (!neverEngage && _currentState is not (State.Engage or State.Attack))
         {
-            _agent.speed = runningSpeed;
-            PlayChaseSound();
-            _currentState = State.Engage;
+            EnterEngage();
         }
 
         _attackCooldownTimer = 0f;
@@ -612,8 +584,7 @@ public class ZombieBehaviour : MonoBehaviour
     private IEnumerator HitStun()
     {
         _isTakingHit = true;
-        _agent.isStopped = true;
-        _agent.velocity = Vector3.zero;
+        _movement.HardStop();
 
         if (takeDamageSound)
         {
@@ -633,8 +604,8 @@ public class ZombieBehaviour : MonoBehaviour
             }
             else
             {
-                _agent.isStopped = false;
-                _agent.SetDestination(_perception.Player.position);
+                _movement.Resume();
+                _movement.SetDestination(_perception.Player.position);
                 animator.CrossFadeInFixedTime("Movement", 0.15f, 0);
             }
         }
@@ -664,8 +635,7 @@ public class ZombieBehaviour : MonoBehaviour
         _isDead = true;
         _toggle = false;
 
-        _agent.isStopped = true;
-        _agent.enabled = false;
+        _movement.Disable();
 
         foreach (var col in GetComponentsInChildren<Collider>())
         {
