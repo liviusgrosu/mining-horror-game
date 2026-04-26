@@ -16,7 +16,8 @@ public class ZombieBehaviour : MonoBehaviour
         Attack,
         Check,
         Return,
-        Investigate
+        Investigate,
+        Searching
     }
 
     [Header("General")]
@@ -38,6 +39,12 @@ public class ZombieBehaviour : MonoBehaviour
     [Header("Check State")]
     [Tooltip("How long the enemy will wait before returning to idle state")]
     [SerializeField] private float _checkStateTime = 2f;
+
+    [Header("Searching State")]
+    [SerializeField] private float _searchDuration = 8f;
+    [SerializeField] private float _searchRadius = 6f;
+    [SerializeField] private float _searchPauseTime = 1f;
+    [SerializeField] private float _searchPointTolerance = 1f;
 
     [Header("Attack State")]
     [Tooltip("How fast the enemy will rotate to the player after finishing an attack")]
@@ -70,6 +77,10 @@ public class ZombieBehaviour : MonoBehaviour
     private float _getDistanceFromPlayer => Vector3.Distance(transform.position, _player.position);
     private Vector3 _investigateTarget;
     private float _lastNoiseTime;
+    private float _searchElapsedTime;
+    private float _searchPauseTimer;
+    private bool _hasSearchPoint;
+    private Vector3 _currentSearchPoint;
 
     // Patrolling values
     private bool _shouldPatrol => _initialState == State.Patrol;
@@ -207,7 +218,7 @@ public class ZombieBehaviour : MonoBehaviour
             return;
         }
 
-        if (_currentState == State.Investigate)
+        if (_currentState == State.Investigate || _currentState == State.Searching)
         {
             var distToNew = Vector3.Distance(transform.position, position);
             var distToCurrent = Vector3.Distance(transform.position, _investigateTarget);
@@ -276,6 +287,9 @@ public class ZombieBehaviour : MonoBehaviour
                 break;
             case State.Investigate:
                 InvestigateState();
+                break;
+            case State.Searching:
+                SearchingState();
                 break;
         }
     }
@@ -383,7 +397,7 @@ public class ZombieBehaviour : MonoBehaviour
     {
         animator.SetFloat(MovementBlend, 0.5f, 0.1f, Time.deltaTime);
         _agent.SetDestination(_investigateTarget);
-        
+
         if (Vector3.Distance(transform.position, _investigateTarget) <= _agent.stoppingDistance + 1.5f)
         {
             var noiseStoppedTime = Time.time - _lastNoiseTime;
@@ -395,10 +409,71 @@ public class ZombieBehaviour : MonoBehaviour
             }
 
             _agent.ResetPath();
-            _agent.isStopped = true;
-            _checkStateElapsedTime = 0f;
-            _currentState = State.Check;
+            _searchElapsedTime = 0f;
+            _searchPauseTimer = 0f;
+            _hasSearchPoint = false;
+            _currentState = State.Searching;
         }
+    }
+
+    private void SearchingState()
+    {
+        _searchElapsedTime += Time.deltaTime;
+
+        if (_searchElapsedTime >= _searchDuration)
+        {
+            _agent.isStopped = false;
+            _agent.speed = walkingSpeed;
+            _agent.stoppingDistance = 0f;
+            _currentState = _shouldPatrol || startAtIdle ? State.Patrol : State.Return;
+            return;
+        }
+
+        if (!_hasSearchPoint)
+        {
+            animator.SetFloat(MovementBlend, 0f, 0.1f, Time.deltaTime);
+            if (TryFindSearchPoint(out var newPoint))
+            {
+                _currentSearchPoint = newPoint;
+                _agent.isStopped = false;
+                _agent.speed = walkingSpeed;
+                _agent.SetDestination(_currentSearchPoint);
+                _hasSearchPoint = true;
+            }
+            return;
+        }
+
+        if (Vector3.Distance(transform.position, _currentSearchPoint) > _searchPointTolerance)
+        {
+            animator.SetFloat(MovementBlend, 0.5f, 0.1f, Time.deltaTime);
+            return;
+        }
+
+        animator.SetFloat(MovementBlend, 0f, 0.1f, Time.deltaTime);
+        _agent.isStopped = true;
+        _searchPauseTimer += Time.deltaTime;
+        if (_searchPauseTimer >= _searchPauseTime)
+        {
+            _searchPauseTimer = 0f;
+            _hasSearchPoint = false;
+        }
+    }
+
+    private bool TryFindSearchPoint(out Vector3 point)
+    {
+        for (var attempt = 0; attempt < 8; attempt++)
+        {
+            var offset = UnityEngine.Random.insideUnitSphere * _searchRadius;
+            offset.y = 0f;
+            var candidate = _investigateTarget + offset;
+            if (NavMesh.SamplePosition(candidate, out var hit, _searchRadius, NavMesh.AllAreas))
+            {
+                point = hit.position;
+                return true;
+            }
+        }
+        point = Vector3.zero;
+        return false;
     }
 
     private void ReturnState()
