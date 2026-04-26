@@ -1384,7 +1384,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0aa6255276abd7458760c12fa580c3d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ZombieAnimationEvents
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimationEvents
 --- !u!4 &6386820880218880706 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: acf5687dcee45994c8a9fe7caafeee87, type: 3}

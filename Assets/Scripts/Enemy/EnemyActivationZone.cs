@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class ZombieActivationZone : MonoBehaviour
+public class EnemyActivationZone : MonoBehaviour
 {
-    [SerializeField] private GameObject zombie;
+    [SerializeField] private GameObject enemy;
 
     private void Awake()
     {
@@ -16,7 +16,7 @@ public class ZombieActivationZone : MonoBehaviour
             return;
         }
 
-        zombie.SetActive(true);
+        enemy.SetActive(true);
     }
 
     private void OnTriggerExit(Collider other)
@@ -26,6 +26,6 @@ public class ZombieActivationZone : MonoBehaviour
             return;
         }
 
-        zombie.SetActive(false);
+        enemy.SetActive(false);
     }
 }

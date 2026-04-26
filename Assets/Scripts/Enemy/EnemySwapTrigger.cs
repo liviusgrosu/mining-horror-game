@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ZombieSwapTrigger : MonoBehaviour
+public class EnemySwapTrigger : MonoBehaviour
 {
     [SerializeField] private GameObject zombieToDisable;
     [SerializeField] private GameObject zombieToEnable;
