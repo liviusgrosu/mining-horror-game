@@ -75,7 +75,8 @@ public class PlayerMovement : MonoBehaviour
     private float mouseSensitivity = 100f;
 
     [Header("-DEBUG-")]
-    private bool unlimitedSprint = false;
+    [SerializeField]
+    private bool unlimitedSprint;
 
     void Start()
     {
@@ -315,14 +316,14 @@ public class PlayerMovement : MonoBehaviour
 
         if (wantsToSprint)
         {
+            _isSprinting = true;
+            _sprintTimer += Time.deltaTime;
+            
             if (unlimitedSprint)
             {
                 return;
             }
             
-            _isSprinting = true;
-            _sprintTimer += Time.deltaTime;
-
             if (_sprintTimer >= maxSprintTime)
             {
                 _isSprinting = false;

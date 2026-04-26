@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections;
 using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyPerception))]
 [RequireComponent(typeof(EnemyMovement))]
+[RequireComponent(typeof(EnemyHealth))]
+[RequireComponent(typeof(EnemyCombat))]
+[RequireComponent(typeof(EnemyAudio))]
 public class ZombieBehaviour : MonoBehaviour
 {
     private static readonly int MovementBlend = Animator.StringToHash("MovementBlend");
@@ -50,14 +51,6 @@ public class ZombieBehaviour : MonoBehaviour
     [Header("Attack State")]
     [Tooltip("How fast the enemy will rotate to the player after finishing an attack")]
     [SerializeField] private float _toPlayerRotateAttackSpeed = 500f;
-    [Tooltip("Damage dealt per attack")]
-    [SerializeField] private int _attackDamage = 20;
-    [Tooltip("Cooldown between attacks in seconds")]
-    [SerializeField] private float _attackCooldown = 2f;
-    [Tooltip("Distance to trigger attack")]
-    [SerializeField] private float _attackRange = 2f;
-    private float _attackCooldownTimer;
-    private bool _isAttacking;
 
     [SerializeField] private float _movementThreshold = 0.1f;
     private bool _wasMoving;
@@ -67,6 +60,9 @@ public class ZombieBehaviour : MonoBehaviour
     private State _currentState = State.Idle;
     private EnemyPerception _perception;
     private EnemyMovement _movement;
+    private EnemyHealth _health;
+    private EnemyCombat _combat;
+    private EnemyAudio _audio;
 
     private Vector3 _startingPosition;
     private Quaternion _startingRotation;
@@ -82,10 +78,9 @@ public class ZombieBehaviour : MonoBehaviour
     private float _suspicionElapsedTime;
     private State _lastDebugState;
 
-    // Patrolling values
     private bool _shouldPatrol => _initialState == State.Patrol;
     [SerializeField]
-    private EnemyPathing _pathing;  
+    private EnemyPathing _pathing;
     private int _currentPointIndex = 0;
 
     [SerializeField]
@@ -93,57 +88,43 @@ public class ZombieBehaviour : MonoBehaviour
 
     private float _animationTime;
 
-    [Header("Audio")]
-    [SerializeField]
-    private AudioSource _loopAudioSource;
-    [SerializeField]
-    private AudioSource _oneShotAudioSource;
-
-    [SerializeField] private AudioClip idleSound;
-    [SerializeField] private AudioClip chaseSound;
-    [SerializeField] private AudioClip takeDamageSound;
-    [SerializeField] private AudioClip dieSound;
-
-    [Header("Damage Collider")]
-    [SerializeField] private Collider _damageCollider;
-
-    [Header("Blood Pool")]
-    [SerializeField] private Transform _bloodPool;
-    [SerializeField] private float _bloodPoolExpandTime = 3f;
-
-    [Header("Health")]
-    [SerializeField] private int _maxHealth = 100;
-    [SerializeField] private float _hitStunDuration = 0.5f;
-    private int _currentHealth;
-    private bool _isDead;
-    private bool _isTakingHit;
-
     [Header("Debug")]
     [SerializeField] private bool neverEngage;
-    [SerializeField] private bool shutUpPlease;
     [SerializeField] private TextMeshProUGUI _stateText;
     [SerializeField] private TextMeshProUGUI _sightStimulusText;
     [SerializeField] private TextMeshProUGUI _hearingStimulusText;
-    
+
     private void Awake()
     {
         _perception = GetComponent<EnemyPerception>();
         _movement = GetComponent<EnemyMovement>();
+        _health = GetComponent<EnemyHealth>();
+        _combat = GetComponent<EnemyCombat>();
+        _audio = GetComponent<EnemyAudio>();
         _startingRotation = transform.rotation;
         _currentState = _initialState;
-        _currentHealth = _maxHealth;
-        _loopAudioSource.enabled = !shutUpPlease;
     }
-    
+
     private void OnEnable()
     {
         if (!_perception)
         {
             _perception = GetComponent<EnemyPerception>();
         }
+        if (!_health)
+        {
+            _health = GetComponent<EnemyHealth>();
+        }
         if (_perception)
         {
             _perception.OnStimulus += OnStimulus;
+        }
+        if (_health)
+        {
+            _health.OnDamaged += HandleDamaged;
+            _health.OnHitStunStart += HandleHitStunStart;
+            _health.OnHitStunEnd += HandleHitStunEnd;
+            _health.OnDied += HandleDied;
         }
     }
 
@@ -153,11 +134,17 @@ public class ZombieBehaviour : MonoBehaviour
         {
             _perception.OnStimulus -= OnStimulus;
         }
+        if (_health)
+        {
+            _health.OnDamaged -= HandleDamaged;
+            _health.OnHitStunStart -= HandleHitStunStart;
+            _health.OnHitStunEnd -= HandleHitStunEnd;
+            _health.OnDied -= HandleDied;
+        }
     }
 
     private void OnStimulus(Stimulus s)
     {
-        // ----- DEBUG ----- 
         if (s.Kind == StimulusKind.Sight)
         {
             var tier = "";
@@ -175,7 +162,7 @@ public class ZombieBehaviour : MonoBehaviour
             }
             _sightStimulusText.text = $"Sight:{tier}";
         }
-        
+
         if (s.Kind == StimulusKind.Sound)
         {
             var tier = "";
@@ -193,10 +180,8 @@ public class ZombieBehaviour : MonoBehaviour
             }
             _hearingStimulusText.text = $"Sound:{tier}";
         }
-        
-        // ---------------- 
-        
-        if (_isDead || _isTakingHit || !_toggle)
+
+        if (_health.IsDead || _health.IsTakingHit || !_toggle)
         {
             return;
         }
@@ -219,6 +204,10 @@ public class ZombieBehaviour : MonoBehaviour
         {
             if (s.Kind == StimulusKind.Sound)
             {
+                // TODO: This needs to be redone. It makes sense for decoy
+                // But if the player is making noise right next to the enemy and is already investigating,
+                // then the enemy just ignores it cause _investigateTarget is closer then to the player.
+                // We need to factor in sound source (decoy/player)
                 if (_currentState == State.Investigate)
                 {
                     var distToNew = Vector3.Distance(transform.position, s.Position);
@@ -248,12 +237,12 @@ public class ZombieBehaviour : MonoBehaviour
         if (s.Tier == StimulusTier.Faint)
         {
             // TODO: If post-engage, immediatly go into engage
-            // TOOD: If investigate/searching/checking, go into suspicious or investigate
-            
             if (_currentState is State.Investigate or State.Searching)
             {
+                EnterInvestigate(s.Position);
                 return;
             }
+
             EnterSuspicious(s.Position);
         }
     }
@@ -261,7 +250,7 @@ public class ZombieBehaviour : MonoBehaviour
     private void EnterEngage()
     {
         _movement.RunTo(_perception.Player.position);
-        PlayChaseSound();
+        _audio.PlayChaseLoop();
         _currentState = State.Engage;
     }
 
@@ -306,12 +295,12 @@ public class ZombieBehaviour : MonoBehaviour
             SetPathingDestination();
         }
 
-        PlayIdleSound();
+        _audio.PlayIdleLoop();
     }
 
     private void Update()
     {
-        if (!_toggle || _isTakingHit)
+        if (!_toggle || _health.IsTakingHit)
         {
             return;
         }
@@ -380,11 +369,10 @@ public class ZombieBehaviour : MonoBehaviour
         animator.SetFloat(MovementBlend, 1f, 0.1f, Time.deltaTime);
         _movement.SetDestination(_perception.Player.position);
 
-        if (_getDistanceFromPlayer <= _attackRange)
+        if (_getDistanceFromPlayer <= _combat.AttackRange)
         {
             _movement.HardStop();
-            _isAttacking = true;
-            _attackCooldownTimer = 0f;
+            _combat.StartAttack();
             animator.SetBool(IsAttacking, true);
             animator.Play("Attack", 0, 0f);
             _currentState = State.Attack;
@@ -395,7 +383,7 @@ public class ZombieBehaviour : MonoBehaviour
             _movement.Cancel();
             _checkStateElapsedTime = 0f;
             _currentState = State.Check;
-            PlayIdleSound();
+            _audio.PlayIdleLoop();
         }
     }
 
@@ -411,21 +399,21 @@ public class ZombieBehaviour : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _toPlayerRotateAttackSpeed * Time.deltaTime);
         }
 
-        _attackCooldownTimer += Time.deltaTime;
+        var cooldownReached = _combat.TickCooldown(Time.deltaTime);
 
         var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        if (!stateInfo.IsName("Attack") && _getDistanceFromPlayer > _attackRange * 1.5f)
+        if (!stateInfo.IsName("Attack") && _getDistanceFromPlayer > _combat.AttackRange * 1.5f)
         {
-            _isAttacking = false;
+            _combat.EndAttack();
             animator.SetBool(IsAttacking, false);
             _movement.Resume();
             _currentState = State.Engage;
             return;
         }
 
-        if (_attackCooldownTimer >= _attackCooldown)
+        if (cooldownReached)
         {
-            _attackCooldownTimer = 0f;
+            _combat.ResetCooldown();
             animator.SetBool(IsAttacking, true);
             animator.Play("Attack", 0, 0f);
         }
@@ -536,105 +524,48 @@ public class ZombieBehaviour : MonoBehaviour
 
     public void Disengage()
     {
-        _isAttacking = false;
+        _combat.EndAttack();
         animator.SetBool(IsAttacking, false);
         _checkStateElapsedTime = 0f;
-        PlayIdleSound();
+        _audio.PlayIdleLoop();
         EnterPatrolOrReturn();
     }
 
-    private void PlayIdleSound()
+    private void HandleDamaged(int amount)
     {
-        MusicManager.Instance.FadeToAmbientMusic();
-        _loopAudioSource.Stop();
-        _loopAudioSource.clip = idleSound;
-        _loopAudioSource.Play();
-    }
-
-    private void PlayChaseSound()
-    {
-        MusicManager.Instance.PlayChaseMusic();
-        _loopAudioSource.Stop();
-        _loopAudioSource.clip = chaseSound;
-        _loopAudioSource.Play();
-    }
-
-
-    public void TakeDamage(int amount)
-    {
-        if (_isDead) return;
-
-        _currentHealth -= amount;
-
-        if (_currentHealth <= 0)
-        {
-            Die();
-            return;
-        }
-
         if (!neverEngage && _currentState is not (State.Engage or State.Attack))
         {
             EnterEngage();
         }
-
-        _attackCooldownTimer = 0f;
-        StartCoroutine(HitStun());
+        _combat.ResetCooldown();
     }
 
-    private IEnumerator HitStun()
+    private void HandleHitStunStart()
     {
-        _isTakingHit = true;
         _movement.HardStop();
-
-        if (takeDamageSound)
-        {
-            _oneShotAudioSource.PlayOneShot(takeDamageSound);
-        }
+        _audio.PlayHurt();
         animator.CrossFadeInFixedTime("Take Hit", 0.1f, 0);
-        yield return new WaitForSeconds(_hitStunDuration);
+    }
 
-        _isTakingHit = false;
-        if (!_isDead)
+    private void HandleHitStunEnd()
+    {
+        if (_currentState == State.Attack)
         {
-            if (_currentState == State.Attack)
-            {
-                _attackCooldownTimer = 0f;
-                animator.SetBool(IsAttacking, true);
-                animator.Play("Attack", 0, 0f);
-            }
-            else
-            {
-                _movement.Resume();
-                _movement.SetDestination(_perception.Player.position);
-                animator.CrossFadeInFixedTime("Movement", 0.15f, 0);
-            }
+            _combat.ResetCooldown();
+            animator.SetBool(IsAttacking, true);
+            animator.Play("Attack", 0, 0f);
+        }
+        else
+        {
+            _movement.Resume();
+            _movement.SetDestination(_perception.Player.position);
+            animator.CrossFadeInFixedTime("Movement", 0.15f, 0);
         }
     }
 
-    public void EnableDamageCollider()
+    private void HandleDied()
     {
-        _damageCollider.enabled = true;
-    }
-
-    public void DisableDamageCollider()
-    {
-        _damageCollider.enabled = false;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            PlayerHealth.Instance.TakeDamage(_attackDamage);
-            _damageCollider.enabled = false;
-        }
-    }
-
-    private void Die()
-    {
-        _isDead = true;
         _toggle = false;
-
         _movement.Disable();
 
         foreach (var col in GetComponentsInChildren<Collider>())
@@ -642,36 +573,12 @@ public class ZombieBehaviour : MonoBehaviour
             col.enabled = false;
         }
 
-        _loopAudioSource.Stop();
-        _oneShotAudioSource.Stop();
-        if (dieSound)
+        _audio.StopAll();
+        _audio.PlayDie();
+        if (MusicManager.Instance)
         {
-            _oneShotAudioSource.PlayOneShot(dieSound);
+            MusicManager.Instance.FadeToAmbientMusic();
         }
-        MusicManager.Instance.FadeToAmbientMusic();
         animator.Play("Die", 0, 0f);
-
-        if (_bloodPool)
-            StartCoroutine(ExpandBloodPool());
-    }
-
-    private IEnumerator ExpandBloodPool()
-    {
-        yield return new WaitForSeconds(1f);
-        var elapsedTime = 0f;
-        var targetScale = new Vector3(0.3f, _bloodPool.localScale.y, 0.3f);
-
-        while (elapsedTime < _bloodPoolExpandTime)
-        {
-            elapsedTime += Time.deltaTime;
-            var t = elapsedTime / _bloodPoolExpandTime;
-            var scale = _bloodPool.localScale;
-            scale.x = Mathf.Lerp(0f, targetScale.x, t);
-            scale.z = Mathf.Lerp(0f, targetScale.z, t);
-            _bloodPool.localScale = scale;
-            yield return null;
-        }
-
-        _bloodPool.localScale = targetScale;
     }
 }

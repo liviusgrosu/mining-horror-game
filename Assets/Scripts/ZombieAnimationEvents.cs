@@ -2,21 +2,20 @@ using UnityEngine;
 
 public class ZombieAnimationEvents : MonoBehaviour
 {
-    private ZombieBehaviour _zombie;
+    private EnemyCombat _combat;
 
     private void Awake()
     {
-        _zombie = GetComponentInParent<ZombieBehaviour>();
+        _combat = GetComponentInParent<EnemyCombat>();
     }
 
     public void EnableDamageCollider()
     {
-        _zombie.EnableDamageCollider();
+        _combat.EnableDamageCollider();
     }
 
     public void DisableDamageCollider()
     {
-        _zombie.DisableDamageCollider();
+        _combat.DisableDamageCollider();
     }
-
 }

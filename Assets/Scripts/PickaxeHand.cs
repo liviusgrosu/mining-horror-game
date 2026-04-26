@@ -157,10 +157,10 @@ public class PickaxeHand : MonoBehaviour
                 var hasDeathRune = deathRune != null && Inventory.Instance.PickaxeGems.Contains(deathRune);
                 if (hasDeathRune)
                 {
-                    var shade = hit.collider.GetComponentInParent<ZombieBehaviour>();
-                    if (shade != null)
+                    var enemyHealth = hit.collider.GetComponentInParent<EnemyHealth>();
+                    if (enemyHealth)
                     {
-                        shade.TakeDamage(_currentPickaxe.GetComponent<Pickaxe>().Power * 10);
+                        enemyHealth.TakeDamage(_currentPickaxe.GetComponent<Pickaxe>().Power * 10);
                     }
                     SpawnBloodEffect(hit.point, hit.normal);
                 }
