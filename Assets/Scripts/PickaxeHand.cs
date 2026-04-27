@@ -25,10 +25,19 @@ public class PickaxeHand : MonoBehaviour
     [SerializeField] private float _bobAmountX = 0.01f;
     [SerializeField] private float _bobSmooth = 10f;
     private float _bobTimer;
+    private Vector3 _bobOffset;
     private Vector3 _initialLocalPosition;
     private CharacterController _playerController;
     private PlayerMovement _playerMovement;
     private CharacterFootsteps _playerFootsteps;
+
+    [Header("Sway")]
+    [SerializeField] private float _lookSwayAmount = 0.01f;
+    [SerializeField] private float _lookSwayClamp = 0.08f;
+    [SerializeField] private float _verticalSwayAmount = 0.02f;
+    [SerializeField] private float _verticalSwayClamp = 0.15f;
+    [SerializeField] private float _swaySmooth = 6f;
+    private Vector3 _swayOffset;
 
     private Vector3 _lastNoisePosition;
     private float _lastNoiseRadius;
@@ -136,8 +145,22 @@ public class PickaxeHand : MonoBehaviour
         var bobY = Mathf.Sin(_bobTimer * Mathf.PI * 2f) * _bobAmountY;
         var bobX = Mathf.Cos(_bobTimer * Mathf.PI) * _bobAmountX;
 
-        var targetPos = _initialLocalPosition + new Vector3(bobX, bobY, 0f);
-        transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, _bobSmooth * Time.deltaTime);
+        var mouseX = Input.GetAxisRaw("Mouse X");
+        var mouseY = Input.GetAxisRaw("Mouse Y");
+        var verticalVelocity = _playerController
+            ? _playerController.velocity.y
+            : 0f;
+
+        var swayTargetX = Mathf.Clamp(-mouseX * _lookSwayAmount, -_lookSwayClamp, _lookSwayClamp);
+        var swayTargetY = Mathf.Clamp(-mouseY * _lookSwayAmount, -_lookSwayClamp, _lookSwayClamp)
+            + Mathf.Clamp(-verticalVelocity * _verticalSwayAmount, -_verticalSwayClamp, _verticalSwayClamp);
+        var swayTarget = new Vector3(swayTargetX, swayTargetY, 0f);
+        _swayOffset = Vector3.Lerp(_swayOffset, swayTarget, _swaySmooth * Time.deltaTime);
+
+        var bobTarget = new Vector3(bobX, bobY, 0f);
+        _bobOffset = Vector3.Lerp(_bobOffset, bobTarget, _bobSmooth * Time.deltaTime);
+
+        transform.localPosition = _initialLocalPosition + _bobOffset + _swayOffset;
     }
 
     public void SwitchPickaxe(string name)
