@@ -20,6 +20,16 @@ public class PickaxeHand : MonoBehaviour
     private bool _hasPendingHit;
     private RaycastHit _pendingHit;
 
+    [Header("Bob")]
+    [SerializeField] private float _bobAmountY = 0.02f;
+    [SerializeField] private float _bobAmountX = 0.01f;
+    [SerializeField] private float _bobSmooth = 10f;
+    private float _bobTimer;
+    private Vector3 _initialLocalPosition;
+    private CharacterController _playerController;
+    private PlayerMovement _playerMovement;
+    private CharacterFootsteps _playerFootsteps;
+
     private Vector3 _lastNoisePosition;
     private float _lastNoiseRadius;
 
@@ -69,7 +79,11 @@ public class PickaxeHand : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _camera = Camera.main.transform;
-        SwitchPickaxe("Bronze Pickaxe");    
+        _initialLocalPosition = transform.localPosition;
+        _playerController = GetComponentInParent<CharacterController>();
+        _playerMovement = GetComponentInParent<PlayerMovement>();
+        _playerFootsteps = GetComponentInParent<CharacterFootsteps>();
+        SwitchPickaxe("Bronze Pickaxe");
     }
 
     void Update()
@@ -91,6 +105,39 @@ public class PickaxeHand : MonoBehaviour
                 _animator.SetTrigger("SwingMiss");
             }
         }
+    }
+
+    private void LateUpdate()
+    {
+        if (GameManager.Instance && (GameManager.Instance.InMenu || GameManager.Instance.HasDied))
+        {
+            return;
+        }
+
+        var isMoving = _playerController
+            && _playerController.velocity.magnitude > 0.1f
+            && _playerController.isGrounded;
+
+        if (isMoving && _playerFootsteps)
+        {
+            var currentInterval = _playerMovement && _playerMovement.IsCrouching
+                ? _playerFootsteps.crouchStepInterval
+                : _playerMovement && _playerMovement.IsSprinting
+                    ? _playerFootsteps.sprintStepInterval
+                    : _playerFootsteps.stepInterval;
+
+            _bobTimer += Time.deltaTime / currentInterval;
+        }
+        else
+        {
+            _bobTimer = 0f;
+        }
+
+        var bobY = Mathf.Sin(_bobTimer * Mathf.PI * 2f) * _bobAmountY;
+        var bobX = Mathf.Cos(_bobTimer * Mathf.PI) * _bobAmountX;
+
+        var targetPos = _initialLocalPosition + new Vector3(bobX, bobY, 0f);
+        transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, _bobSmooth * Time.deltaTime);
     }
 
     public void SwitchPickaxe(string name)

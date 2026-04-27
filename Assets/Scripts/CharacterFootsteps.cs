@@ -4,6 +4,8 @@ using Random = UnityEngine.Random;
 
 public class CharacterFootsteps : MonoBehaviour
 {
+    public static event Action<float> OnFootstepNoise;
+
     [Header("Gravel Footstep Sounds")]
     public AudioClip[] gravelSounds;
 
@@ -145,7 +147,9 @@ public class CharacterFootsteps : MonoBehaviour
             var speedMultiplier = Mathf.Lerp(_crouchSpeedMultiplier, _sprintSpeedMultiplier, t);
             var (surfaceNoise, surfaceTag) = GetSurfaceNoiseLevel();
             _lastNoiseRadius = _baseNoiseRadius * surfaceNoise * speedMultiplier;
+            Debug.Log($"Noise Radius: {_lastNoiseRadius}");
             NoiseEmitter.Emit(transform.position, _lastNoiseRadius, surfaceTag);
+            OnFootstepNoise?.Invoke(_lastNoiseRadius);
         }
 
         _wasGrounded = isGrounded;
@@ -163,7 +167,9 @@ public class CharacterFootsteps : MonoBehaviour
                     : _walkSpeedMultiplier;
 
         _lastNoiseRadius = _baseNoiseRadius * surfaceNoise * speedMultiplier;
+        Debug.Log($"Noise Radius: {_lastNoiseRadius}");
         NoiseEmitter.Emit(transform.position, _lastNoiseRadius, surfaceTag);
+        OnFootstepNoise?.Invoke(_lastNoiseRadius);
     }
 
     private (float, string) GetSurfaceNoiseLevel()
