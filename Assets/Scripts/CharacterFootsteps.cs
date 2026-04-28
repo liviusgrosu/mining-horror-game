@@ -147,7 +147,6 @@ public class CharacterFootsteps : MonoBehaviour
             var speedMultiplier = Mathf.Lerp(_crouchSpeedMultiplier, _sprintSpeedMultiplier, t);
             var (surfaceNoise, surfaceTag) = GetSurfaceNoiseLevel();
             _lastNoiseRadius = _baseNoiseRadius * surfaceNoise * speedMultiplier;
-            Debug.Log($"Noise Radius: {_lastNoiseRadius}");
             NoiseEmitter.Emit(transform.position, _lastNoiseRadius, surfaceTag);
             OnFootstepNoise?.Invoke(_lastNoiseRadius);
         }
@@ -167,7 +166,6 @@ public class CharacterFootsteps : MonoBehaviour
                     : _walkSpeedMultiplier;
 
         _lastNoiseRadius = _baseNoiseRadius * surfaceNoise * speedMultiplier;
-        Debug.Log($"Noise Radius: {_lastNoiseRadius}");
         NoiseEmitter.Emit(transform.position, _lastNoiseRadius, surfaceTag);
         OnFootstepNoise?.Invoke(_lastNoiseRadius);
     }

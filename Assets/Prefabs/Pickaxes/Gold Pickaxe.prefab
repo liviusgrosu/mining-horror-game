@@ -110,3 +110,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pickaxe
   Power: 3
+  _gemIndicator: {fileID: 8761886371164867794}
+--- !u!23 &8761886371164867794 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7918335002988649766, guid: 91b6919b3876a7a48b220e6950b83a6a, type: 3}
+  m_PrefabInstance: {fileID: 7747340898447371784}
+  m_PrefabAsset: {fileID: 0}

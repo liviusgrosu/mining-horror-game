@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +20,12 @@ public class GemSelectionUI : MonoBehaviour
     [SerializeField] private TMP_Text _dampenCountText;
     [SerializeField] private TMP_Text _decoyCountText;
 
+    [Header("Pickaxe Gem Indicator Materials")]
+    [SerializeField] private Material _noneMaterial;
+    [SerializeField] private Material _invisibilityMaterial;
+    [SerializeField] private Material _dampeningMaterial;
+    [SerializeField] private Material _decoyMaterial;
+
     [SerializeField]
     private int maxUses = 10;
 
@@ -29,10 +36,48 @@ public class GemSelectionUI : MonoBehaviour
     public GemType SelectedGem { get; private set; } = GemType.None;
     public bool IsOpen { get; private set; }
 
+    public event Action<GemType> OnSelectedGemChanged;
+
     private void Awake()
     {
         Instance = this;
         _invisibilityUses = _dampenUses = _decoyUses = maxUses;
+    }
+
+    private void Update()
+    {
+        if (GameManager.Instance && (GameManager.Instance.InMenu || GameManager.Instance.HasDied))
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1) && _invisibilityUses > 0)
+        {
+            SelectGem(GemType.Invisibility);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && _dampenUses > 0)
+        {
+            SelectGem(GemType.Dampening);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3) && _decoyUses > 0)
+        {
+            SelectGem(GemType.Decoy);
+        }
+    }
+
+    public Material GetMaterialFor(GemType type)
+    {
+        switch (type)
+        {
+            case GemType.Invisibility:
+                return _invisibilityMaterial;
+            case GemType.Dampening:
+                return _dampeningMaterial;
+            case GemType.Decoy:
+                return _decoyMaterial;
+            default:
+                return _noneMaterial;
+        }
     }
 
     private void Start()
@@ -59,22 +104,23 @@ public class GemSelectionUI : MonoBehaviour
 
     public bool TryConsumeUse(GemType type)
     {
+        var depleted = false;
         switch (type)
         {
             case GemType.Invisibility:
                 if (_invisibilityUses <= 0) { return false; }
                 _invisibilityUses--;
-                if (_invisibilityUses == 0 && SelectedGem == GemType.Invisibility) { SelectedGem = GemType.None; }
+                if (_invisibilityUses == 0 && SelectedGem == GemType.Invisibility) { SelectedGem = GemType.None; depleted = true; }
                 break;
             case GemType.Dampening:
                 if (_dampenUses <= 0) { return false; }
                 _dampenUses--;
-                if (_dampenUses == 0 && SelectedGem == GemType.Dampening) { SelectedGem = GemType.None; }
+                if (_dampenUses == 0 && SelectedGem == GemType.Dampening) { SelectedGem = GemType.None; depleted = true; }
                 break;
             case GemType.Decoy:
                 if (_decoyUses <= 0) { return false; }
                 _decoyUses--;
-                if (_decoyUses == 0 && SelectedGem == GemType.Decoy) { SelectedGem = GemType.None; }
+                if (_decoyUses == 0 && SelectedGem == GemType.Decoy) { SelectedGem = GemType.None; depleted = true; }
                 break;
             default:
                 return false;
@@ -82,6 +128,10 @@ public class GemSelectionUI : MonoBehaviour
 
         RefreshRings();
         RefreshUsageUI();
+        if (depleted)
+        {
+            OnSelectedGemChanged?.Invoke(SelectedGem);
+        }
         return true;
     }
 
@@ -105,8 +155,13 @@ public class GemSelectionUI : MonoBehaviour
 
     private void SelectGem(GemType type)
     {
+        if (SelectedGem == type)
+        {
+            return;
+        }
         SelectedGem = type;
         RefreshRings();
+        OnSelectedGemChanged?.Invoke(SelectedGem);
     }
 
     private void RefreshRings()

@@ -12563,6 +12563,10 @@ MonoBehaviour:
   _invisibilityCountText: {fileID: 1065543061}
   _dampenCountText: {fileID: 737336439}
   _decoyCountText: {fileID: 2102784815}
+  _noneMaterial: {fileID: 0}
+  _invisibilityMaterial: {fileID: 0}
+  _dampeningMaterial: {fileID: 0}
+  _decoyMaterial: {fileID: 0}
   maxUses: 10
 --- !u!1 &1171930836
 GameObject:
@@ -17246,6 +17250,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 64649107166384029, guid: 4233c8d53e41c9149a181a75327e1abd, type: 3}
       propertyPath: _bobAmountY
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 64649107166384029, guid: 4233c8d53e41c9149a181a75327e1abd, type: 3}
+      propertyPath: _swaySmooth
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 64649107166384029, guid: 4233c8d53e41c9149a181a75327e1abd, type: 3}
+      propertyPath: _lookSwayClamp
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 64649107166384029, guid: 4233c8d53e41c9149a181a75327e1abd, type: 3}
+      propertyPath: _lookSwayAmount
       value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 433850183594807019, guid: 4233c8d53e41c9149a181a75327e1abd, type: 3}

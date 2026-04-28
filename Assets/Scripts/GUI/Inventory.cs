@@ -49,31 +49,9 @@ public class Inventory : MonoBehaviour
     public IReadOnlyDictionary<InventoryItem, int> Items => _items;
     public IReadOnlyList<InventoryItem> PickaxeGems => _pickaxeGems;
 
-    public InventoryItem TempItem1, TempItem2, TempItem3, TempItem4;
-
     private void Start()
     {
         _currentPickaxeUI = Instantiate(bronzePickaxeUI, pickaxeUIParent).GetComponent<PickaxeUI>();
-    }
-    
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            Add(TempItem1);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            Add(TempItem2);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            Add(TempItem3);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            Add(TempItem4);
-        }
     }
 
     public void SwitchPickaxe(string newPickaxe)
