@@ -24,6 +24,8 @@ public class PickaxeHand : MonoBehaviour
     [SerializeField] private float _bobAmountY = 0.02f;
     [SerializeField] private float _bobAmountX = 0.01f;
     [SerializeField] private float _bobSmooth = 10f;
+    [SerializeField] private float _walkBobMultiplier = 0.5f;
+    [SerializeField] private float _crouchBobMultiplier = 0.3f;
     private float _bobTimer;
     private Vector3 _bobOffset;
     private Vector3 _initialLocalPosition;
@@ -142,8 +144,14 @@ public class PickaxeHand : MonoBehaviour
             _bobTimer = 0f;
         }
 
-        var bobY = Mathf.Sin(_bobTimer * Mathf.PI * 2f) * _bobAmountY;
-        var bobX = Mathf.Cos(_bobTimer * Mathf.PI) * _bobAmountX;
+        var bobMultiplier = _playerMovement && _playerMovement.IsCrouching
+            ? _crouchBobMultiplier
+            : _playerMovement && _playerMovement.IsSprinting
+                ? 1f
+                : _walkBobMultiplier;
+
+        var bobY = Mathf.Sin(_bobTimer * Mathf.PI * 2f) * _bobAmountY * bobMultiplier;
+        var bobX = Mathf.Cos(_bobTimer * Mathf.PI) * _bobAmountX * bobMultiplier;
 
         var mouseX = Input.GetAxisRaw("Mouse X");
         var mouseY = Input.GetAxisRaw("Mouse Y");
