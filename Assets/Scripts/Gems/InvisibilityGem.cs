@@ -10,6 +10,7 @@ public class InvisibilityGem : MonoBehaviour
     [SerializeField] private float _fadeOutTime = 0.5f;
     [SerializeField] private float _visibilityReduction;
     [SerializeField] private float _transparentAlpha = 0.3f;
+    [SerializeField] private ParticleSystem _activationVFX;
 
     private float _timer;
     private bool _isActive;
@@ -47,6 +48,11 @@ public class InvisibilityGem : MonoBehaviour
             }
 
             _timer = _duration;
+
+            if (_activationVFX)
+            {
+                _activationVFX.Play(true);
+            }
 
             if (!_isActive)
             {

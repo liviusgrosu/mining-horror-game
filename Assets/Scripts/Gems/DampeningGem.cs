@@ -7,6 +7,7 @@ public class DampeningGem : MonoBehaviour
     [SerializeField] private float _dampenedSpeedMultiplier = 0.1f;
     [SerializeField] [Range(0f, 1f)] private float _dampenedVolumeMultiplier = 0.2f;
     [SerializeField] private CharacterFootsteps _footsteps;
+    [SerializeField] private ParticleSystem _activationVFX;
 
     private float _timer;
     private bool _isActive;
@@ -32,6 +33,11 @@ public class DampeningGem : MonoBehaviour
             }
 
             _timer = _duration;
+
+            if (_activationVFX)
+            {
+                _activationVFX.Play(true);
+            }
 
             if (!_isActive)
             {
