@@ -5,19 +5,15 @@ public class DecoyGem : MonoBehaviour
     [SerializeField] private float _lifetime = 10f;
     [SerializeField] private GameObject _decoyPrefab;
     [SerializeField] private GameObject _previewPrefab;
-    [SerializeField] private GameObject _invalidPreviewPrefab;
-    [SerializeField] private float _validDistance = 2f;
     [SerializeField] private float _maxPreviewDistance = 10f;
     [SerializeField] private LayerMask _validLayers;
     [SerializeField] private LayerMask _ignoreLayers;
 
-    private enum PreviewState { Hidden, Valid, Invalid }
-
     private GameObject _activeDecoy;
     private GameObject _previewInstance;
-    private GameObject _activePreviewPrefab;
-    private PreviewState _currentState;
     private Vector3 _lastSpawnPos;
+    private Quaternion _lastSpawnRot;
+    private bool _isValidSpawn;
 
     private void Update()
     {
@@ -41,59 +37,46 @@ public class DecoyGem : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.F))
         {
-            if (_currentState == PreviewState.Valid)
+            if (_isValidSpawn)
             {
                 SpawnDecoy();
             }
-
             DestroyPreview();
         }
     }
 
-    private PreviewState Evaluate(out Vector3 spawnPos)
+    private void EvaluateSpawn()
     {
-        spawnPos = Vector3.zero;
         var cam = Camera.main.transform;
-
-        if (!Physics.Raycast(cam.position, cam.forward, out var hit, _maxPreviewDistance, ~_ignoreLayers))
+        if (Physics.Raycast(cam.position, cam.forward, out var hit, _maxPreviewDistance, ~_ignoreLayers)
+            && (_validLayers & (1 << hit.collider.gameObject.layer)) != 0)
         {
-            return PreviewState.Hidden;
+            _lastSpawnPos = hit.point;
+            _lastSpawnRot = Quaternion.FromToRotation(Vector3.up, hit.normal);
+            _isValidSpawn = true;
+            return;
         }
 
-        spawnPos = hit.point;
-        var isValidLayer = (_validLayers & (1 << hit.collider.gameObject.layer)) != 0;
-
-        if (hit.distance <= _validDistance && isValidLayer)
-        {
-            return PreviewState.Valid;
-        }
-
-        return PreviewState.Invalid;
+        _isValidSpawn = false;
     }
 
     private void UpdatePreview()
     {
-        _currentState = Evaluate(out _lastSpawnPos);
+        EvaluateSpawn();
 
-        if (_currentState == PreviewState.Hidden)
+        if (!_isValidSpawn)
         {
             DestroyPreview();
             return;
         }
 
-        var targetPrefab = _currentState == PreviewState.Valid
-            ? _previewPrefab
-            : _invalidPreviewPrefab;
-
-        if (!_previewInstance || _activePreviewPrefab != targetPrefab)
+        if (!_previewInstance)
         {
-            DestroyPreview();
-            _activePreviewPrefab = targetPrefab;
-            _previewInstance = Instantiate(targetPrefab, _lastSpawnPos, Quaternion.identity);
+            _previewInstance = Instantiate(_previewPrefab, _lastSpawnPos, _lastSpawnRot);
         }
         else
         {
-            _previewInstance.transform.position = _lastSpawnPos;
+            _previewInstance.transform.SetPositionAndRotation(_lastSpawnPos, _lastSpawnRot);
         }
     }
 
@@ -103,8 +86,8 @@ public class DecoyGem : MonoBehaviour
         {
             Destroy(_previewInstance);
             _previewInstance = null;
-            _activePreviewPrefab = null;
         }
+        _isValidSpawn = false;
     }
 
     private void SpawnDecoy()
@@ -119,7 +102,7 @@ public class DecoyGem : MonoBehaviour
             Destroy(_activeDecoy);
         }
 
-        _activeDecoy = Instantiate(_decoyPrefab, _lastSpawnPos, Quaternion.identity);
+        _activeDecoy = Instantiate(_decoyPrefab, _lastSpawnPos, _lastSpawnRot);
         Destroy(_activeDecoy, _lifetime);
     }
 }
