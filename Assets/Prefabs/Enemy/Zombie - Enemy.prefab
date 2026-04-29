@@ -1014,7 +1014,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShadeBehaviour
   _toggle: 1
   _rotationTolerance: 10
-  _proximityEngageDistance: 2
   _startingRotationSpeed: 250
   _checkStateTime: 2
   _searchDuration: 8
@@ -1024,7 +1023,6 @@ MonoBehaviour:
   _suspicionDuration: 3
   _suspicionRotateSpeed: 500
   _toPlayerRotateAttackSpeed: 100
-  _movementThreshold: 0.1
   _initialState: 0
   _pathing: {fileID: 0}
   animator: {fileID: 6835881315518645157}
@@ -1278,7 +1276,7 @@ BoxCollider:
   m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1.9166068, z: 1.524704}
-  m_Center: {x: 0, y: 0.20898515, z: 0.31411743}
+  m_Center: {x: 0, y: 0.20898515, z: 1.12}
 --- !u!1001 &6856786220266233129
 PrefabInstance:
   m_ObjectHideFlags: 0
