@@ -58,18 +58,10 @@ public class PickaxeHand : MonoBehaviour
     [SerializeField] private float _miningNoiseRadius = 12f;
 
     private AudioSource _audioSource;
-    
-    [SerializeField]
-    public AudioClip pickaxeValidSound;
+    private PickaxeAudio _pickaxeAudio;
 
     [SerializeField]
-    public AudioClip pickaxeInvalidSound;
-
-    [SerializeField] 
     public AudioClip pickaxeUpgradeSound;
-    
-    [SerializeField] 
-    public AudioClip pickaxeMissSound;
     
     private void Awake()
     {
@@ -84,6 +76,7 @@ public class PickaxeHand : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         _audioSource.playOnAwake = false;
         _audioSource.loop = false;
+        _pickaxeAudio = GetComponent<PickaxeAudio>();
     }
 
     void Start()
@@ -197,7 +190,7 @@ public class PickaxeHand : MonoBehaviour
                 _lastNoisePosition = hit.point;
                 _lastNoiseRadius = _miningNoiseRadius;
                 NoiseEmitter.Emit(hit.point, _miningNoiseRadius, hit.collider.tag);
-                _audioSource.PlayOneShot(pickaxeValidSound);
+                _pickaxeAudio.PlayImpactForTag(hit.collider.tag);
                 SpawnCloudEffect(hit.point);
                 var voxelRenderer = hit.collider.GetComponent<MeshRenderer>();
                 if (voxelRenderer != null)
@@ -217,7 +210,7 @@ public class PickaxeHand : MonoBehaviour
                     _lastNoisePosition = hit.point;
                     _lastNoiseRadius = _miningNoiseRadius;
                     NoiseEmitter.Emit(hit.point, _miningNoiseRadius, hit.collider.tag);
-                    _audioSource.PlayOneShot(pickaxeValidSound);
+                    _pickaxeAudio.PlayImpactForTag(hit.collider.tag);
                     SpawnCloudEffect(hit.point);
                     if (mat != null)
                     {
@@ -226,7 +219,7 @@ public class PickaxeHand : MonoBehaviour
                 }
                 else
                 {
-                    _audioSource.PlayOneShot(pickaxeInvalidSound);
+                    _pickaxeAudio.PlayImpactForTag(hit.collider.tag);
                     SpawnSparkEffect(hit.point, hit.normal);
                 }
             }
@@ -246,11 +239,10 @@ public class PickaxeHand : MonoBehaviour
                 {
                     SpawnLightBloodEffect(hit.point, hit.normal);
                 }
-                _audioSource.PlayOneShot(pickaxeValidSound);
             }
             else
             {
-                _audioSource.PlayOneShot(pickaxeInvalidSound);
+                _pickaxeAudio.PlayImpactForTag(hit.collider.tag);
                 _lastNoisePosition = hit.point;
                 _lastNoiseRadius = _miningNoiseRadius;
                 NoiseEmitter.Emit(hit.point, _miningNoiseRadius, hit.collider.tag);
@@ -259,7 +251,7 @@ public class PickaxeHand : MonoBehaviour
         }
         else
         {
-            _audioSource.PlayOneShot(pickaxeMissSound);
+            _pickaxeAudio.PlayMiss();
         }
     }
 
