@@ -46,6 +46,7 @@ public class EnemyAI : MonoBehaviour
     [Header("Suspicious State")]
     [SerializeField] private float _suspicionDuration = 3f;
     [SerializeField] private float _suspicionRotateSpeed = 500f;
+    [SerializeField] private int _suspicionEscalateCount = 2;
 
     [Header("Attack State")]
     [Tooltip("How fast the enemy will rotate to the player after finishing an attack")]
@@ -73,6 +74,7 @@ public class EnemyAI : MonoBehaviour
     private Vector3 _currentSearchPoint;
     private Vector3 _suspicionTarget;
     private float _suspicionElapsedTime;
+    private int _suspicionStimulusCount;
 
     private bool _shouldPatrol => _initialState == State.Patrol;
     [SerializeField]
@@ -237,7 +239,7 @@ public class EnemyAI : MonoBehaviour
                 return;
             }
 
-            EnterSuspicious(s.Position);
+            EnterSuspicious(s.Position, s.FromPlayer);
         }
     }
 
@@ -256,14 +258,24 @@ public class EnemyAI : MonoBehaviour
         _currentState = State.Investigate;
     }
 
-    private void EnterSuspicious(Vector3 target)
+    private void EnterSuspicious(Vector3 target, bool fromPlayer)
     {
-        _suspicionTarget = target;
-        _movement.Cancel();
-        if (_currentState != State.Suspicious)
+        if (_currentState == State.Suspicious)
+        {
+            _suspicionStimulusCount++;
+            if (_suspicionStimulusCount >= _suspicionEscalateCount)
+            {
+                EnterInvestigate(target, fromPlayer);
+                return;
+            }
+        }
+        else
         {
             _suspicionElapsedTime = 0f;
+            _suspicionStimulusCount = 0;
         }
+        _suspicionTarget = target;
+        _movement.Cancel();
         _currentState = State.Suspicious;
     }
 
