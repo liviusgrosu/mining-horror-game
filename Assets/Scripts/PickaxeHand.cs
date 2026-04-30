@@ -44,7 +44,7 @@ public class PickaxeHand : MonoBehaviour
     private Vector3 _lastNoisePosition;
     private float _lastNoiseRadius;
 
-    [SerializeField] private GameObject sparkVFX, dustEffect, bloodVFX, lightBloodVFX, materialHitVFX;
+    [SerializeField] private GameObject sparkVFX, dustEffect, bloodVFX, lightBloodVFX, materialHitVFX, woodChipVFX;
 
     [Header("Runes")]
     [SerializeField] private InventoryItem deathRune;
@@ -246,7 +246,15 @@ public class PickaxeHand : MonoBehaviour
                 _lastNoisePosition = hit.point;
                 _lastNoiseRadius = _miningNoiseRadius;
                 NoiseEmitter.Emit(hit.point, _miningNoiseRadius, hit.collider.tag);
-                SpawnSparkEffect(hit.point, hit.normal);
+                var tag = hit.collider.tag;
+                if (tag == "Wood")
+                {
+                    SpawnWoodChipEffect(hit.point, hit.normal);
+                }
+                else if (tag != "Grass" && tag != "Carpet")
+                {
+                    SpawnSparkEffect(hit.point, hit.normal);
+                }
             }
         }
         else
@@ -264,6 +272,16 @@ public class PickaxeHand : MonoBehaviour
     private void SpawnSparkEffect(Vector3 point, Vector3 normal)
     {
         var vfx = Instantiate(sparkVFX, point, Quaternion.LookRotation(normal));
+        Destroy(vfx, 1f);
+    }
+
+    private void SpawnWoodChipEffect(Vector3 point, Vector3 normal)
+    {
+        if (!woodChipVFX)
+        {
+            return;
+        }
+        var vfx = Instantiate(woodChipVFX, point, Quaternion.LookRotation(normal));
         Destroy(vfx, 1f);
     }
 
