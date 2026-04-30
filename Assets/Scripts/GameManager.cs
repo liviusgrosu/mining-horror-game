@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject _controlsOverlay;
     [SerializeField] private GameObject _inventoryUI;
+    [SerializeField] private GameObject _viewGemScreenUI;
 
     [SerializeField] private CanvasGroup _mineralStatsCanvasGroup;
     private Coroutine _mineralStatsCoroutine;
@@ -65,6 +66,11 @@ public class GameManager : MonoBehaviour
             }
 
             ToggleInventory();
+        }
+
+        if (Input.GetKeyDown(KeyCode.G) && !HasWon && !HasDied && !InMenu)
+        {
+            ToggleViewGemScreen();
         }
         
         if (!HasDied && !HasWon)
@@ -251,6 +257,19 @@ public class GameManager : MonoBehaviour
         if (IsPaused && PickupNotification.Instance)
         {
             PickupNotification.Instance.ClearAll();
+        }
+
+        ToggleCursorLock(IsPaused);
+        Time.timeScale = IsPaused ? 0f : 1f;
+    }
+
+    public void ToggleViewGemScreen()
+    {
+        IsPaused = !IsPaused;
+
+        if (_viewGemScreenUI)
+        {
+            _viewGemScreenUI.SetActive(IsPaused);
         }
 
         ToggleCursorLock(IsPaused);
