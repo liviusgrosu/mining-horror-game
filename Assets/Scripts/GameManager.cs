@@ -59,17 +59,53 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape) && !HasWon && !HasDied)
         {
-            if (InMenu)
+            if (UpgradeUI && UpgradeUI.activeSelf)
             {
                 CloseUpgradeUI();
+                return;
+            }
+
+            if (_viewGemScreenUI && _viewGemScreenUI.activeSelf)
+            {
+                ToggleViewGemScreen();
+                return;
+            }
+
+            if (_inventoryUI && _inventoryUI.activeSelf)
+            {
+                ToggleInventory();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.I) && !HasWon && !HasDied)
+        {
+            var gemUI = GemSelectionUI.Instance;
+            if (gemUI && gemUI.IsOpen)
+            {
+                return;
+            }
+
+            if (UpgradeUI && UpgradeUI.activeSelf)
+            {
                 return;
             }
 
             ToggleInventory();
         }
 
-        if (Input.GetKeyDown(KeyCode.G) && !HasWon && !HasDied && !InMenu)
+        if (Input.GetKeyDown(KeyCode.G) && !HasWon && !HasDied)
         {
+            var gemUI = GemSelectionUI.Instance;
+            if (gemUI && gemUI.IsOpen)
+            {
+                return;
+            }
+
+            if (UpgradeUI && UpgradeUI.activeSelf)
+            {
+                return;
+            }
+
             ToggleViewGemScreen();
         }
         
@@ -82,7 +118,7 @@ public class GameManager : MonoBehaviour
                 GemSelectionUI.Instance.OpenScreen();
                 ToggleCursorLock(true);
             }
-            else if (Input.GetKeyUp(KeyCode.Tab))
+            else if (Input.GetKeyUp(KeyCode.Tab) && GemSelectionUI.Instance && GemSelectionUI.Instance.IsOpen)
             {
                 IsPaused = false;
                 InMenu = false;
@@ -247,33 +283,70 @@ public class GameManager : MonoBehaviour
 
     public void ToggleInventory()
     {
-        IsPaused = !IsPaused;
+        var isOpen = _inventoryUI && _inventoryUI.activeSelf;
+        CloseAllMenus();
+
+        if (isOpen)
+        {
+            return;
+        }
+
+        IsPaused = true;
+        InMenu = true;
 
         if (_inventoryUI)
         {
-            _inventoryUI.SetActive(IsPaused);
+            _inventoryUI.SetActive(true);
         }
 
-        if (IsPaused && PickupNotification.Instance)
+        if (PickupNotification.Instance)
         {
             PickupNotification.Instance.ClearAll();
         }
 
-        ToggleCursorLock(IsPaused);
-        Time.timeScale = IsPaused ? 0f : 1f;
+        ToggleCursorLock(true);
+        Time.timeScale = 0f;
     }
 
     public void ToggleViewGemScreen()
     {
-        IsPaused = !IsPaused;
+        var isOpen = _viewGemScreenUI && _viewGemScreenUI.activeSelf;
+        CloseAllMenus();
+
+        if (isOpen)
+        {
+            return;
+        }
+
+        IsPaused = true;
+        InMenu = true;
 
         if (_viewGemScreenUI)
         {
-            _viewGemScreenUI.SetActive(IsPaused);
+            _viewGemScreenUI.SetActive(true);
         }
 
-        ToggleCursorLock(IsPaused);
-        Time.timeScale = IsPaused ? 0f : 1f;
+        ToggleCursorLock(true);
+        Time.timeScale = 0f;
+    }
+
+    private void CloseAllMenus()
+    {
+        IsPaused = false;
+        InMenu = false;
+
+        if (_inventoryUI)
+        {
+            _inventoryUI.SetActive(false);
+        }
+
+        if (_viewGemScreenUI)
+        {
+            _viewGemScreenUI.SetActive(false);
+        }
+
+        ToggleCursorLock(false);
+        Time.timeScale = 1f;
     }
 
     private void ToggleCursorLock(bool state)
