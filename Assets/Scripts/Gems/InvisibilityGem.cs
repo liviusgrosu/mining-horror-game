@@ -11,6 +11,7 @@ public class InvisibilityGem : MonoBehaviour
     [SerializeField] private float _visibilityReduction;
     [SerializeField] private float _transparentAlpha = 0.3f;
     [SerializeField] private ParticleSystem _activationVFX;
+    [SerializeField] private Renderer[] _exemptRenderers;
 
     private float _timer;
     private bool _isActive;
@@ -70,6 +71,11 @@ public class InvisibilityGem : MonoBehaviour
         foreach (var renderer in renderers)
         {
             if (!renderer)
+            {
+                continue;
+            }
+
+            if (System.Array.IndexOf(_exemptRenderers, renderer) >= 0)
             {
                 continue;
             }
