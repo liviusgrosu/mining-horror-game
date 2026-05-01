@@ -6969,6 +6969,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5552045675560653739, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
+      propertyPath: Loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6672215762392754845, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
+      propertyPath: _shutUpPlease
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6672215762392754845, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
+      propertyPath: _calmDownSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 942f46a377cde1b4c9e1d2133ee26938, type: 3}
+    - target: {fileID: 6672215762392754845, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
+      propertyPath: _suspiciousSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 9a18526387ed35c4ab16dcd60886337b, type: 3}
+    - target: {fileID: 6672215762392754845, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
+      propertyPath: _investigateSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 65baca114a9208f4ba0fd0f31cc5053d, type: 3}
     - target: {fileID: 7490492891687829689, guid: d0fef12db5b7075448274ed22ace87af, type: 3}
       propertyPath: m_Name
       value: Enemy - Idle - Hearing
@@ -17032,6 +17052,10 @@ PrefabInstance:
       propertyPath: '_exemptRenderers.Array.data[4]'
       value: 
       objectReference: {fileID: 956650625}
+    - target: {fileID: 7343007571191451958, guid: 4233c8d53e41c9149a181a75327e1abd, type: 3}
+      propertyPath: m_Radius
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 7343007571191451958, guid: 4233c8d53e41c9149a181a75327e1abd, type: 3}
       propertyPath: m_Material
       value: 

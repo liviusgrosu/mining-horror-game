@@ -9,6 +9,9 @@ public class EnemyAudio : MonoBehaviour
     [SerializeField] private AudioClip _chaseSound;
     [SerializeField] private AudioClip _takeDamageSound;
     [SerializeField] private AudioClip _dieSound;
+    [SerializeField] private AudioClip _suspiciousSound;
+    [SerializeField] private AudioClip _investigateSound;
+    [SerializeField] private AudioClip _calmDownSound;
 
     [Header("Debug")]
     [SerializeField] private bool _shutUpPlease;
@@ -56,6 +59,30 @@ public class EnemyAudio : MonoBehaviour
         if (_dieSound)
         {
             _oneShotAudioSource.PlayOneShot(_dieSound);
+        }
+    }
+
+    public void PlaySuspicious()
+    {
+        if (_suspiciousSound)
+        {
+            _oneShotAudioSource.PlayOneShot(_suspiciousSound);
+        }
+    }
+
+    public void PlayInvestigate()
+    {
+        if (_investigateSound)
+        {
+            _oneShotAudioSource.PlayOneShot(_investigateSound);
+        }
+    }
+
+    public void PlayCalmDown()
+    {
+        if (_calmDownSound)
+        {
+            _oneShotAudioSource.PlayOneShot(_calmDownSound);
         }
     }
 

@@ -228,7 +228,7 @@ Enemies are **environmental obstacles with readable behavior**, not combat targe
 
 ## Build Phases
 
-### Phase 1: Stealth Foundation
+### Phase 1: Stealth Foundation ✅ DONE
 *No dependencies. Build first. Can be built in parallel.*
 
 **1a. Surface Noise System**
@@ -236,68 +236,73 @@ Enemies are **environmental obstacles with readable behavior**, not combat targe
 - Player footstep volume = surface noise x movement speed multiplier
 - Mining noise generation (scaled by ore hardness)
 - Noise events broadcast as world-space events with position and radius
-- [ ] Surface tags on terrain/objects
-- [ ] Noise event system (broadcast + attenuation)
-- [ ] Player noise generation (footsteps + mining)
+- [x] Surface tags on terrain/objects — implemented as collider tags (Gravel/Stone/Wood/Grass/Carpet/Metal) detected by `CharacterFootsteps`
+- [x] Noise event system (broadcast + attenuation) — `NoiseEmitter` static event; hard-surface attenuation in `EnemyPerception`
+- [x] Player noise generation (footsteps + mining) — `CharacterFootsteps.EmitFootstepNoise` + `PickaxeHand.CheckHit` mining contacts
 
 **1b. Light Zone System**
-- Areas tagged with light level (lit, dim, dark)
-- Player visibility value based on current zone
+- Player visibility value driven by `StealthLight` components (continuous, not discrete zones — by design)
 - Existing light gem affects player visibility when active
-- [ ] Light zone tagging
-- [ ] Player visibility calculation
-- [ ] Light gem integration
+- [x] StealthLight placement & contribution model — `StealthLight` per-light detection range + max contribution
+- [x] Player visibility calculation — `PlayerVisibility` samples lights every 0.1s, ambient base 0.1
+- [x] Light gem integration — Invisibility gem multiplies `PlayerVisibility.VisibilityMultiplier`
 
-### Phase 2: Enemy Perception
+### Phase 2: Enemy Perception ✅ DONE
 *Depends on Phase 1.*
 
 **2a. Enemy Hearing**
 - Listen for noise events within hearing radius
 - Distance attenuation on noise volume
 - Threshold-based reaction (ignore / suspicious / search / chase)
-- [ ] Noise listener on enemy
-- [ ] Distance attenuation
-- [ ] Threshold reactions feeding state machine
+- [x] Noise listener on enemy — `EnemyPerception.HandleNoise`
+- [x] Distance attenuation — hard-surface attenuation factor reduces effective radius
+- [x] Threshold reactions feeding state machine — Faint/Moderate/Strong tiers via `_noiseEngageRatio`/`_noiseSuspicionRatio`
 
 **2b. Enemy Vision**
 - Cone-based FOV (refine existing)
-- Range modulated by player visibility from light zones
+- Range modulated by player visibility
 - Raycast LOS verification (existing)
-- [ ] Vision range modulation by light level
-- [ ] Integration with light zone system
+- [x] Vision range modulation by light level — linear lerp between dark (~2m) and lit (~15m) engage ranges
+- [x] Integration with visibility system — `EnemyPerception.TrySightStimulus` reads `PlayerVisibility`
 
 **2c. Enemy State Machine Rework**
-- Refactor ShadeBehaviour into four states: Idle, Suspicious, Searching, Chasing
-- Distinct audio cue per state
-- Distinct visual behavior per state
-- De-escalation timers
-- [ ] State machine refactor
-- [ ] Audio cues per state
-- [ ] Visual/animation behavior per state
-- [ ] De-escalation logic
+- States implemented (richer than the original 4-state spec): Idle, Patrol, Engage, Attack, Check, Return, Investigate, Searching, Suspicious
+- [x] State machine refactor — `EnemyAI.State` enum
+- [~] Audio cues per state — partial: `EnemyAudio` differentiates Idle vs Chase only; Suspicious/Searching share idle audio (known gap, see Active Gaps)
+- [x] Visual/animation behavior per state
+- [x] De-escalation logic — Check (2s), Suspicious (3s), Search (8s) timers
 
-### Phase 3: Diegetic Feedback
+### Phase 3: Diegetic Feedback ✅ DONE
 *Depends on Phase 1. Can be built alongside Phase 2.*
 
-**3. Pickaxe Feedback**
-- Vibration/particle effect scales with player noise output
-- Material tint shift based on player visibility value
-- [ ] Noise visualization on pickaxe model
-- [ ] Visibility tint on pickaxe material
-- [ ] Tuning and readability testing
+**3. Diegetic Stealth Feedback**
+- Implementation choice: feedback lives on the **gem indicator** rather than directly on the pickaxe metal. Functionally equivalent.
+- [x] Noise visualization — `GemLoudnessEffect` pulses gem emission with footstep radius
+- [x] Visibility tint — `GemVisibilityEffect` scales gem material intensity 0–4× from `PlayerVisibility.VisibilityValue`
+- [ ] Tuning and readability testing — pending Phase 5 playtest
 
-### Phase 4: Gems
+### Phase 4: Gems ✅ DONE (charge refuel deferred)
 *Depends on Phase 1 + Phase 2.*
 
-**4. Two Starter Gems + Radial Menu**
-- Dampening gem: suppress player noise for X seconds
-- Decoy gem: create noise event at target location
-- Radial menu for gem selection
-- Charge system (use charges, refuel by mining)
-- [ ] Gem base system (charges, activation, radial UI)
-- [ ] Dampening gem implementation
-- [ ] Decoy gem implementation
-- [ ] Charge-crystal mining for refueling
+**4. Starter Gems + Selection UI**
+- Three gems implemented (one beyond original scope): Dampening, Decoy, Invisibility
+- Selection: number keys 1–3 via `GemSelectionUI`, F to activate
+- [x] Gem base system (charges, activation, selection UI) — `GemSelectionUI` with 10 hardcoded uses per gem
+- [x] Dampening gem — `DampeningGem`, 5s, 0.1× speed / 0.2× volume on `CharacterFootsteps`
+- [x] Decoy gem — `DecoyGem` + `DecoyNoise`, hold-to-preview / release-to-spawn, 15m noise radius repeating
+- [x] Invisibility gem (added) — `InvisibilityGem`, alpha fade + visibility multiplier, exemptable renderers
+- [ ] Charge-crystal mining for refueling — **deferred**, gems treated as plentiful for now (see Active Gaps)
+
+---
+
+### Active Gaps (carried into Phase 5 planning)
+
+These were raised during the iteration-3 implementation review and deliberately accepted or deferred:
+
+- **Charge-crystal refuel not wired** — `GemSelectionUI.RestoreUse` exists but no minable ore feeds it. Gem economy can't be the tension driver in Phase 5.
+- **Per-state enemy audio missing** — `EnemyAudio` only does Idle vs Chase. Suspicious/Searching are silent-by-default. Phase 5 must communicate enemy state visually or accept the ambiguity as a horror beat.
+- **Block-placing mechanic not implemented** — design-doc'd but no script. Phase 5 will cut or stub one scripted instance.
+- **Sprint noise multiplier (1.5×) ≠ sprint speed multiplier (1.8×)** — minor tuning mismatch in `CharacterFootsteps` vs `PlayerMovement`.
 
 ### Phase 5: Test Level
 *Depends on all above. Integration test.*

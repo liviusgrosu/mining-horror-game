@@ -252,15 +252,21 @@ public class EnemyAI : MonoBehaviour
 
     private void EnterInvestigate(Vector3 target, bool fromPlayer)
     {
+        var wasInvestigating = _currentState == State.Investigate;
         _investigateTarget = target;
         _investigatingPlayer = fromPlayer;
         _movement.WalkTo(target);
         _currentState = State.Investigate;
+        if (!wasInvestigating)
+        {
+            _audio.PlayInvestigate();
+        }
     }
 
     private void EnterSuspicious(Vector3 target, bool fromPlayer)
     {
-        if (_currentState == State.Suspicious)
+        var wasSuspicious = _currentState == State.Suspicious;
+        if (wasSuspicious)
         {
             _suspicionStimulusCount++;
             if (_suspicionStimulusCount >= _suspicionEscalateCount)
@@ -277,10 +283,15 @@ public class EnemyAI : MonoBehaviour
         _suspicionTarget = target;
         _movement.Cancel();
         _currentState = State.Suspicious;
+        if (!wasSuspicious)
+        {
+            _audio.PlaySuspicious();
+        }
     }
 
     private void EnterPatrolOrReturn()
     {
+        var wasAlerted = _currentState is State.Suspicious or State.Investigate or State.Searching or State.Check or State.Engage or State.Attack;
         if (_shouldPatrol)
         {
             SetPathingDestination();
@@ -290,6 +301,10 @@ public class EnemyAI : MonoBehaviour
         {
             _movement.WalkTo(_startingPosition);
             _currentState = State.Return;
+        }
+        if (wasAlerted)
+        {
+            _audio.PlayCalmDown();
         }
     }
 
