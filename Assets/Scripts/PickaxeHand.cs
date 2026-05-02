@@ -223,6 +223,16 @@ public class PickaxeHand : MonoBehaviour
                     SpawnSparkEffect(hit.point, hit.normal);
                 }
             }
+            else if (hit.collider.CompareTag("Chain"))
+            {
+                var chandelier = hit.collider.GetComponentInParent<ChandelierBreakable>();
+                if (chandelier)
+                {
+                    chandelier.Break();
+                }
+                _pickaxeAudio.PlayImpactForTag(hit.collider.tag);
+                SpawnSparkEffect(hit.point, hit.normal);
+            }
             else if (hit.collider.CompareTag("Enemy"))
             {
                 var hasDeathRune = deathRune != null && Inventory.Instance.PickaxeGems.Contains(deathRune);

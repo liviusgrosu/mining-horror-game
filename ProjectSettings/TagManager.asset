@@ -25,6 +25,7 @@ TagManager:
   - Grass
   - Fence
   - Lever
+  - Chain
   layers:
   - Default
   - TransparentFX
