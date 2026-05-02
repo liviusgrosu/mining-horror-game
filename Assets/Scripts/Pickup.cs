@@ -86,7 +86,7 @@ public class Pickup : MonoBehaviour
             _hoveringWorldItem = null;
         }
 
-        if (Input.GetKey(KeyCode.F) && _hoveringOver)
+        if (Input.GetKeyDown(KeyCode.F) && _hoveringOver)
         {
             if (_hoveringWorldItem)
             {
@@ -121,14 +121,14 @@ public class Pickup : MonoBehaviour
             {
                 GameManager.Instance.ShowNormalRockHoverText();
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.F) && _hoveringOver && _hoveringOver.CompareTag("Lever"))
-        {
-            var lever = _hoveringOver.GetComponent<Lever>();
-            if (lever)
+            
+            else if (_hoveringOver.CompareTag("Lever"))
             {
-                lever.Toggle();
+                var lever = _hoveringOver.GetComponent<Lever>();
+                if (lever)
+                {
+                    lever.Toggle();
+                }
             }
         }
     }
