@@ -129,7 +129,9 @@ public class EnemyPerception : MonoBehaviour
             return;
         }
 
-        if (!Physics.Raycast(transform.position, enemyToPlayer, out var hit, maxRange))
+        var eyeOrigin = transform.position + Vector3.up;
+        var rayDirection = Player.position - eyeOrigin;
+        if (!Physics.Raycast(eyeOrigin, rayDirection, out var hit, maxRange))
         {
             return;
         }
