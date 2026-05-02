@@ -30,12 +30,12 @@ public class DecoyGem : MonoBehaviour
             return;
         }
 
-        if (Input.GetKey(KeyCode.F))
+        if (Input.GetKey(KeyCode.R))
         {
             UpdatePreview();
         }
 
-        if (Input.GetKeyUp(KeyCode.F))
+        if (Input.GetKeyUp(KeyCode.R))
         {
             if (_isValidSpawn)
             {

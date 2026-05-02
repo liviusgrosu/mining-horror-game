@@ -69,6 +69,10 @@ public class Pickup : MonoBehaviour
             {
                 GameManager.Instance.ToggleQuestionMark(true);
             }
+            else if (_hoveringOver.CompareTag("Lever"))
+            {
+                GameManager.Instance.ToggleQuestionMark(true);
+            }
             else
             {
                 _hoveringOver = null;
@@ -82,7 +86,7 @@ public class Pickup : MonoBehaviour
             _hoveringWorldItem = null;
         }
 
-        if (Input.GetKey(KeyCode.E) && _hoveringOver)
+        if (Input.GetKey(KeyCode.F) && _hoveringOver)
         {
             if (_hoveringWorldItem)
             {
@@ -116,6 +120,15 @@ public class Pickup : MonoBehaviour
             else if (_hoveringOver.CompareTag("Breakable"))
             {
                 GameManager.Instance.ShowNormalRockHoverText();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.F) && _hoveringOver && _hoveringOver.CompareTag("Lever"))
+        {
+            var lever = _hoveringOver.GetComponent<Lever>();
+            if (lever)
+            {
+                lever.Toggle();
             }
         }
     }

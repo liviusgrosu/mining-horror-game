@@ -41,7 +41,7 @@ public class InvisibilityGem : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             if (!GemSelectionUI.Instance.TryConsumeUse(GemType.Invisibility))
             {
