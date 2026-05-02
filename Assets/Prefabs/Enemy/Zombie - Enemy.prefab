@@ -871,7 +871,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.538
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -1022,6 +1022,7 @@ MonoBehaviour:
   _searchPointTolerance: 1
   _suspicionDuration: 3
   _suspicionRotateSpeed: 500
+  _suspicionEscalateCount: 2
   _toPlayerRotateAttackSpeed: 100
   _initialState: 0
   _pathing: {fileID: 0}
@@ -1131,7 +1132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyCombat
   _attackDamage: 20
   _attackCooldown: 2
-  _attackRange: 2
+  _attackRange: 1.5
   _damageCollider: {fileID: 7809366210491225192}
 --- !u!114 &6672215762392754845
 MonoBehaviour:
@@ -1151,7 +1152,10 @@ MonoBehaviour:
   _chaseSound: {fileID: 8300000, guid: dc434e87c38265d45a3860ca3246c7f0, type: 3}
   _takeDamageSound: {fileID: 8300000, guid: af2ae066efa67b245aa7ff31b8dacdf2, type: 3}
   _dieSound: {fileID: 8300000, guid: 0a43f0243d628ce4bb2cff17f1af9515, type: 3}
-  _shutUpPlease: 1
+  _suspiciousSound: {fileID: 8300000, guid: 9a18526387ed35c4ab16dcd60886337b, type: 3}
+  _investigateSound: {fileID: 8300000, guid: 65baca114a9208f4ba0fd0f31cc5053d, type: 3}
+  _calmDownSound: {fileID: 8300000, guid: 942f46a377cde1b4c9e1d2133ee26938, type: 3}
+  _shutUpPlease: 0
 --- !u!136 &3741179505598364092
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1275,8 +1279,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 1, y: 1.9166068, z: 1.524704}
-  m_Center: {x: 0, y: 0.20898515, z: 1.12}
+  m_Size: {x: 1, y: 1.9166068, z: 1.8648696}
+  m_Center: {x: 0, y: 0.20898515, z: 1.2900829}
 --- !u!1001 &6856786220266233129
 PrefabInstance:
   m_ObjectHideFlags: 0

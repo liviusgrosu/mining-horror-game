@@ -18,6 +18,7 @@ public class EnemyMovement : MonoBehaviour
     public float RunSpeed => _runSpeed;
     public Vector3 Destination => _agent.destination;
     public float StoppingDistance => _agent.stoppingDistance;
+    public bool IsPathUnreachable => _agent.pathStatus != NavMeshPathStatus.PathComplete;
 
     private void Awake()
     {

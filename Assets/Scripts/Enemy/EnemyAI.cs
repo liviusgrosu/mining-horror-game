@@ -48,6 +48,9 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float _suspicionRotateSpeed = 500f;
     [SerializeField] private int _suspicionEscalateCount = 2;
 
+    [Header("Engage State")]
+    [SerializeField] private float _engageGiveUpTime = 4f;
+
     [Header("Attack State")]
     [Tooltip("How fast the enemy will rotate to the player after finishing an attack")]
     [SerializeField] private float _toPlayerRotateAttackSpeed = 500f;
@@ -75,6 +78,7 @@ public class EnemyAI : MonoBehaviour
     private Vector3 _suspicionTarget;
     private float _suspicionElapsedTime;
     private int _suspicionStimulusCount;
+    private float _engageUnreachableElapsedTime;
 
     private bool _shouldPatrol => _initialState == State.Patrol;
     [SerializeField]
@@ -247,6 +251,7 @@ public class EnemyAI : MonoBehaviour
     {
         _movement.RunTo(_perception.Player.position);
         _audio.PlayChaseLoop();
+        _engageUnreachableElapsedTime = 0f;
         _currentState = State.Engage;
     }
 
@@ -391,6 +396,20 @@ public class EnemyAI : MonoBehaviour
         animator.SetFloat(MovementBlend, 1f, 0.1f, Time.deltaTime);
         _movement.SetDestination(_perception.Player.position);
 
+        if (_movement.IsPathUnreachable)
+        {
+            _engageUnreachableElapsedTime += Time.deltaTime;
+            if (_engageUnreachableElapsedTime >= _engageGiveUpTime)
+            {
+                BailEngageToSearching();
+                return;
+            }
+        }
+        else
+        {
+            _engageUnreachableElapsedTime = 0f;
+        }
+
         if (_getDistanceFromPlayer <= _combat.AttackRange)
         {
             _movement.HardStop();
@@ -407,6 +426,18 @@ public class EnemyAI : MonoBehaviour
             _currentState = State.Check;
             _audio.PlayIdleLoop();
         }
+    }
+
+    private void BailEngageToSearching()
+    {
+        _investigateTarget = _perception.Player.position;
+        _movement.Cancel();
+        _searchElapsedTime = 0f;
+        _searchPauseTimer = 0f;
+        _hasSearchPoint = false;
+        _engageUnreachableElapsedTime = 0f;
+        _audio.PlayIdleLoop();
+        _currentState = State.Searching;
     }
 
     private void AttackState()
@@ -602,5 +633,19 @@ public class EnemyAI : MonoBehaviour
             MusicManager.Instance.FadeToAmbientMusic();
         }
         animator.Play("Die", 0, 0f);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying)
+        {
+            return;
+        }
+        if (_currentState is not (State.Investigate or State.Searching))
+        {
+            return;
+        }
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(_investigateTarget, 0.4f);
     }
 }
