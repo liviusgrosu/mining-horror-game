@@ -9200,6 +9200,8 @@ MonoBehaviour:
   _retractedOffset: {x: 0, y: -4.71, z: 0}
   _moveDuration: 0.3
   _startExtended: 0
+  _hitVolume: {fileID: 2137545503}
+  _damage: 9999
 --- !u!1 &974765915
 GameObject:
   m_ObjectHideFlags: 0
@@ -24811,6 +24813,19 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3521408382274165382, guid: c542215f50d24024a85eed9ab446d51d, type: 3}
   m_PrefabInstance: {fileID: 2050835906}
   m_PrefabAsset: {fileID: 0}
+--- !u!134 &2063219394
+PhysicsMaterial:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 2
+  m_DynamicFriction: 0.6
+  m_StaticFriction: 0.6
+  m_Bounciness: 0
+  m_FrictionCombine: 0
+  m_BounceCombine: 0
 --- !u!1001 &2065100681
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25741,7 +25756,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2137545501}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2063219394}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
