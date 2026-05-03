@@ -168,9 +168,9 @@ public class PickaxeHand : MonoBehaviour
     {
         var chosenPickaxe = _pickAxes.Find(pickaxe => pickaxe.name == name);
         Destroy(_currentPickaxe);
-        var parent = _pickaxeParent ? _pickaxeParent : transform;
-        _currentPickaxe = Instantiate(chosenPickaxe, parent.position, Quaternion.Euler(chosenPickaxe.transform.rotation.eulerAngles));
-        _currentPickaxe.transform.SetParent(parent);
+        _currentPickaxe = Instantiate(chosenPickaxe, _pickaxeParent, false);
+        _currentPickaxe.transform.localPosition = chosenPickaxe.transform.localPosition;
+        _currentPickaxe.transform.localRotation = chosenPickaxe.transform.localRotation;
     }
 
     public void CheckHit()

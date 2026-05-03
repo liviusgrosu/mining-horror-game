@@ -68,7 +68,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -1853912566661118546, guid: 76c883d3b45193f4a895f415d344511d, type: 3}
+  m_Motion: {fileID: 7400000, guid: e22f02a27671a12409f46d01b8831dc5, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -108,7 +108,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Hand Updated
+  m_Name: Hand - Swing
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: SwingHit
@@ -157,7 +157,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 8427253045246559546, guid: 76c883d3b45193f4a895f415d344511d, type: 3}
+  m_Motion: {fileID: 7400000, guid: 4e5e7d9dc5d847d43822f21fddd5fd15, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
