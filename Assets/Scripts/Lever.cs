@@ -9,7 +9,9 @@ public class Lever : MonoBehaviour
     [SerializeField] private float _state1AngleX = -60f;
     [SerializeField] private float _state2AngleX = -120f;
     [SerializeField] private float _rotateDuration = 0.2f;
+    [SerializeField] private AudioClip _toggleSound;
 
+    private AudioSource _audioSource;
     private bool _inState2;
     private bool _isAnimating;
     private float _currentAngleX;
@@ -18,6 +20,7 @@ public class Lever : MonoBehaviour
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         _inState2 = _startInState2;
         var euler = _handle.localEulerAngles;
         _baseY = euler.y;
@@ -33,6 +36,10 @@ public class Lever : MonoBehaviour
         if (_isAnimating)
         {
             return;
+        }
+        if (_audioSource && _toggleSound)
+        {
+            _audioSource.PlayOneShot(_toggleSound);
         }
         _inState2 = !_inState2;
         var targetAngle = _inState2

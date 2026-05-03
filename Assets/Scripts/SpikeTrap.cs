@@ -13,6 +13,12 @@ public class SpikeTrap : MonoBehaviour
     [SerializeField] private BoxCollider _hitVolume;
     [SerializeField] private int _damage = 9999;
 
+    [Header("Feedback")]
+    [SerializeField] private ParticleSystem _toggleVFX;
+    [SerializeField] private AudioClip _extendSound;
+    [SerializeField] private AudioClip _retractSound;
+
+    private AudioSource _audioSource;
     private Vector3 _extendedLocalPosition;
     private Vector3 _retractedLocalPosition;
     private Coroutine _moveRoutine;
@@ -24,6 +30,7 @@ public class SpikeTrap : MonoBehaviour
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         _extendedLocalPosition = _spikes.localPosition;
         _retractedLocalPosition = _extendedLocalPosition + _retractedOffset;
         _isExtended = _startExtended;
@@ -51,6 +58,17 @@ public class SpikeTrap : MonoBehaviour
         if (!_isExtended)
         {
             _hitEnemies.Clear();
+        }
+        var clip = _isExtended
+            ? _extendSound
+            : _retractSound;
+        if (_audioSource && clip)
+        {
+            _audioSource.PlayOneShot(clip);
+        }
+        if (_toggleVFX)
+        {
+            _toggleVFX.Play();
         }
         var target = _isExtended
             ? _extendedLocalPosition
