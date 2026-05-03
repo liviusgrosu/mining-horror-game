@@ -349,7 +349,8 @@ public class PickaxeHand : MonoBehaviour
         {
             return;
         }
-        _pickaxeParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        _pickaxeParticleSystem.Clear(true);
+        _pickaxeParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     }
         
     private void OnDrawGizmos()
