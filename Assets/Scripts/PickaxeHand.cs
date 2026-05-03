@@ -12,13 +12,11 @@ public class PickaxeHand : MonoBehaviour
     [SerializeField]
     private Transform _pickaxeParent;
     private GameObject _currentPickaxe;
+    private ParticleSystem _pickaxeParticleSystem;
     private int _pickaxeIndex = -1;
 
     private Animator _animator;
     private Transform _camera;
-
-    private bool _hasPendingHit;
-    private RaycastHit _pendingHit;
 
     [Header("Bob")]
     [SerializeField] private float _bobAmountY = 0.02f;
@@ -101,15 +99,7 @@ public class PickaxeHand : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            _hasPendingHit = Physics.Raycast(_camera.position, _camera.forward, out _pendingHit, _hitRange, ~ignoreMask);
-            if (_hasPendingHit)
-            {
-                _animator.SetTrigger("SwingHit");
-            }
-            else
-            {
-                _animator.SetTrigger("SwingMiss");
-            }
+            _animator.SetTrigger("Swing");
         }
     }
 
@@ -173,14 +163,13 @@ public class PickaxeHand : MonoBehaviour
         _currentPickaxe = Instantiate(chosenPickaxe, _pickaxeParent, false);
         _currentPickaxe.transform.localPosition = chosenPickaxe.transform.localPosition;
         _currentPickaxe.transform.localRotation = chosenPickaxe.transform.localRotation;
+        _pickaxeParticleSystem = _currentPickaxe.GetComponentInChildren<ParticleSystem>();
     }
 
     public void CheckHit()
     {
-        if (_hasPendingHit)
+        if (Physics.Raycast(_camera.position, _camera.forward, out var hit, _hitRange, ~ignoreMask))
         {
-            var hit = _pendingHit;
-            _hasPendingHit = false;
             if (hit.collider.CompareTag("VoxelTerrain"))
             {
                 var voxelTerrain = hit.collider.GetComponentInParent<VoxelTerrain>();
@@ -345,6 +334,24 @@ public class PickaxeHand : MonoBehaviour
         _audioSource.PlayOneShot(pickaxeUpgradeSound);
     }
 
+    public void EnableSlashVFX()
+    {
+        if (!_pickaxeParticleSystem)
+        {
+            return;
+        }
+        _pickaxeParticleSystem.Play();
+    }
+
+    public void DisableSlashVFX()
+    {
+        if (!_pickaxeParticleSystem)
+        {
+            return;
+        }
+        _pickaxeParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+    }
+        
     private void OnDrawGizmos()
     {
         if (_lastNoiseRadius <= 0f)

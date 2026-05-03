@@ -499,7 +499,7 @@ Light:
   serializedVersion: 12
   m_Type: 1
   m_Color: {r: 0.8923583, g: 0.7783019, b: 1, a: 1}
-  m_Intensity: 0.01
+  m_Intensity: 0.5
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -45089,6 +45089,22 @@ PrefabInstance:
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 52538101}
+    - target: {fileID: 7410587358979456896, guid: e93683bfe9a2a66418ac2849d47d03fd, type: 3}
+      propertyPath: _swingTrail
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7985488898393507637, guid: e93683bfe9a2a66418ac2849d47d03fd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.166
+      objectReference: {fileID: 0}
+    - target: {fileID: 7985488898393507637, guid: e93683bfe9a2a66418ac2849d47d03fd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.148
+      objectReference: {fileID: 0}
+    - target: {fileID: 7985488898393507637, guid: e93683bfe9a2a66418ac2849d47d03fd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.286
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
