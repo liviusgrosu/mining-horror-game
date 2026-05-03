@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class ChandelierBreakable : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> _chains;
     [SerializeField] private GameObject _staticChandelier;
     [SerializeField] private GameObject _fallingChandelierPrefab;
 
@@ -11,7 +10,19 @@ public class ChandelierBreakable : MonoBehaviour
     [SerializeField] private GameObject _breakVfxPrefab;
     [SerializeField] private AudioClip _breakSfx;
 
+    private readonly List<GameObject> _chains = new();
     private bool _broken;
+
+    private void Awake()
+    {
+        foreach (var t in GetComponentsInChildren<Transform>(true))
+        {
+            if (t.CompareTag("Chain"))
+            {
+                _chains.Add(t.gameObject);
+            }
+        }
+    }
 
     public void Break()
     {

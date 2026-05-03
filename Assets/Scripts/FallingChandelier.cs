@@ -11,13 +11,20 @@ public class FallingChandelier : MonoBehaviour
     [SerializeField] private float _noiseRadius = 12f;
     [SerializeField] private string _noiseSurfaceTag = "Metal";
 
+    [Header("Feedback")]
+    [SerializeField] private GameObject _landVFXPrefab;
+    [SerializeField] private AudioClip _landSFX;
+
     private Rigidbody _rigidbody;
+    private AudioSource _audioSource;
     private bool _hasEmittedLandingNoise;
     private bool _isSettled;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _audioSource = GetComponent<AudioSource>();
+        
         if (_navMeshObstacle)
         {
             _navMeshObstacle.enabled = false;
@@ -50,6 +57,15 @@ public class FallingChandelier : MonoBehaviour
         {
             _hasEmittedLandingNoise = true;
             NoiseEmitter.Emit(transform.position, _noiseRadius, _noiseSurfaceTag);
+            var contactPoint = collision.GetContact(0).point;
+            if (_landVFXPrefab)
+            {
+                Instantiate(_landVFXPrefab, contactPoint, Quaternion.identity);
+            }
+            if (_landSFX)
+            {
+                _audioSource.PlayOneShot(_landSFX);
+            }
         }
 
         if (!isEnemy || _isSettled)
