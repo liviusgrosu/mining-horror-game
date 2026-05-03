@@ -25,6 +25,16 @@ public class Inventory : MonoBehaviour
     [SerializeField] private AudioClip gemDetachSound;
     private AudioSource _audioSource;
 
+    [Serializable]
+    public class DebugStartingItem
+    {
+        public InventoryItem Item;
+        public int Quantity = 1;
+    }
+
+    [Header("Debug")]
+    [SerializeField] private List<DebugStartingItem> _debugStartingItems = new();
+
     public event Action OnChanged;
 
     private int _inventoryCapacity = 8;
@@ -52,6 +62,27 @@ public class Inventory : MonoBehaviour
     private void Start()
     {
         _currentPickaxeUI = Instantiate(bronzePickaxeUI, pickaxeUIParent).GetComponent<PickaxeUI>();
+        ApplyDebugStartingItems();
+    }
+
+    private void ApplyDebugStartingItems()
+    {
+        var added = false;
+        foreach (var entry in _debugStartingItems)
+        {
+            if (!entry.Item || entry.Quantity <= 0)
+            {
+                continue;
+            }
+
+            _items[entry.Item] = _items.GetValueOrDefault(entry.Item, 0) + entry.Quantity;
+            added = true;
+        }
+
+        if (added)
+        {
+            OnChanged?.Invoke();
+        }
     }
 
     public void SwitchPickaxe(string newPickaxe)
