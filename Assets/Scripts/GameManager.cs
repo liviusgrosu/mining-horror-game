@@ -252,6 +252,7 @@ public class GameManager : MonoBehaviour
         const float startFocusDistance = 5f;
         const float blurDuration = 1f;
 
+        dof.active = true;
         dof.mode.Override(DepthOfFieldMode.Bokeh);
         dof.focusDistance.Override(startFocusDistance);
 

@@ -3,9 +3,11 @@ using UnityEngine;
 public class GemVisibilityEffect : MonoBehaviour
 {
     [SerializeField] private Material _gemMaterial;
-    [SerializeField] private Color _baseEmissiveColor = Color.white;
-    [SerializeField] private float _minIntensity = 1f;
-    [SerializeField] private float _maxIntensity = 4f;
+    [SerializeField] private float _maxRimIntensity = 3f;
+    [SerializeField] private float _maxFacingBoost = 0.5f;
+
+    private static readonly int RimIntensityID = Shader.PropertyToID("_RimIntensity");
+    private static readonly int FacingBoostID = Shader.PropertyToID("_FacingBoost");
 
     private void Update()
     {
@@ -14,8 +16,8 @@ public class GemVisibilityEffect : MonoBehaviour
             return;
         }
 
-        var visibility = PlayerVisibility.Instance.VisibilityValue;
-        var intensity = Mathf.Lerp(_minIntensity, _maxIntensity, visibility);
-        _gemMaterial.SetColor("_EmissionColor", _baseEmissiveColor * intensity);
+        var t = Mathf.Clamp01(PlayerVisibility.Instance.VisibilityValue);
+        _gemMaterial.SetFloat(RimIntensityID, _maxRimIntensity * t);
+        _gemMaterial.SetFloat(FacingBoostID, _maxFacingBoost * t);
     }
 }
