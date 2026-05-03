@@ -133,7 +133,9 @@ public class CharacterFootsteps : MonoBehaviour
         {
             var fallSpeed = Mathf.Abs(_characterController.velocity.y);
             var t = Mathf.InverseLerp(_landingMinVelocity, _landingMaxVelocity, fallSpeed);
-            var volume = Mathf.Lerp(crouchVolumeMultiplier, sprintVolumeMultiplier, t);
+            var volume = IsDampened
+                ? DampenedVolumeMultiplier
+                : Mathf.Lerp(crouchVolumeMultiplier, sprintVolumeMultiplier, t);
 
             var soundSet = GetSoundSetForSurface();
             if (soundSet != null && soundSet.Length >= 2)
@@ -144,7 +146,9 @@ public class CharacterFootsteps : MonoBehaviour
                 _audioSource.PlayOneShot(clip2, volume);
             }
 
-            var speedMultiplier = Mathf.Lerp(_crouchSpeedMultiplier, _sprintSpeedMultiplier, t);
+            var speedMultiplier = IsDampened
+                ? DampenedSpeedMultiplier
+                : Mathf.Lerp(_crouchSpeedMultiplier, _sprintSpeedMultiplier, t);
             var (surfaceNoise, surfaceTag) = GetSurfaceNoiseLevel();
             _lastNoiseRadius = _baseNoiseRadius * surfaceNoise * speedMultiplier;
             NoiseEmitter.Emit(transform.position, _lastNoiseRadius, surfaceTag);
