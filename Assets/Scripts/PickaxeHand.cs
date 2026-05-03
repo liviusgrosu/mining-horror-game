@@ -48,6 +48,8 @@ public class PickaxeHand : MonoBehaviour
 
     [Header("Runes")]
     [SerializeField] private InventoryItem deathRune;
+    [SerializeField] private AudioClip _enemyHitSound;
+    [SerializeField] private AudioClip _enemyHitNoRuneSound;
 
     public LayerMask ignoreMask;
 
@@ -244,10 +246,23 @@ public class PickaxeHand : MonoBehaviour
                         enemyHealth.TakeDamage(_currentPickaxe.GetComponent<Pickaxe>().Power * 10);
                     }
                     SpawnBloodEffect(hit.point, hit.normal);
+                    if (_enemyHitSound)
+                    {
+                        _audioSource.PlayOneShot(_enemyHitSound);
+                    }
                 }
                 else
                 {
                     SpawnLightBloodEffect(hit.point, hit.normal);
+                    if (_enemyHitNoRuneSound)
+                    {
+                        _audioSource.PlayOneShot(_enemyHitNoRuneSound);
+                    }
+                }
+                var enemyAI = hit.collider.GetComponentInParent<EnemyAI>();
+                if (enemyAI)
+                {
+                    enemyAI.ForceEngage();
                 }
             }
             else

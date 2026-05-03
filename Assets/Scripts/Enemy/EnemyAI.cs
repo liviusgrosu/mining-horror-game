@@ -255,6 +255,19 @@ public class EnemyAI : MonoBehaviour
         _currentState = State.Engage;
     }
 
+    public void ForceEngage()
+    {
+        if (_health.IsDead || !_toggle || neverEngage)
+        {
+            return;
+        }
+        if (_currentState is State.Engage or State.Attack)
+        {
+            return;
+        }
+        EnterEngage();
+    }
+
     private void EnterInvestigate(Vector3 target, bool fromPlayer)
     {
         var wasInvestigating = _currentState == State.Investigate;
@@ -586,10 +599,6 @@ public class EnemyAI : MonoBehaviour
 
     private void HandleDamaged(int amount)
     {
-        if (!neverEngage && _currentState is not (State.Engage or State.Attack))
-        {
-            EnterEngage();
-        }
         _combat.ResetCooldown();
     }
 
