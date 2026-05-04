@@ -74,6 +74,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float mouseSensitivity = 100f;
 
+    [Header("Fall Damage")]
+    [SerializeField]
+    private float fallDamageVelocityThreshold = -15f;
+    [SerializeField]
+    private int fallDamageAmount = 20;
+    private bool _wasGrounded;
+
     [Header("-DEBUG-")]
     [SerializeField]
     private bool unlimitedSprint;
@@ -206,6 +213,15 @@ public class PlayerMovement : MonoBehaviour
     {
         var horizontal = Input.GetAxisRaw("Horizontal");
         var vertical = Input.GetAxisRaw("Vertical");
+
+        if (_controller.isGrounded && !_wasGrounded)
+        {
+            if (_yVelocity <= fallDamageVelocityThreshold && PlayerHealth.Instance)
+            {
+                PlayerHealth.Instance.TakeFallDamage(fallDamageAmount);
+            }
+        }
+        _wasGrounded = _controller.isGrounded;
 
         if (_controller.isGrounded && _yVelocity < 0)
         {

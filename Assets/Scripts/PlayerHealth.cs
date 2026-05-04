@@ -31,6 +31,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private AudioClip[] gettingHitSFX;
     [SerializeField] private AudioClip healthBottleUseSFX;
     [SerializeField] private AudioClip deathSFX;
+    [SerializeField] private AudioClip knuckleCrackSFX;
     private AudioSource _audioSource;
 
     [Header("Health Status UI")]
@@ -117,6 +118,38 @@ public class PlayerHealth : MonoBehaviour
         
         PlayHitSound();
         PlayHitFlash();
+    }
+
+    public void TakeFallDamage(int amount)
+    {
+        if (_currentHealth <= 0)
+        {
+            return;
+        }
+
+        _currentHealth = Mathf.Max(_currentHealth - amount, 0);
+        UpdateVignette();
+        UpdateHealthStatus();
+
+        if (CameraHitEffect.Instance)
+        {
+            CameraHitEffect.Instance.ApplyDownwardHit();
+        }
+
+        if (knuckleCrackSFX && _audioSource)
+        {
+            _audioSource.PlayOneShot(knuckleCrackSFX);
+        }
+
+        if (_currentHealth <= 0)
+        {
+            if (deathSFX && _audioSource)
+            {
+                _audioSource.PlayOneShot(deathSFX);
+            }
+            GameManager.Instance.OpenGameOverScreen();
+            enabled = false;
+        }
     }
 
     public void Heal(int amount)
