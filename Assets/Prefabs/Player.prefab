@@ -267,6 +267,8 @@ MonoBehaviour:
   _dampenedVolumeMultiplier: 0.1
   _footsteps: {fileID: 8016013582615741529}
   _activationVFX: {fileID: 8997049441885653117}
+  _audioSource: {fileID: 6512750150397453092}
+  _activationSFX: {fileID: 8300000, guid: 44b4bcf3d7e57cb40b0cdb2180ec5447, type: 3}
 --- !u!114 &5970992241793753994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,6 +287,8 @@ MonoBehaviour:
   _visibilityReduction: 0.25
   _transparentAlpha: 0.3
   _activationVFX: {fileID: 4609969565916561496}
+  _audioSource: {fileID: 6512750150397453092}
+  _activationSFX: {fileID: 8300000, guid: cf77bb8e7956bee49bedfe2c7bf6f5c7, type: 3}
   _exemptRenderers:
   - {fileID: 1636624864882916775}
   - {fileID: 7021318282704343641}
@@ -667,7 +671,7 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 8192
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 0
@@ -770,6 +774,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   mouseSensitivity: 100
+  fallDamageVelocityThreshold: -10
+  fallDamageAmount: 20
   unlimitedSprint: 1
 --- !u!114 &4678693609887437966
 MonoBehaviour:
@@ -899,6 +905,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d2a236031d5c4934c9b9b57048967d35, type: 3}
   healthBottleUseSFX: {fileID: 8300000, guid: 45cb35b22d8842a4099d09f53c6cc4ad, type: 3}
   deathSFX: {fileID: 8300000, guid: ee612d1d1ca3181498708417bcd812cd, type: 3}
+  knuckleCrackSFX: {fileID: 8300000, guid: 6dcd331123c03db43b44b0f821f83fac, type: 3}
   _healthStatusImage: {fileID: 0}
   _healthStatusText: {fileID: 0}
   _healthy:
@@ -1391,6 +1398,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraHitEffect
   maxYawOffset: 30
   maxPitchOffset: 15
+  downwardPitchOffset: 25
   recoverySpeed: 3
 --- !u!1001 &336109572655357821
 PrefabInstance:
@@ -1459,7 +1467,7 @@ PrefabInstance:
     - target: {fileID: -7918335002988649766, guid: 7bcb0d0ad5afb784c80915f1d832da55, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 7c091bc6044d6fe4982d0533f7ae247e, type: 2}
+      objectReference: {fileID: 2100000, guid: e4cac8b7b79caa24c90ddaaf4dba004c, type: 2}
     - target: {fileID: -7029948723529949830, guid: 7bcb0d0ad5afb784c80915f1d832da55, type: 3}
       propertyPath: m_Name
       value: Sight Crystal
@@ -1563,10 +1571,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df8b762758c771c46b53156b1a8d4b62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GemVisibilityEffect
-  _gemMaterial: {fileID: 2100000, guid: 7c091bc6044d6fe4982d0533f7ae247e, type: 2}
-  _baseEmissiveColor: {r: 0.579203, g: 0.08018869, b: 1, a: 1}
-  _minIntensity: -2
-  _maxIntensity: 4
+  _gemMaterial: {fileID: 2100000, guid: e4cac8b7b79caa24c90ddaaf4dba004c, type: 2}
+  _maxRimIntensity: 3
+  _maxFacingBoost: 0.5
 --- !u!23 &2450481006365589194 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2786534777698132407, guid: 7bcb0d0ad5afb784c80915f1d832da55, type: 3}
@@ -1590,9 +1597,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GemLoudnessEffect
   _gemMaterial: {fileID: 2100000, guid: 7a4806922232dab4d8f514401cc24e41, type: 2}
-  _baseEmissiveColor: {r: 0.8784314, g: 0.75479984, b: 0.10980392, a: 1}
-  _minIntensity: -2
-  _maxIntensity: 4
+  _maxRimIntensity: 3
+  _maxFacingBoost: 0.5
   _minRadius: 2
   _maxRadius: 14
   _decayDuration: 1
@@ -1990,15 +1996,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5e52fb64f774ff24da2ac4fbd6814c08, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.166
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5e52fb64f774ff24da2ac4fbd6814c08, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.148
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5e52fb64f774ff24da2ac4fbd6814c08, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.286
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5e52fb64f774ff24da2ac4fbd6814c08, type: 3}
       propertyPath: m_LocalRotation.w

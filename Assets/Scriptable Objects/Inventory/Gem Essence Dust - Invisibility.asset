@@ -16,6 +16,6 @@ MonoBehaviour:
   Description: 'Used to recharge the invisibility ability
 
 '
-  Icon: {fileID: 21300000, guid: 28d1d996e54c0ff40b85cac43d6bfc28, type: 3}
+  Icon: {fileID: 21300000, guid: 045bd48dafc11554fa5b2382ee1ec1ca, type: 3}
   Type: 0
   GemType: 1

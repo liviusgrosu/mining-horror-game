@@ -11,6 +11,8 @@ public class InvisibilityGem : MonoBehaviour
     [SerializeField] private float _visibilityReduction;
     [SerializeField] private float _transparentAlpha = 0.3f;
     [SerializeField] private ParticleSystem _activationVFX;
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _activationSFX;
     [SerializeField] private Renderer[] _exemptRenderers;
 
     private float _timer;
@@ -53,6 +55,11 @@ public class InvisibilityGem : MonoBehaviour
             if (_activationVFX)
             {
                 _activationVFX.Play(true);
+            }
+
+            if (_audioSource && _activationSFX)
+            {
+                _audioSource.PlayOneShot(_activationSFX);
             }
 
             if (!_isActive)

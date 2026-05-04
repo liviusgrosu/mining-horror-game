@@ -4462,8 +4462,8 @@ MonoBehaviour:
   _dampenCountText: {fileID: 2759496107433323489}
   _decoyCountText: {fileID: 5623146974756732046}
   _noneMaterial: {fileID: 2100000, guid: 5d8c9e9ebb90ee9499d5f41ac3b2b2c4, type: 2}
-  _invisibilityMaterial: {fileID: 2100000, guid: 656a26aeeb0223b4a996c73ca0193c69, type: 2}
-  _dampeningMaterial: {fileID: 2100000, guid: 6e3349a5c1189024fa448c0a0fbcaa7e, type: 2}
+  _invisibilityMaterial: {fileID: 2100000, guid: 6e3349a5c1189024fa448c0a0fbcaa7e, type: 2}
+  _dampeningMaterial: {fileID: 2100000, guid: 656a26aeeb0223b4a996c73ca0193c69, type: 2}
   _decoyMaterial: {fileID: 2100000, guid: da67a086dd3ebe94e9ecd68880d80311, type: 2}
   maxUses: 10
 --- !u!1 &1776977274654170574

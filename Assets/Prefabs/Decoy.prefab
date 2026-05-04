@@ -448,7 +448,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: b58eb5814110dd24aba48118845d693f, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.038
+  m_Volume: 0.254
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -561,7 +561,8 @@ MonoBehaviour:
   _renderers:
   - {fileID: 6689305486229423620}
   - {fileID: 5714712298784611541}
-  _duration: 1
+  _fadeInDuration: 0.5
+  _fadeOutDuration: 0.5
 --- !u!4 &3347938190222384784 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9e0b06ec6881a464885e0c742e51c606, type: 3}

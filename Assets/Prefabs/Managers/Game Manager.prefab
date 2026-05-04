@@ -62,6 +62,7 @@ MonoBehaviour:
   IsPaused: 0
   _controlsOverlay: {fileID: 0}
   _inventoryUI: {fileID: 0}
+  _viewGemScreenUI: {fileID: 0}
   _mineralStatsCanvasGroup: {fileID: 0}
   _deathPostProcessVolume: {fileID: 0}
   _blackScreen: {fileID: 0}
@@ -85,10 +86,13 @@ MonoBehaviour:
   playerLight: {fileID: 0}
   gemAttachSound: {fileID: 8300000, guid: 2e7540905157a734db46f8ceebbca3c2, type: 3}
   gemDetachSound: {fileID: 8300000, guid: be42ba26a0cf2f348990d9252342782f, type: 3}
-  TempItem1: {fileID: 11400000, guid: 1d95cd079a3b48840b815174dfc5a9e5, type: 2}
-  TempItem2: {fileID: 11400000, guid: 899220e9c03787e4f85640cbd18a5a94, type: 2}
-  TempItem3: {fileID: 11400000, guid: 6c818ca8e9758284bb0e0959fabd7187, type: 2}
-  TempItem4: {fileID: 11400000, guid: 07b7101319103614da515703d889807a, type: 2}
+  _debugStartingItems:
+  - Item: {fileID: 11400000, guid: 1d95cd079a3b48840b815174dfc5a9e5, type: 2}
+    Quantity: 100
+  - Item: {fileID: 11400000, guid: 6c818ca8e9758284bb0e0959fabd7187, type: 2}
+    Quantity: 100
+  - Item: {fileID: 11400000, guid: 899220e9c03787e4f85640cbd18a5a94, type: 2}
+    Quantity: 100
 --- !u!82 &1952167961294130224
 AudioSource:
   m_ObjectHideFlags: 0
