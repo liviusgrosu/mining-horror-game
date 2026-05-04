@@ -74,7 +74,10 @@ public class GameManager : MonoBehaviour
             if (_inventoryUI && _inventoryUI.activeSelf)
             {
                 ToggleInventory();
+                return;
             }
+
+            ToggleControlsOverlay();
         }
 
         if (Input.GetKeyDown(KeyCode.I) && !HasWon && !HasDied)
@@ -269,17 +272,26 @@ public class GameManager : MonoBehaviour
         dof.focusDistance.Override(0f);
     }
 
-    public void TogglePause()
+    public void ToggleControlsOverlay()
     {
-        IsPaused = !IsPaused;
+        var isOpen = _controlsOverlay && _controlsOverlay.activeSelf;
+        CloseAllMenus();
+
+        if (isOpen)
+        {
+            return;
+        }
+
+        IsPaused = true;
+        InMenu = true;
 
         if (_controlsOverlay)
         {
-            _controlsOverlay.SetActive(IsPaused);
+            _controlsOverlay.SetActive(true);
         }
 
-        ToggleCursorLock(IsPaused);
-        Time.timeScale = IsPaused ? 0f : 1f;
+        ToggleCursorLock(true);
+        Time.timeScale = 0f;
     }
 
     public void ToggleInventory()
@@ -344,6 +356,11 @@ public class GameManager : MonoBehaviour
         if (_viewGemScreenUI)
         {
             _viewGemScreenUI.SetActive(false);
+        }
+
+        if (_controlsOverlay)
+        {
+            _controlsOverlay.SetActive(false);
         }
 
         ToggleCursorLock(false);
