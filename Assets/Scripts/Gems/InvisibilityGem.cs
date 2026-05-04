@@ -67,20 +67,20 @@ public class InvisibilityGem : MonoBehaviour
         _isActive = true;
         _savedStates.Clear();
 
-        var renderers = GetComponentsInChildren<Renderer>();
-        foreach (var renderer in renderers)
+        var renderers = GetComponentsInChildren<MeshRenderer>();
+        foreach (var meshRenderer in renderers)
         {
-            if (!renderer)
+            if (!meshRenderer)
             {
                 continue;
             }
 
-            if (System.Array.IndexOf(_exemptRenderers, renderer) >= 0)
+            if (System.Array.IndexOf(_exemptRenderers, meshRenderer) >= 0)
             {
                 continue;
             }
 
-            foreach (var mat in renderer.materials)
+            foreach (var mat in meshRenderer.materials)
             {
                 var state = new MaterialState
                 {

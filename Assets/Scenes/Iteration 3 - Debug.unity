@@ -38752,6 +38752,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8590356060253181259, guid: c542215f50d24024a85eed9ab446d51d, type: 3}
+      propertyPath: _dampeningMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 656a26aeeb0223b4a996c73ca0193c69, type: 2}
+    - target: {fileID: 8590356060253181259, guid: c542215f50d24024a85eed9ab446d51d, type: 3}
+      propertyPath: _invisibilityMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 6e3349a5c1189024fa448c0a0fbcaa7e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

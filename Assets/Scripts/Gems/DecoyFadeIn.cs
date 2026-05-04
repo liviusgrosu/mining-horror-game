@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DecoyFadeIn : MonoBehaviour
 {
-    [SerializeField] private Renderer[] _renderers;
+    [SerializeField] private MeshRenderer[] _renderers;
     [SerializeField] private float _fadeInDuration = 0.5f;
     [SerializeField] private float _fadeOutDuration = 0.5f;
 
