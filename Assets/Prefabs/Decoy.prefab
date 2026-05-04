@@ -426,6 +426,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9e0b06ec6881a464885e0c742e51c606, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4634038742874243394}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9e0b06ec6881a464885e0c742e51c606, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7453016423412541261}
   m_SourcePrefab: {fileID: 100100000, guid: 9e0b06ec6881a464885e0c742e51c606, type: 3}
 --- !u!1 &2683464398577271850 stripped
 GameObject:
@@ -543,8 +546,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DecoyNoise
   _noiseRadius: 15
   _emitInterval: 1
+--- !u!114 &7453016423412541261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2683464398577271850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2c9041cea7eb1446af9f8365fbbba41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DecoyFadeIn
+  _renderers:
+  - {fileID: 6689305486229423620}
+  - {fileID: 5714712298784611541}
+  _duration: 1
 --- !u!4 &3347938190222384784 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9e0b06ec6881a464885e0c742e51c606, type: 3}
+  m_PrefabInstance: {fileID: 3025571736165169531}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &5714712298784611541 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1823322365421230674, guid: 9e0b06ec6881a464885e0c742e51c606, type: 3}
+  m_PrefabInstance: {fileID: 3025571736165169531}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &6689305486229423620 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8442510506162454399, guid: 9e0b06ec6881a464885e0c742e51c606, type: 3}
   m_PrefabInstance: {fileID: 3025571736165169531}
   m_PrefabAsset: {fileID: 0}

@@ -103,6 +103,14 @@ public class DecoyGem : MonoBehaviour
         }
 
         _activeDecoy = Instantiate(_decoyPrefab, _lastSpawnPos, _lastSpawnRot);
-        Destroy(_activeDecoy, _lifetime);
+        var fader = _activeDecoy.GetComponent<DecoyFadeIn>();
+        if (fader)
+        {
+            fader.BeginLifecycle(_lifetime);
+        }
+        else
+        {
+            Destroy(_activeDecoy, _lifetime);
+        }
     }
 }
