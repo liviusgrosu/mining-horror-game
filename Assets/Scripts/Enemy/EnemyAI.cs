@@ -79,6 +79,8 @@ public class EnemyAI : MonoBehaviour
     private float _suspicionElapsedTime;
     private int _suspicionStimulusCount;
     private float _engageUnreachableElapsedTime;
+    private Vector3 _engageTarget;
+    private bool _engagingPlayer;
 
     private bool _shouldPatrol => _initialState == State.Patrol;
     [SerializeField]
@@ -87,6 +89,9 @@ public class EnemyAI : MonoBehaviour
 
     [SerializeField]
     private Animator animator;
+
+    [Header("Decoy Engage")]
+    [SerializeField] private GameObject _decoyEngageVfx;
 
     [Header("Debug")]
     [SerializeField] private bool neverEngage;
@@ -185,19 +190,29 @@ public class EnemyAI : MonoBehaviour
         {
             return;
         }
+
+        if (s.Kind == StimulusKind.Sound && s.Tier != StimulusTier.Faint)
+        {
+            _lastNoiseTime = Time.time;
+        }
+
         if (_currentState is State.Engage or State.Attack)
         {
             return;
         }
 
-        if (s.Tier == StimulusTier.Strong && s.FromPlayer && !neverEngage)
+        if (s.Tier == StimulusTier.Strong && !neverEngage)
         {
+            if (s.FromPlayer)
+            {
+                EnterEngage(_perception.Player.position, true);
+                return;
+            }
             if (s.Kind == StimulusKind.Sound)
             {
-                _lastNoiseTime = Time.time;
+                EnterEngage(s.Position, false);
+                return;
             }
-            EnterEngage();
-            return;
         }
 
         if (s.Tier == StimulusTier.Moderate)
@@ -206,7 +221,6 @@ public class EnemyAI : MonoBehaviour
             {
                 if (_currentState == State.Investigate)
                 {
-                    _lastNoiseTime = Time.time;
                     var trackingPlayerLive = _investigatingPlayer && s.FromPlayer;
                     if (!trackingPlayerLive)
                     {
@@ -217,10 +231,6 @@ public class EnemyAI : MonoBehaviour
                             return;
                         }
                     }
-                }
-                else
-                {
-                    _lastNoiseTime = Time.time;
                 }
                 EnterInvestigate(s.Position, s.FromPlayer);
                 return;
@@ -247,12 +257,23 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void EnterEngage()
+    private void EnterEngage(Vector3 target, bool isPlayer)
     {
-        _movement.RunTo(_perception.Player.position);
+        _engageTarget = target;
+        _engagingPlayer = isPlayer;
+        _movement.RunTo(target);
         _audio.PlayChaseLoop();
         _engageUnreachableElapsedTime = 0f;
         _currentState = State.Engage;
+        SetDecoyEngageVfx(!isPlayer);
+    }
+
+    private void SetDecoyEngageVfx(bool active)
+    {
+        if (_decoyEngageVfx && _decoyEngageVfx.activeSelf != active)
+        {
+            _decoyEngageVfx.SetActive(active);
+        }
     }
 
     public void ForceEngage()
@@ -265,7 +286,7 @@ public class EnemyAI : MonoBehaviour
         {
             return;
         }
-        EnterEngage();
+        EnterEngage(_perception.Player.position, true);
     }
 
     private void EnterInvestigate(Vector3 target, bool fromPlayer)
@@ -407,7 +428,9 @@ public class EnemyAI : MonoBehaviour
     private void EngageState()
     {
         animator.SetFloat(MovementBlend, 1f, 0.1f, Time.deltaTime);
-        _movement.SetDestination(_perception.Player.position);
+
+        var target = _engagingPlayer ? _perception.Player.position : _engageTarget;
+        _movement.SetDestination(target);
 
         if (_movement.IsPathUnreachable)
         {
@@ -421,6 +444,20 @@ public class EnemyAI : MonoBehaviour
         else
         {
             _engageUnreachableElapsedTime = 0f;
+        }
+
+        if (!_engagingPlayer)
+        {
+            if (_movement.HasArrived(1.5f))
+            {
+                _movement.Halt();
+                animator.SetFloat(MovementBlend, 0f, 0.1f, Time.deltaTime);
+                if (Time.time - _lastNoiseTime >= 1.5f)
+                {
+                    BailEngageToSearching();
+                }
+            }
+            return;
         }
 
         if (_getDistanceFromPlayer <= _combat.AttackRange)
@@ -443,7 +480,7 @@ public class EnemyAI : MonoBehaviour
 
     private void BailEngageToSearching()
     {
-        _investigateTarget = _perception.Player.position;
+        _investigateTarget = _engagingPlayer ? _perception.Player.position : _engageTarget;
         _movement.Cancel();
         _searchElapsedTime = 0f;
         _searchPauseTimer = 0f;
@@ -451,6 +488,7 @@ public class EnemyAI : MonoBehaviour
         _engageUnreachableElapsedTime = 0f;
         _audio.PlayIdleLoop();
         _currentState = State.Searching;
+        SetDecoyEngageVfx(false);
     }
 
     private void AttackState()
@@ -629,6 +667,7 @@ public class EnemyAI : MonoBehaviour
     {
         _toggle = false;
         _movement.Disable();
+        SetDecoyEngageVfx(false);
 
         foreach (var col in GetComponentsInChildren<Collider>())
         {
