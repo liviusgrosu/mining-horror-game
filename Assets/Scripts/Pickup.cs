@@ -131,10 +131,18 @@ public class Pickup : MonoBehaviour
             
             else if (_hoveringOver.CompareTag("Lever"))
             {
-                var lever = _hoveringOver.GetComponent<Lever>();
-                if (lever)
+                var toggleLever = _hoveringOver.GetComponent<ToggleLever>();
+                if (toggleLever)
                 {
-                    lever.Toggle();
+                    toggleLever.Toggle();
+                }
+                else
+                {
+                    var trapDoorLever = _hoveringOver.GetComponent<TrapDoorLever>();
+                    if (trapDoorLever)
+                    {
+                        trapDoorLever.Toggle();
+                    }
                 }
             }
         }

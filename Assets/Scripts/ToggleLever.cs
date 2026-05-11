@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Lever : MonoBehaviour
+public class ToggleLever : MonoBehaviour
 {
     [SerializeField] private Transform _handle;
     [SerializeField] private SpikeTrap _spikeTrap;

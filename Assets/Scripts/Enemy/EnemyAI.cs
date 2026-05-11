@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -625,6 +626,39 @@ public class EnemyAI : MonoBehaviour
             _movement.RestoreInitialStoppingDistance();
             _currentState = State.Idle;
         }
+    }
+
+    public void FallIntoTrap(float fallSpeed, float fallDuration)
+    {
+        if (!Toggle)
+        {
+            return;
+        }
+        Toggle = false;
+        _movement.Disable();
+        SetDecoyEngageVfx(false);
+        foreach (var col in GetComponentsInChildren<Collider>())
+        {
+            col.enabled = false;
+        }
+        _audio.StopAll();
+        if (MusicManager.Instance)
+        {
+            MusicManager.Instance.FadeToAmbientMusic();
+        }
+        StartCoroutine(FallRoutine(fallSpeed, fallDuration));
+    }
+
+    private IEnumerator FallRoutine(float fallSpeed, float fallDuration)
+    {
+        var elapsed = 0f;
+        while (elapsed < fallDuration)
+        {
+            elapsed += Time.deltaTime;
+            transform.position += Vector3.down * (fallSpeed * Time.deltaTime);
+            yield return null;
+        }
+        Destroy(gameObject);
     }
 
     public void Disengage()
