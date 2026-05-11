@@ -268,7 +268,7 @@ Enemies are **environmental obstacles with readable behavior**, not combat targe
 **2c. Enemy State Machine Rework**
 - States implemented (richer than the original 4-state spec): Idle, Patrol, Engage, Attack, Check, Return, Investigate, Searching, Suspicious
 - [x] State machine refactor — `EnemyAI.State` enum
-- [~] Audio cues per state — partial: `EnemyAudio` differentiates Idle vs Chase only; Suspicious/Searching share idle audio (known gap, see Active Gaps)
+- [x] Audio cues per state
 - [x] Visual/animation behavior per state
 - [x] De-escalation logic — Check (2s), Suspicious (3s), Search (8s) timers
 
@@ -279,9 +279,9 @@ Enemies are **environmental obstacles with readable behavior**, not combat targe
 - Implementation choice: feedback lives on the **gem indicator** rather than directly on the pickaxe metal. Functionally equivalent.
 - [x] Noise visualization — `GemLoudnessEffect` pulses gem emission with footstep radius
 - [x] Visibility tint — `GemVisibilityEffect` scales gem material intensity 0–4× from `PlayerVisibility.VisibilityValue`
-- [ ] Tuning and readability testing — pending Phase 5 playtest
+- [x] Tuning and readability testing
 
-### Phase 4: Gems ✅ DONE (charge refuel deferred)
+### Phase 4: Gems ✅ DONE
 *Depends on Phase 1 + Phase 2.*
 
 **4. Starter Gems + Selection UI**
@@ -291,18 +291,13 @@ Enemies are **environmental obstacles with readable behavior**, not combat targe
 - [x] Dampening gem — `DampeningGem`, 5s, 0.1× speed / 0.2× volume on `CharacterFootsteps`
 - [x] Decoy gem — `DecoyGem` + `DecoyNoise`, hold-to-preview / release-to-spawn, 15m noise radius repeating
 - [x] Invisibility gem (added) — `InvisibilityGem`, alpha fade + visibility multiplier, exemptable renderers
-- [ ] Charge-crystal mining for refueling — **deferred**, gems treated as plentiful for now (see Active Gaps)
+- [x] Charge-crystal mining for refueling — gem essence dust drops from minable ore, consumed via inventory to restore uses
 
 ---
 
 ### Active Gaps (carried into Phase 5 planning)
 
-These were raised during the iteration-3 implementation review and deliberately accepted or deferred:
-
-- **Charge-crystal refuel not wired** — `GemSelectionUI.RestoreUse` exists but no minable ore feeds it. Gem economy can't be the tension driver in Phase 5.
-- **Per-state enemy audio missing** — `EnemyAudio` only does Idle vs Chase. Suspicious/Searching are silent-by-default. Phase 5 must communicate enemy state visually or accept the ambiguity as a horror beat.
-- **Block-placing mechanic not implemented** — design-doc'd but no script. Phase 5 will cut or stub one scripted instance.
-- **Sprint noise multiplier (1.5×) ≠ sprint speed multiplier (1.8×)** — minor tuning mismatch in `CharacterFootsteps` vs `PlayerMovement`.
+All Phases 1–4 gaps resolved. Block-placing is realised through scripted obstacles (lever+spikes, chandelier, player-only crouch holes) rather than a generic placement mechanic.
 
 ### Phase 5: Test Level
 *Depends on all above. Integration test.*

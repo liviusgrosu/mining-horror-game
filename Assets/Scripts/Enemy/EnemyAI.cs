@@ -26,7 +26,7 @@ public class EnemyAI : MonoBehaviour
 
     [Header("General")]
     [Tooltip("Turn on/off the behaviour")]
-    [SerializeField] private bool _toggle = true;
+    public bool Toggle = true;
     [Tooltip("Angle until rotation is complete")]
     [SerializeField] private float _rotationTolerance;
 
@@ -132,7 +132,7 @@ public class EnemyAI : MonoBehaviour
             _health.OnDied += HandleDied;
         }
     }
-
+    
     private void OnDisable()
     {
         if (_perception)
@@ -147,6 +147,19 @@ public class EnemyAI : MonoBehaviour
             _health.OnDied -= HandleDied;
         }
     }
+    
+    private void Start()
+    {
+        _startingPosition = transform.position;
+
+        if (Toggle && _shouldPatrol)
+        {
+            SetPathingDestination();
+        }
+
+        _audio.PlayIdleLoop();
+    }
+
 
     private void OnStimulus(Stimulus s)
     {
@@ -186,7 +199,7 @@ public class EnemyAI : MonoBehaviour
             _hearingStimulusText.text = $"Sound:{tier}";
         }
 
-        if (_health.IsDead || _health.IsTakingHit || !_toggle)
+        if (_health.IsDead || _health.IsTakingHit || !Toggle)
         {
             return;
         }
@@ -278,7 +291,7 @@ public class EnemyAI : MonoBehaviour
 
     public void ForceEngage()
     {
-        if (_health.IsDead || !_toggle || neverEngage)
+        if (_health.IsDead || !Toggle || neverEngage)
         {
             return;
         }
@@ -346,22 +359,10 @@ public class EnemyAI : MonoBehaviour
             _audio.PlayCalmDown();
         }
     }
-
-    private void Start()
-    {
-        _startingPosition = transform.position;
-
-        if (_shouldPatrol)
-        {
-            SetPathingDestination();
-        }
-
-        _audio.PlayIdleLoop();
-    }
-
+    
     private void Update()
     {
-        if (!_toggle || _health.IsTakingHit)
+        if (!Toggle || _health.IsTakingHit)
         {
             return;
         }
@@ -665,7 +666,7 @@ public class EnemyAI : MonoBehaviour
 
     private void HandleDied()
     {
-        _toggle = false;
+        Toggle = false;
         _movement.Disable();
         SetDecoyEngageVfx(false);
 
