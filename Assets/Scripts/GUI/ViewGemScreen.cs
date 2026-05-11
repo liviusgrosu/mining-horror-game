@@ -7,13 +7,14 @@ public class ViewGemScreen : MonoBehaviour
 {
     public static ViewGemScreen Instance;
 
-    [SerializeField] private List<GemAbilityItem> _gems = new();
     [SerializeField] private List<ViewGemUISlot> _slots = new();
     [SerializeField] private TextMeshProUGUI _nameText;
     [SerializeField] private TextMeshProUGUI _descriptionText;
     [SerializeField] private TextMeshProUGUI _placeholderText;
     [SerializeField] private GameObject _videoPlayerImage;
     [SerializeField] private VideoPlayer _videoPlayer;
+
+    private readonly List<GemAbilityItem> _displayedGems = new();
 
     private void Awake()
     {
@@ -36,6 +37,18 @@ public class ViewGemScreen : MonoBehaviour
 
     private void RefreshSlots()
     {
+        _displayedGems.Clear();
+        if (GemSelectionUI.Instance)
+        {
+            foreach (var ability in GemSelectionUI.Instance.OwnedAbilities)
+            {
+                if (ability)
+                {
+                    _displayedGems.Add(ability);
+                }
+            }
+        }
+
         for (int i = 0; i < _slots.Count; i++)
         {
             if (!_slots[i])
@@ -43,9 +56,9 @@ public class ViewGemScreen : MonoBehaviour
                 continue;
             }
 
-            if (i < _gems.Count && _gems[i])
+            if (i < _displayedGems.Count)
             {
-                _slots[i].Bind(this, i, _gems[i].Icon);
+                _slots[i].Bind(this, i, _displayedGems[i].Icon);
             }
             else
             {
@@ -56,12 +69,12 @@ public class ViewGemScreen : MonoBehaviour
 
     public void SelectGem(int index)
     {
-        if (index < 0 || index >= _gems.Count)
+        if (index < 0 || index >= _displayedGems.Count)
         {
             return;
         }
 
-        var gem = _gems[index];
+        var gem = _displayedGems[index];
 
         if (_placeholderText)
         {

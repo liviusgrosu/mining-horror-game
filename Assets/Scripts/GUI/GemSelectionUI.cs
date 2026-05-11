@@ -37,6 +37,7 @@ public class GemSelectionUI : MonoBehaviour
 
     public GemType SelectedGem { get; private set; } = GemType.None;
     public bool IsOpen { get; private set; }
+    public IReadOnlyCollection<GemAbilityItem> OwnedAbilities => _ownedAbilities.Values;
 
     public event Action<GemType> OnSelectedGemChanged;
 
