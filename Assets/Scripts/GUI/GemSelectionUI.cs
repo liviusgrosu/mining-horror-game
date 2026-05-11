@@ -209,6 +209,11 @@ public class GemSelectionUI : MonoBehaviour
 
         RefreshRings();
         RefreshUsageUI();
+
+        if (PickupNotification.Instance)
+        {
+            PickupNotification.Instance.Show(ability);
+        }
     }
 
     private int GetUses(GemType type)
