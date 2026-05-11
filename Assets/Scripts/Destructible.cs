@@ -10,6 +10,7 @@ public class Destructible : MonoBehaviour
     [SerializeField] private float shakeIntensity = 0.05f;
     [SerializeField] private ParticleSystem smokeVFX;
     [SerializeField] private AudioClip hittingSound;
+    [SerializeField] private GameObject onDestroyedActivate;
 
     public float PowerRequirement => powerRequirement;
     public InventoryItem RequiredGem => requiredGem;
@@ -126,6 +127,10 @@ public class Destructible : MonoBehaviour
         if (_currentStageIndex >= _stageCount)
         {
             _collider.enabled = false;
+            if (onDestroyedActivate)
+            {
+                onDestroyedActivate.SetActive(true);
+            }
             return;
         }
 
