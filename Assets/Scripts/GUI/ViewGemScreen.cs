@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,16 +7,7 @@ public class ViewGemScreen : MonoBehaviour
 {
     public static ViewGemScreen Instance;
 
-    [Serializable]
-    public class GemEntry
-    {
-        public string Name;
-        [TextArea] public string Description;
-        public Sprite Icon;
-        public VideoClip Video;
-    }
-
-    [SerializeField] private List<GemEntry> _gems = new();
+    [SerializeField] private List<GemAbilityItem> _gems = new();
     [SerializeField] private List<ViewGemUISlot> _slots = new();
     [SerializeField] private TextMeshProUGUI _nameText;
     [SerializeField] private TextMeshProUGUI _descriptionText;
@@ -53,7 +43,7 @@ public class ViewGemScreen : MonoBehaviour
                 continue;
             }
 
-            if (i < _gems.Count && _gems[i] != null)
+            if (i < _gems.Count && _gems[i])
             {
                 _slots[i].Bind(this, i, _gems[i].Icon);
             }

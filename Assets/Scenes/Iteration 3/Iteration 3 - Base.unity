@@ -885,6 +885,26 @@ PrefabInstance:
       propertyPath: pickaxeUIParent
       value: 
       objectReference: {fileID: 1866403593}
+    - target: {fileID: 7017264594273454127, guid: 0d1ff14a3468fab43a55f49ea89b6be2, type: 3}
+      propertyPath: _debugStartingItems.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7017264594273454127, guid: 0d1ff14a3468fab43a55f49ea89b6be2, type: 3}
+      propertyPath: _debugStartingItems.Array.data[3].Item
+      value: 
+      objectReference: {fileID: 11400000, guid: 861c7dff18f77c041aefa58f8ae38e10, type: 2}
+    - target: {fileID: 7017264594273454127, guid: 0d1ff14a3468fab43a55f49ea89b6be2, type: 3}
+      propertyPath: _debugStartingItems.Array.data[4].Item
+      value: 
+      objectReference: {fileID: 11400000, guid: 07b7101319103614da515703d889807a, type: 2}
+    - target: {fileID: 7017264594273454127, guid: 0d1ff14a3468fab43a55f49ea89b6be2, type: 3}
+      propertyPath: _debugStartingItems.Array.data[3].Quantity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7017264594273454127, guid: 0d1ff14a3468fab43a55f49ea89b6be2, type: 3}
+      propertyPath: _debugStartingItems.Array.data[4].Quantity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8993526741983432931, guid: 0d1ff14a3468fab43a55f49ea89b6be2, type: 3}
       propertyPath: m_Name
       value: Game Manager

@@ -91,7 +91,14 @@ public class Pickup : MonoBehaviour
             if (_hoveringWorldItem)
             {
                 _audioSource.PlayOneShot(_hoveringWorldItem.PickupSoundOverride ? _hoveringWorldItem.PickupSoundOverride : _pickupSound);
-                Inventory.Instance.Add(_hoveringWorldItem.Item);
+                if (_hoveringWorldItem.Item is GemAbilityItem gemItem)
+                {
+                    GemSelectionUI.Instance.AcquireGem(gemItem);
+                }
+                else
+                {
+                    Inventory.Instance.Add(_hoveringWorldItem.Item);
+                }
                 Destroy(_hoveringOver);
                 _hoveringOver = null;
                 _hoveringWorldItem = null;
