@@ -1141,6 +1141,22 @@ PrefabInstance:
       propertyPath: _gems.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8590356060253181259, guid: c542215f50d24024a85eed9ab446d51d, type: 3}
+      propertyPath: _debugStartingAbilities.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8590356060253181259, guid: c542215f50d24024a85eed9ab446d51d, type: 3}
+      propertyPath: '_debugStartingAbilities.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: c331cba608fa0314c9bb3adbc7e6cdf6, type: 2}
+    - target: {fileID: 8590356060253181259, guid: c542215f50d24024a85eed9ab446d51d, type: 3}
+      propertyPath: '_debugStartingAbilities.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 25c014c1dd7360642a751c72e631943a, type: 2}
+    - target: {fileID: 8590356060253181259, guid: c542215f50d24024a85eed9ab446d51d, type: 3}
+      propertyPath: '_debugStartingAbilities.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 8fdf6578715a7ac47b08d682ef4ee82d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
