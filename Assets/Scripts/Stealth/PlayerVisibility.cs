@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerVisibility : MonoBehaviour
@@ -20,7 +19,6 @@ public class PlayerVisibility : MonoBehaviour
 
     private float _targetVisibility = 1f;
     private float _timeSinceLastUpdate;
-    private readonly List<StealthLight> _stealthLights = new();
 
     private void Awake()
     {
@@ -30,17 +28,6 @@ public class PlayerVisibility : MonoBehaviour
             return;
         }
         Instance = this;
-    }
-
-    private void Start()
-    {
-        RefreshLightCache();
-    }
-
-    public void RefreshLightCache()
-    {
-        _stealthLights.Clear();
-        _stealthLights.AddRange(FindObjectsOfType<StealthLight>());
     }
 
     private void Update()
@@ -60,7 +47,7 @@ public class PlayerVisibility : MonoBehaviour
         var total = _ambientBase;
         var playerPos = transform.position;
 
-        foreach (var stealthLight in _stealthLights)
+        foreach (var stealthLight in StealthLight.Active)
         {
             if (!stealthLight)
             {
