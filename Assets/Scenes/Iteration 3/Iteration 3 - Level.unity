@@ -151113,6 +151113,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5970992241793753994, guid: e93683bfe9a2a66418ac2849d47d03fd, type: 3}
+      propertyPath: _exemptMaterials.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5970992241793753994, guid: e93683bfe9a2a66418ac2849d47d03fd, type: 3}
+      propertyPath: '_exemptMaterials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 656a26aeeb0223b4a996c73ca0193c69, type: 2}
+    - target: {fileID: 5970992241793753994, guid: e93683bfe9a2a66418ac2849d47d03fd, type: 3}
+      propertyPath: '_exemptMaterials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: da67a086dd3ebe94e9ecd68880d80311, type: 2}
+    - target: {fileID: 5970992241793753994, guid: e93683bfe9a2a66418ac2849d47d03fd, type: 3}
+      propertyPath: '_exemptMaterials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 6e3349a5c1189024fa448c0a0fbcaa7e, type: 2}
     - target: {fileID: 8016013582615741529, guid: e93683bfe9a2a66418ac2849d47d03fd, type: 3}
       propertyPath: _woodNoise
       value: 0.7

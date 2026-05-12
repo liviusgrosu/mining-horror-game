@@ -14,6 +14,7 @@ public class InvisibilityGem : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip _activationSFX;
     [SerializeField] private Renderer[] _exemptRenderers;
+    [SerializeField] private Material[] _exemptMaterials;
 
     private float _timer;
     private bool _isActive;
@@ -87,8 +88,16 @@ public class InvisibilityGem : MonoBehaviour
                 continue;
             }
 
-            foreach (var mat in meshRenderer.materials)
+            var sharedMats = meshRenderer.sharedMaterials;
+            var mats = meshRenderer.materials;
+            for (var i = 0; i < mats.Length; i++)
             {
+                if (i < sharedMats.Length && System.Array.IndexOf(_exemptMaterials, sharedMats[i]) >= 0)
+                {
+                    continue;
+                }
+
+                var mat = mats[i];
                 var state = new MaterialState
                 {
                     Material = mat,
