@@ -25,6 +25,6 @@ public class ModelMeshColliderPostprocessor : AssetPostprocessor
     bool ShouldProcess(string path)
     {
         // Only process models in the Iteration 2 folder that are level geometry
-        return path.Contains("Models/Iteration 2") && path.Contains("Level");
+        return path.Contains("Models/Iteration 3") && path.Contains("Level");
     }
 }
