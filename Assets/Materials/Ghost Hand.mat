@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Loudness Gem
+  m_Name: Ghost Hand
   m_Shader: {fileID: 4800000, guid: 805822bf32a662947a45f4037da428d8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -26,11 +26,11 @@ Material:
     m_Ints: []
     m_Floats:
     - _CoreEmission: 0.5
-    - _FacingBoost: 0
-    - _RimIntensity: 0
+    - _FacingBoost: 0.24934736
+    - _RimIntensity: 1.4960842
     - _RimPower: 2
     m_Colors:
-    - _BaseColor: {r: 0.23529412, g: 0.21171379, b: 0.09411766, a: 1}
-    - _GlowColor: {r: 3, g: 2.5, b: 0.7, a: 1}
+    - _BaseColor: {r: 0.018422928, g: 0.14633062, b: 0.16981131, a: 1}
+    - _GlowColor: {r: 0.23853771, g: 0.40816358, b: 0.65675324, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
