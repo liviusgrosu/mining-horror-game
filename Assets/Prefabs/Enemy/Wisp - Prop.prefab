@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3195606545861734505
+--- !u!1 &4043599966355592230
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,42 +8,41 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1121437485801226535}
-  - component: {fileID: 5069160453648278793}
-  - component: {fileID: 4295560355605671759}
-  - component: {fileID: 9169841651919253802}
-  - component: {fileID: 6435981532094752104}
+  - component: {fileID: 1694932675594866767}
+  - component: {fileID: 1821390626891439882}
+  - component: {fileID: 4236669768729925899}
+  - component: {fileID: 2101265346626290259}
   m_Layer: 0
-  m_Name: Wisp
+  m_Name: Wisp - Prop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1121437485801226535
+--- !u!4 &1694932675594866767
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3195606545861734505}
+  m_GameObject: {fileID: 4043599966355592230}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -17.671349, y: -2.30053, z: -74.27994}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: -0.00000047683716}
+  m_LocalPosition: {x: 178.688, y: -4.19, z: -53.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7495832484893515705}
-  - {fileID: 5219837441254097646}
+  - {fileID: 7551879433455969703}
+  - {fileID: 41239890817277634}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!108 &5069160453648278793
+--- !u!108 &1821390626891439882
 Light:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3195606545861734505}
+  m_GameObject: {fileID: 4043599966355592230}
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
@@ -54,7 +53,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -102,13 +101,13 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
---- !u!114 &4295560355605671759
+--- !u!114 &4236669768729925899
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3195606545861734505}
+  m_GameObject: {fileID: 4043599966355592230}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
@@ -131,13 +130,13 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!114 &9169841651919253802
+--- !u!114 &2101265346626290259
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3195606545861734505}
+  m_GameObject: {fileID: 4043599966355592230}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 52183e977aa3bea489791c73ae6c61bd, type: 3}
@@ -169,29 +168,13 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &6435981532094752104
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3195606545861734505}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b9c250aacf2c904ea75ae3def81209b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LightPathFollower
-  _pathing: {fileID: 0}
-  _speed: 1
-  _fadeInDuration: 0.5
-  _fadeOutDuration: 0.5
---- !u!1001 &1874640988680937182
+--- !u!1001 &1931817428957209792
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1121437485801226535}
+    m_TransformParent: {fileID: 1694932675594866767}
     m_Modifications:
     - target: {fileID: 1779917094725118382, guid: 17cf54fd57eb4ff48afdfcde50adadc2, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -322,18 +305,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 17cf54fd57eb4ff48afdfcde50adadc2, type: 3}
---- !u!4 &7495832484893515705 stripped
+--- !u!4 &7551879433455969703 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8215300066020131175, guid: 17cf54fd57eb4ff48afdfcde50adadc2, type: 3}
-  m_PrefabInstance: {fileID: 1874640988680937182}
+  m_PrefabInstance: {fileID: 1931817428957209792}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &4211443569931813769
+--- !u!1001 &8255125142999588773
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1121437485801226535}
+    m_TransformParent: {fileID: 1694932675594866767}
     m_Modifications:
     - target: {fileID: 1779917094725118382, guid: 17cf54fd57eb4ff48afdfcde50adadc2, type: 3}
       propertyPath: m_Materials.Array.size
@@ -410,14 +393,6 @@ PrefabInstance:
     - target: {fileID: 7675088024166202590, guid: 17cf54fd57eb4ff48afdfcde50adadc2, type: 3}
       propertyPath: InitialModule.gravityModifier.scalar
       value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 7675088024166202590, guid: 17cf54fd57eb4ff48afdfcde50adadc2, type: 3}
-      propertyPath: InitialModule.gravityModifier.minScalar
-      value: 0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 7675088024166202590, guid: 17cf54fd57eb4ff48afdfcde50adadc2, type: 3}
-      propertyPath: InitialModule.gravityModifier.minMaxState
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7675088024166202590, guid: 17cf54fd57eb4ff48afdfcde50adadc2, type: 3}
       propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.size
@@ -516,8 +491,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 17cf54fd57eb4ff48afdfcde50adadc2, type: 3}
---- !u!4 &5219837441254097646 stripped
+--- !u!4 &41239890817277634 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8215300066020131175, guid: 17cf54fd57eb4ff48afdfcde50adadc2, type: 3}
-  m_PrefabInstance: {fileID: 4211443569931813769}
+  m_PrefabInstance: {fileID: 8255125142999588773}
   m_PrefabAsset: {fileID: 0}
