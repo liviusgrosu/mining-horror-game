@@ -143,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52183e977aa3bea489791c73ae6c61bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StealthLight
-  detectionRange: 10
+  detectionRange: 7
   maxContribution: 1
   falloffCurve:
     serializedVersion: 2
