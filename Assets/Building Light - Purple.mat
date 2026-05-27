@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Visibility Gem
+  m_Name: Building Light - Purple
   m_Shader: {fileID: 4800000, guid: 805822bf32a662947a45f4037da428d8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -26,11 +26,11 @@ Material:
     m_Ints: []
     m_Floats:
     - _CoreEmission: 0.5
-    - _FacingBoost: 3e-45
-    - _RimIntensity: 1.7e-44
+    - _FacingBoost: 0.1260544
+    - _RimIntensity: 0.75632644
     - _RimPower: 2
     m_Colors:
-    - _BaseColor: {r: 0.21771142, g: 0.09411766, b: 0.23529412, a: 1}
-    - _GlowColor: {r: 1.9876463, g: 0.6958187, b: 2.4182556, a: 1}
+    - _BaseColor: {r: 0.1821971, g: 0.070588246, b: 0.2, a: 1}
+    - _GlowColor: {r: 0.65020174, g: 0.14509802, b: 0.7176471, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
