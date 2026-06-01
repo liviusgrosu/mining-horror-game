@@ -51,6 +51,7 @@ public class EnemyAI : MonoBehaviour
 
     [Header("Engage State")]
     [SerializeField] private float _engageGiveUpTime = 4f;
+    [SerializeField] private float _engageLostSightGiveUpTime = 3f;
 
     [Header("Attack State")]
     [Tooltip("How fast the enemy will rotate to the player after finishing an attack")]
@@ -82,6 +83,8 @@ public class EnemyAI : MonoBehaviour
     private float _engageUnreachableElapsedTime;
     private Vector3 _engageTarget;
     private bool _engagingPlayer;
+    private float _lastSightTime;
+    private Vector3 _lastSeenPlayerPosition;
 
     private bool _shouldPatrol => _initialState == State.Patrol;
     [SerializeField]
@@ -200,6 +203,12 @@ public class EnemyAI : MonoBehaviour
             _hearingStimulusText.text = $"Sound:{tier}";
         }
 
+        if (s.Kind == StimulusKind.Sight && s.FromPlayer)
+        {
+            _lastSightTime = Time.time;
+            _lastSeenPlayerPosition = s.Position;
+        }
+
         if (_health.IsDead || _health.IsTakingHit || !Toggle)
         {
             return;
@@ -275,6 +284,11 @@ public class EnemyAI : MonoBehaviour
     {
         _engageTarget = target;
         _engagingPlayer = isPlayer;
+        if (isPlayer)
+        {
+            _lastSeenPlayerPosition = target;
+            _lastSightTime = Time.time;
+        }
         _movement.RunTo(target);
         _audio.PlayChaseLoop();
         _engageUnreachableElapsedTime = 0f;
@@ -431,8 +445,19 @@ public class EnemyAI : MonoBehaviour
     {
         animator.SetFloat(MovementBlend, 1f, 0.1f, Time.deltaTime);
 
-        var target = _engagingPlayer ? _perception.Player.position : _engageTarget;
+        var target = _engagingPlayer ? _lastSeenPlayerPosition : _engageTarget;
         _movement.SetDestination(target);
+
+        if (_engagingPlayer)
+        {
+            var sightLostFor = Time.time - _lastSightTime;
+            var noiseQuietFor = Time.time - _lastNoiseTime;
+            if (sightLostFor >= _engageLostSightGiveUpTime && noiseQuietFor >= _engageLostSightGiveUpTime)
+            {
+                BailEngageToSearching();
+                return;
+            }
+        }
 
         if (_movement.IsPathUnreachable)
         {
@@ -482,7 +507,7 @@ public class EnemyAI : MonoBehaviour
 
     private void BailEngageToSearching()
     {
-        _investigateTarget = _engagingPlayer ? _perception.Player.position : _engageTarget;
+        _investigateTarget = _engagingPlayer ? _lastSeenPlayerPosition : _engageTarget;
         _movement.Cancel();
         _searchElapsedTime = 0f;
         _searchPauseTimer = 0f;
