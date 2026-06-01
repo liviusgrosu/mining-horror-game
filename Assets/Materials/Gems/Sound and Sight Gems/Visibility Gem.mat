@@ -26,8 +26,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _CoreEmission: 0.5
-    - _FacingBoost: 1.2748828e-33
-    - _RimIntensity: 7.6492966e-33
+    - _FacingBoost: 9.605118e-20
+    - _RimIntensity: 5.7630707e-19
     - _RimPower: 2
     m_Colors:
     - _BaseColor: {r: 0.21771142, g: 0.09411766, b: 0.23529412, a: 1}

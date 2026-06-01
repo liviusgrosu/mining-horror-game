@@ -32,6 +32,6 @@ public class EnemyAIActivationZone : MonoBehaviour
     private IEnumerator ActivateAfterDelay()
     {
         yield return new WaitForSeconds(_activationDelay);
-        enemy.Toggle = true;
+        enemy.Activate();
     }
 }

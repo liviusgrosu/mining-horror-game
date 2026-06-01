@@ -304,6 +304,19 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    public void Activate()
+    {
+        if (Toggle)
+        {
+            return;
+        }
+        Toggle = true;
+        if (_shouldPatrol)
+        {
+            SetPathingDestination();
+        }
+    }
+
     public void ForceEngage()
     {
         if (_health.IsDead || !Toggle || neverEngage)
