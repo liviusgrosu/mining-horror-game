@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 388360727898775835}
   - component: {fileID: 8847200694108571004}
   - component: {fileID: 4392503234920445527}
-  - component: {fileID: 3908980064199121590}
   m_Layer: 9
   m_Name: Stars
   m_TagString: Untagged
@@ -4855,17 +4854,3 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
---- !u!114 &3908980064199121590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 637726330674919331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7b88e086b3a9d14cac543746c348d2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Bob
-  amplitude: 0.25
-  frequency: 1
