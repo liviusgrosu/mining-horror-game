@@ -20,6 +20,12 @@ TagManager:
   - Wood
   - Spiked Trap
   - Pit
+  - Metal
+  - Carpet
+  - Grass
+  - Fence
+  - Lever
+  - Chain
   layers:
   - Default
   - TransparentFX
@@ -32,9 +38,9 @@ TagManager:
   - Walkable
   - Environment
   - Player
-  - 
-  - 
-  - 
+  - Entity
+  - WeaponView
+  - Bug
   - 
   - 
   - 

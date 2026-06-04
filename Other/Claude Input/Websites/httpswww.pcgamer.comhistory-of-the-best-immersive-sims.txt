@@ -1,0 +1,128 @@
+History of the best immersive sims
+
+The immersive sim is one of the most exclusive of PC gaming genres. Only around two dozen such games have been developed in the entire history of PC gaming, but at least a quarter of these would be considered among the best games ever made.
+
+This is not surprising. Immersive sims are complex and ambitious creations by their very nature. These games combine elements of action, roleplaying, and stealth into one seamless whole. Each game varies the emphasis of these components, but there are some clearly identifiable qualities that mark them out. They prioritise compelling environment design and they encourage emergent play, providing the player with an array of tools to pursue open-ended goals. 
+
+I’ve traced the history of this genre through 10 of its best and brightest examples, games that epitomise, expand upon, and subvert its conventions. They include some of the PC's most celebrated games, alongside flawed yet fascinating experiments.
+
+1992: Ultima Underworld
+
+Conceived by Paul Neurath, who later co-founded Looking Glass Studios, Ultima Underworld was inspired by the first-person perspective of Dungeon Master on the Atari ST. Yet instead of designing another RPG, Neurath wanted to simulate the feel of exploring a treacherous underground labyrinth. 
+
+Even by today’s standards, Underworld is astonishingly ambitious, sporting an open 3D world where quests can be completed in any order. It features both melee and ranged real-time combat, including a magic system with dozens of spells, many of which must be discovered through experimenting with the arrangement of runes. You also have to eat and sleep in order to function, predating survival games by some 20 years. 
+
+Best feature: Your game map only fills out if you illuminate new areas with a light source, compounding the feeling you’re inside a dingy dungeon.
+1999: System Shock 2
+
+System Shock was Looking Glass’s first original title, building on the ideas explored in Ultima Underworld while transposing them into a sci-fi, cyberpunk universe. It’s a fine game. But the sequel, co-developed between Looking Glass and Ken Levine’s Irrational Games, exists on another level entirely. 
+
+Two things elevate System Shock 2 above the original. The first is its atmosphere. The beleaguered spaceship Von Braun is perhaps the most terrifying virtual space ever, its neon-blue corridors are procedurally prowled by lurching former crew members who scream “I’m sorry” at you as they try to bludgeon your head in, while the eerie electronic soundtrack will slowly erode any player’s resolve. 
+
+The second thing is how it twists the fundamental concepts of immersive sims. System Shock 2 takes that essential idea of freedom to play and explore as you like, and flips it on its head. The game’s multiple upgrade paths—Military, Engineering and Psionic—are less roads to power, and more ropes for the player to hang themselves on. No matter which option you choose, the game always finds a way to undermine your decisions. Few games manage to provide so many options for the player while making them feel so vulnerable in the process. 
+
+The story compounds this feeling of helplessness, forcing you to work with an adversary far more powerful than you and utterly contemptuous toward your existence—the mighty SHODAN. Levine would explore these ideas again in BioShock, but the subtler approach makes System Shock 2 both Irrational’s and Looking Glass’s finest work. 
+
+Best enemy: SHODAN, who else? Brilliantly written by Levine and with a superb performance by Terri Brosius, the megalomaniacal AI remains one of gaming’s greatest adversaries.
+
+2000: Thief 2: The MEtal Age
+
+The original Thief is groundbreaking, with moments of stunning vision, let down by some loopy level designs. The sequel is a stone-cold classic. Thief 2 is a series of beautifully constructed missions that may be the best sequential campaign ever committed to code. 
+
+Thief is laudable for being an immersive sim that narrows in on a specific idea, providing emergent play without being a chocolate-box of concepts. The stealth emphasis also encourages players to pay full attention to their surroundings, observing guard patrols, seeking out shadows and figuring out how to break into buildings. 
+
+Best level: Life of the Party is the mission that made everyone yearn (perhaps mistakenly) for an open-world Thief. It sees Garrett breaking into the tower of Angelwatch and is a masterpiece of 3D level design.
+2000: Deus Ex
+
+If System Shock 2 is a subversion of immersive sims, and Thief is a refinement of them, then Deus Ex is a culmination of the concept, the game that the genre slowly built towards over just shy of a decade. It’s as crazy and grandiose as the conspiracies that infest its gloomy near-future world. The difference is Deus Ex actually manages to pull off its cunning plan. 
+
+Deus Ex provided the broadest palette of player choices to date, blending a skill and augmentation system to create a truly astonishing array of opportunities. Want to be a nano-ninja who can turn invisible and see through walls? No problem at all. Want to be a cybernetic superman who’s able to lift a shipping crate and run like a gazelle? Go for it! Want to just be really fucking good at swimming? Well, OK then. 
+
+Yet where Deus Ex goes beyond the games that preceded it is in how it allows the player to not only interact with the world around them, but also influence it too. It was the first game of its kind to include dialogue choices that impacted directly on the story, leading to the deaths of major characters and altering the fortunes of particular factions. These decisions aren’t simple binary choices either, they’re fraught with grey areas and troubling external pressures, and their consequences can impact you hours deeper into the game. Indeed, Deus Ex offers three endings, all of which have huge and not necessarily happy ramifications for JC Denton and the world he’s trying to save. 
+
+Best moment: Escaping UNATCO after being captured is a superb sequence, turning a familiar and friendly environment into a hostile and dangerous one, and featuring some gripping encounters with friends and coworkers who all react differently to your betrayal.
+
+2006: The Elder Scrolls IV: Oblivion
+
+Morrowind may be the darling of the Elder Scrolls series, but it was with Oblivion that Bethesda’s games moved away from the stats and dice rolls of RPGs into something better resembling an immersive sim. It ditched traditional character classes, allowing the player to customise their avatar through a mix of specific skills. Melee combat was made more realistic, while the introduction of Havok physics lent greater tactility to both archery and magic. 
+
+Oblivion fully embraced the ‘go anywhere, do anything’ notion of the Elder Scrolls series, attempting to cram in as much variety as possible. This resulted in problems; the world design was less coherent than in Morrowind and Skyrim, while the game’s radiant AI struggled to cope with what the devs demand of it. But it also delivered remarkable highs, containing some of the best quests in the entire series. 
+
+Best quest: Whodunit is a Dark Brotherhood quest that tasks you with assassinating five guests at a house party and is probably the best example of Oblivion’s sim-like qualities. You can simply wade through the guests with a sword, but it’s equally possible to manipulate guests into moving to isolated areas or killing each other.
+2004: Vampire: the Masquerade: Bloodlines
+
+Bloodlines would be the best immersive sim ever made, if its developers had been given the time and resources to finish it. Nevertheless, it remains a great example of the genre, its remarkable diversity of play making up for its wonkier elements. You can play as a True Blood-esque Toreador vampire, using your powers of persuasion or seduction to your advantage, or a grotesque Nosferatu who’s prohibited from being seen by regular humans, and must use Los Angeles’ sewers and the ability to turn invisible to protect the vampires’ secret society. 
+
+It’s also arguably the most characterful game on this list, infusing its vampiric theme with gothic horror, explosive violence and jet-black comedy, which is bolstered by a superb script and one of the best dialogue systems in existence. 
+
+The combat may be awful and there are still bugs being ironed out by hobbyist patchers, but Bloodlines remains a fascinating flawed gem. 
+
+Best class: Malkavian vampires are mad from the moment they’re sired, and if you choose to play as one, their dialogue options are completely different from any other class, just one example of Bloodlines’s tremendous scope.
+
+2006: Dark Messiah of Might and Magic
+
+Dark Messiah isn’t the smartest game on this list, but it makes up for this by being an enormous amount of fun. Although it vaguely resembles an RPG, at its heart Dark Messiah is a swashbuckling simulator. Its levels are built like the sets of an Errol Flynn movie, littered with objects that can be actively used in combat. Enemies can be kicked off ledges, booted down staircases, and shoved into walls of conveniently placed spikes. Heavy objects are often suspended above arenas by fraying ropes, while rickety bridges can be destroyed as enemies cross them. 
+
+With its lithe animations and sense of momentum Dark Messiah is also one of the best swordfighting games. Few things in life are as satisfying as decapitating one of Dark Messiah’s gurning Orcs, except perhaps chucking a barrel at them and watching them cartwheel down a flight of stairs. 
+
+Best ability: Dark Messiah’s ice spell is a purveyor of endless slapstick fun. It can freeze enemies in place, but it can also be cast onto the ground. Enemies that then step on this newly frictionless surface will slip and collapse in a pile of limbs, or stumble off a ledge if you cast it in just the perfect spot.
+2007: Bioshock
+
+Few games take the idea of immersive sims as literally as BioShock, set as it is under millions of gallons of ocean. One of Irrational’s goals with BioShock was to make Rapture seem like a plausible place, a city where the cream of American ingenuity held back the tide and lived in utopian bliss. No surprise then it’s Rapture (alongside that moment) that BioShock is mainly remembered for. The underwater city is a marvellous virtual space, its vibrant architecture creaking and leaking as the weight of the sea bears down on it. 
+
+Yet Irrational’s most famous work remains in love with the ideas of emergent play that underpinned its spiritual predecessor. The game’s plasmids hark back to the Psi abilities of System Shock and are enhanced to interact directly with the environment, setting the turrets and cameras against the Splicers, or enraging a Big Daddy into doing all the hard work, before it turns its glowing red eyes on you. 
+
+BioShock may have popularised immersive sims by leaning closer to the FPS side, but if you’re willing to forego the efficiency of guns, it can still provide some splendid emergent moments. BioShock 2 was arguably better at providing players with a range of tools to experiment with in combat. 
+
+Best level: Fort Frolic is undoubtedly the high point of BioShock. Mad auteur Sander Cohen sprinkled much-needed humour into the game’s absurdist-horror tones, and it exhibits some of the best environment design in the game. Fort Frolic was developed largely by Jordan Thomas, who was responsible for Deadly Shadows’s Shalebridge Cradle.
+
+2010: Stalker: Call of Pripyat
+
+The Stalker series has always represented the ultimate end-goal of immersive sims, a cohesive and believable environment, AI that acts autonomously of the player, and complex interactions that result in an unscripted, unpredictable world. 
+
+None of the games achieved what Shadow of Chernobyl set out to do, but Call of Pripyat comes close. It condenses the fragmented environments of previous games into three large areas, where multiple factions of Stalkers, bandits, scientists and others patrol, hunt wildlife, scour for valuable Artifacts and battle over territory. When the wind blusters, the rain rolls in and you’re being hunted by an invisible mutant, few games are as engrossing. 
+
+Best feature: Pripyat is constantly under threat of Emissions, violent energy bursts that alter the situation within the zone, creating new Artifacts, killing NPCs and spawning Zombified Stalkers.
+2012: Dishonored
+
+Recent years have seen a revival of bona-fide immersive sims. In 2011 Deus Ex: Human Revolution proved it was possible to make a follow-up that rivalled Warren Spector’s masterpiece. Then in 2012 came Dishonored, a game openly inspired by the work of Ion Storm and Looking Glass. Arkane’s Arx Fatalis and Dark Messiah had both shown glimmers of a similar talent, and it finally coalesced in their magical murder-sim. 
+
+Dishonored took the level design of Thief and the open-ended play of Deus Ex, and weaved them together superbly. The majority of its missions are built in a similar style to Thief II’s Life of the Party—a smattering of open city that surrounds the central area where the mission takes place. Particular highlights include the Golden Cat, an opulent brothel whose spiralling layout makes for a tricky assassination challenge, and Lady Boyle’s manor, where the ensuing Masquerade Ball allows the player to hide in plain sight. 
+
+Dishonored also boasts the most inventive toolsets of any game of its ilk, blending mechanical gadgetry with pagan-style magic. You can possess enemies and freeze time to manipulate your opponents and remain unseen, or deploy nasty springrazors and summon hordes of rats if you fancy adopting a more sociopathic approach. Dishonored even lets players complete the game without killing anyone, although many of your targets may wish they were dead given some of the fiendish alternatives. 
+
+Best ability: Although it’s the least spectacular ability in Corvo’s arsenal, Blink transforms everything about the game. This short-range teleport affects movement, platforming, combat and stealth, enabling you to dart across gaps between rooftops, flash into cover when noticed by a guard, or vanish away from a pistol-shot and stab your aggressor in the back.
+
+Read on to page two for a collection of the best games that have been inspired by the immersive sim movement.
+
+Inspired indies
+
+Interesting efforts from indie devs bravely taking on the formidable challenge of immersive sims.
+
+Consortium 
+
+Consortium is a dynamic murder mystery that takes place inside a giant military plane. Although it’s rather rough around the edges, it’s an interesting take on the format, minimising combat and instead focusing on dialogue and player choices. Most impressively, you can completely bypass the main mystery and still complete the game. A sequel that plans to expand upon the original premise is being crowdfunded.
+
+Neon Struct
+
+An abstraction of many immersive sim ideas, Neon Struct is a pure stealth game that sees you rebelling against a dystopian surveillance state, breaking into high-security buildings, sneaking through guard patrols and generally making a nuisance of yourself. You can knock guards out but can’t kill them, and it boils down the ideas of its bigger brothers to a simpler level. But it remains intriguing through its fantastic level design.
+
+The Magic Circle
+
+A satirical prod at mainstream game development, The Magic Circle casts you as a game tester who goes rogue on a troubled project. You team up with a sentient AI, and go around reprogramming mob enemies, infusing them with new powers to overthrow the game’s creative director. The intriguing AI-rejigging system makes it more than a simple send-up.
+
+Inspired sims
+
+Games outside the immersive sim genre make use of some of its traits. Here are a few examples.
+
+Hitman: Blood Money 
+
+IO’s best Hitman game has nearly all the hallmarks of an immersive sim, only differentiated by its third-person perspective. Its level design encourages exploration and experimentation, while you can quietly dispatch your targets with your fibre-wire, use pre-designed assassination methods to make your hit look like an accident, or simply waltz through the crowds with the biggest gun you can find.
+
+Alien: Isolation 
+
+Isolation doesn’t quite posses the open-ended nature of true immersive sims, but immersion is a crucial factor in making the game work. It combines highly realistic environments with a convincing Xenomorph AI to really hammer home the tension and terror of being trapped in a closed space with one of those creatures, and there’s an array of tools to aid you in distracting and dealing with your chitinous nemesis.
+
+Far Cry 3 
+
+The Far Cry series has always been a shooter at heart, but it has also placed a strong emphasis on emergent play. Far Cry 2 was the main innovator, but the third game masters the form, with its checkpoints providing dozens of little sandboxes to play around with. It also introduces dangerous predators to the food-chain and a wider array of toys, from recurve bows to wingsuits.

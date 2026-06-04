@@ -91,3 +91,14 @@ sysinfo.txt
 # ============= #
 # VS Code       #
 # ============= #
+
+# ======= #
+# Blender #
+# ======= #
+*.blend1
+
+# ======= #
+# Claude  #
+# ======= #
+CLAUDE.md
+.claude

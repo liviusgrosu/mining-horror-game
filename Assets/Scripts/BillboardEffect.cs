@@ -15,9 +15,9 @@ public class BillboardEffect : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (_cam == null) return;
+        if (!_cam) return;
 
         _zRotation += speed * Time.deltaTime;
-        transform.rotation = Quaternion.LookRotation(-_cam.transform.forward) * Quaternion.Euler(0f, 0f, _zRotation);
+        transform.rotation = Quaternion.LookRotation(_cam.transform.forward) * Quaternion.Euler(0f, 0f, _zRotation);
     }
 }

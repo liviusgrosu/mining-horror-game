@@ -69,6 +69,10 @@ public class Pickup : MonoBehaviour
             {
                 GameManager.Instance.ToggleQuestionMark(true);
             }
+            else if (_hoveringOver.CompareTag("Lever"))
+            {
+                GameManager.Instance.ToggleQuestionMark(true);
+            }
             else
             {
                 _hoveringOver = null;
@@ -82,12 +86,19 @@ public class Pickup : MonoBehaviour
             _hoveringWorldItem = null;
         }
 
-        if (Input.GetKey(KeyCode.E) && _hoveringOver)
+        if (Input.GetKeyDown(KeyCode.F) && _hoveringOver)
         {
             if (_hoveringWorldItem)
             {
                 _audioSource.PlayOneShot(_hoveringWorldItem.PickupSoundOverride ? _hoveringWorldItem.PickupSoundOverride : _pickupSound);
-                Inventory.Instance.Add(_hoveringWorldItem.Item);
+                if (_hoveringWorldItem.Item is GemAbilityItem gemItem)
+                {
+                    GemSelectionUI.Instance.AcquireGem(gemItem);
+                }
+                else
+                {
+                    Inventory.Instance.Add(_hoveringWorldItem.Item);
+                }
                 Destroy(_hoveringOver);
                 _hoveringOver = null;
                 _hoveringWorldItem = null;
@@ -116,6 +127,23 @@ public class Pickup : MonoBehaviour
             else if (_hoveringOver.CompareTag("Breakable"))
             {
                 GameManager.Instance.ShowNormalRockHoverText();
+            }
+            
+            else if (_hoveringOver.CompareTag("Lever"))
+            {
+                var toggleLever = _hoveringOver.GetComponent<ToggleLever>();
+                if (toggleLever)
+                {
+                    toggleLever.Toggle();
+                }
+                else
+                {
+                    var trapDoorLever = _hoveringOver.GetComponent<TrapDoorLever>();
+                    if (trapDoorLever)
+                    {
+                        trapDoorLever.Toggle();
+                    }
+                }
             }
         }
     }

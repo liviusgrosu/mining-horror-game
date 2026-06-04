@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfcd85a5dca9de84c8d2239e645c87b3, type: 3}
+  m_Name: Gem Essence Dust - Invisibility
+  m_EditorClassIdentifier: Assembly-CSharp::GemEssenceDustItem
+  Name: Gem Essence Dust - Invisibility
+  Description: 'Used to recharge the invisibility ability
+
+'
+  Icon: {fileID: 21300000, guid: 045bd48dafc11554fa5b2382ee1ec1ca, type: 3}
+  Type: 0
+  GemType: 1

@@ -62,3 +62,12 @@ Player, Enemy, Mineral, Anvil, Entrance Door, Mineral Deposit, Blockage Rock, Br
 - Editor scripts in `Assets/Scripts/Editor/` and `Assets/TutorialInfo/Scripts/`
 - Coroutines used extensively for fade effects, camera shake, audio transitions
 - Surface detection via raycast + tag comparison (Gravel/Stone) for footstep audio
+
+## Code Style (MUST follow exactly)
+
+- **No inline comments** — do not add `//` comments inside method bodies
+- **No XML doc comments** — do not add `///` summary blocks on methods or classes
+- **No `[Tooltip]` attributes** — do not add Tooltip attributes to serialized fields
+- **Always use braces** — every `if`, `else`, `for`, `foreach`, `while` block must have `{` `}`, even single-line bodies
+- **Unity null checks** — use implicit bool checks for `UnityEngine.Object` references: `if (_playerMovement)` not `if (_playerMovement != null)`
+- **Ternary formatting** — multi-condition ternaries must newline and indent each `?` and `:` on its own line, with nested ternaries indented further

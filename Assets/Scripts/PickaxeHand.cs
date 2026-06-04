@@ -6,35 +6,62 @@ using UnityEngine;
 public class PickaxeHand : MonoBehaviour
 {
     public static PickaxeHand Instance;
-    
+
     [SerializeField]
     private List<GameObject> _pickAxes;
+    [SerializeField]
+    private Transform _pickaxeParent;
     private GameObject _currentPickaxe;
+    private ParticleSystem _pickaxeParticleSystem;
     private int _pickaxeIndex = -1;
-    
+
     private Animator _animator;
     private Transform _camera;
 
-    [SerializeField] private GameObject sparkVFX, dustEffect, bloodVFX, lightBloodVFX, materialHitVFX;
+    [Header("Bob")]
+    [SerializeField] private float _bobAmountY = 0.02f;
+    [SerializeField] private float _bobAmountX = 0.01f;
+    [SerializeField] private float _bobSmooth = 10f;
+    [SerializeField] private float _walkBobMultiplier = 0.5f;
+    [SerializeField] private float _crouchBobMultiplier = 0.3f;
+    private float _bobTimer;
+    private Vector3 _bobOffset;
+    private Vector3 _initialLocalPosition;
+    private CharacterController _playerController;
+    private PlayerMovement _playerMovement;
+    private CharacterFootsteps _playerFootsteps;
+
+    [Header("Sway")]
+    [SerializeField] private float _lookSwayAmount = 0.01f;
+    [SerializeField] private float _lookSwayClamp = 0.08f;
+    [SerializeField] private float _verticalSwayAmount = 0.02f;
+    [SerializeField] private float _verticalSwayClamp = 0.15f;
+    [SerializeField] private float _swaySmooth = 6f;
+    private Vector3 _swayOffset;
+
+    private Vector3 _lastNoisePosition;
+    private float _lastNoiseRadius;
+
+    [SerializeField] private GameObject sparkVFX, dustEffect, bloodVFX, lightBloodVFX, materialHitVFX, woodChipVFX;
 
     [Header("Runes")]
     [SerializeField] private InventoryItem deathRune;
-    
+    [SerializeField] private AudioClip _enemyHitSound;
+    [SerializeField] private AudioClip _enemyHitNoRuneSound;
+
     public LayerMask ignoreMask;
-    
+
+    [SerializeField]
+    private float _hitRange = 5f;
+
+    [Header("Noise")]
+    [SerializeField] private float _miningNoiseRadius = 12f;
+
     private AudioSource _audioSource;
-    
-    [SerializeField]
-    public AudioClip pickaxeValidSound;
+    private PickaxeAudio _pickaxeAudio;
 
     [SerializeField]
-    public AudioClip pickaxeInvalidSound;
-
-    [SerializeField] 
     public AudioClip pickaxeUpgradeSound;
-    
-    [SerializeField] 
-    public AudioClip pickaxeMissSound;
     
     private void Awake()
     {
@@ -49,13 +76,18 @@ public class PickaxeHand : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         _audioSource.playOnAwake = false;
         _audioSource.loop = false;
+        _pickaxeAudio = GetComponent<PickaxeAudio>();
     }
 
     void Start()
     {
         _animator = GetComponent<Animator>();
         _camera = Camera.main.transform;
-        SwitchPickaxe("Bronze Pickaxe");    
+        _initialLocalPosition = transform.localPosition;
+        _playerController = GetComponentInParent<CharacterController>();
+        _playerMovement = GetComponentInParent<PlayerMovement>();
+        _playerFootsteps = GetComponentInParent<CharacterFootsteps>();
+        SwitchPickaxe("Bronze Pickaxe");
     }
 
     void Update()
@@ -64,23 +96,79 @@ public class PickaxeHand : MonoBehaviour
         {
             return;
         }
+
         if (Input.GetMouseButtonDown(0))
         {
             _animator.SetTrigger("Swing");
         }
     }
 
+    private void LateUpdate()
+    {
+        if (GameManager.Instance && (GameManager.Instance.InMenu || GameManager.Instance.HasDied))
+        {
+            return;
+        }
+
+        var isMoving = _playerController
+            && _playerController.velocity.magnitude > 0.1f
+            && _playerController.isGrounded;
+
+        if (isMoving && _playerFootsteps)
+        {
+            var currentInterval = _playerMovement && _playerMovement.IsCrouching
+                ? _playerFootsteps.crouchStepInterval
+                : _playerMovement && _playerMovement.IsSprinting
+                    ? _playerFootsteps.sprintStepInterval
+                    : _playerFootsteps.stepInterval;
+
+            _bobTimer += Time.deltaTime / currentInterval;
+        }
+        else
+        {
+            _bobTimer = 0f;
+        }
+
+        var bobMultiplier = _playerMovement && _playerMovement.IsCrouching
+            ? _crouchBobMultiplier
+            : _playerMovement && _playerMovement.IsSprinting
+                ? 1f
+                : _walkBobMultiplier;
+
+        var bobY = Mathf.Sin(_bobTimer * Mathf.PI * 2f) * _bobAmountY * bobMultiplier;
+        var bobX = Mathf.Cos(_bobTimer * Mathf.PI) * _bobAmountX * bobMultiplier;
+
+        var mouseX = Input.GetAxisRaw("Mouse X");
+        var mouseY = Input.GetAxisRaw("Mouse Y");
+        var verticalVelocity = _playerController
+            ? _playerController.velocity.y
+            : 0f;
+
+        var swayTargetX = Mathf.Clamp(-mouseX * _lookSwayAmount, -_lookSwayClamp, _lookSwayClamp);
+        var swayTargetY = Mathf.Clamp(-mouseY * _lookSwayAmount, -_lookSwayClamp, _lookSwayClamp)
+            + Mathf.Clamp(-verticalVelocity * _verticalSwayAmount, -_verticalSwayClamp, _verticalSwayClamp);
+        var swayTarget = new Vector3(swayTargetX, swayTargetY, 0f);
+        _swayOffset = Vector3.Lerp(_swayOffset, swayTarget, _swaySmooth * Time.deltaTime);
+
+        var bobTarget = new Vector3(bobX, bobY, 0f);
+        _bobOffset = Vector3.Lerp(_bobOffset, bobTarget, _bobSmooth * Time.deltaTime);
+
+        transform.localPosition = _initialLocalPosition + _bobOffset + _swayOffset;
+    }
+
     public void SwitchPickaxe(string name)
     {
         var chosenPickaxe = _pickAxes.Find(pickaxe => pickaxe.name == name);
         Destroy(_currentPickaxe);
-        _currentPickaxe = Instantiate(chosenPickaxe, transform.position, transform.rotation);
-        _currentPickaxe.transform.SetParent(transform);
+        _currentPickaxe = Instantiate(chosenPickaxe, _pickaxeParent, false);
+        _currentPickaxe.transform.localPosition = chosenPickaxe.transform.localPosition;
+        _currentPickaxe.transform.localRotation = chosenPickaxe.transform.localRotation;
+        _pickaxeParticleSystem = _currentPickaxe.GetComponentInChildren<ParticleSystem>();
     }
 
     public void CheckHit()
     {
-        if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out var hit, 5.0f, ~ignoreMask))
+        if (Physics.Raycast(_camera.position, _camera.forward, out var hit, _hitRange, ~ignoreMask))
         {
             if (hit.collider.CompareTag("VoxelTerrain"))
             {
@@ -90,7 +178,10 @@ public class PickaxeHand : MonoBehaviour
                     voxelTerrain.Mine(hit.point);
                 }
 
-                _audioSource.PlayOneShot(pickaxeValidSound);
+                _lastNoisePosition = hit.point;
+                _lastNoiseRadius = _miningNoiseRadius;
+                NoiseEmitter.Emit(hit.point, _miningNoiseRadius, hit.collider.tag);
+                _pickaxeAudio.PlayImpactForTag(hit.collider.tag);
                 SpawnCloudEffect(hit.point);
                 var voxelRenderer = hit.collider.GetComponent<MeshRenderer>();
                 if (voxelRenderer != null)
@@ -107,7 +198,10 @@ public class PickaxeHand : MonoBehaviour
                 {
                     var mat = destructible.CurrentStageMaterial;
                     destructible.TakeDamage();
-                    _audioSource.PlayOneShot(pickaxeValidSound);
+                    _lastNoisePosition = hit.point;
+                    _lastNoiseRadius = _miningNoiseRadius;
+                    NoiseEmitter.Emit(hit.point, _miningNoiseRadius, hit.collider.tag);
+                    _pickaxeAudio.PlayImpactForTag(hit.collider.tag);
                     SpawnCloudEffect(hit.point);
                     if (mat != null)
                     {
@@ -116,37 +210,70 @@ public class PickaxeHand : MonoBehaviour
                 }
                 else
                 {
-                    _audioSource.PlayOneShot(pickaxeInvalidSound);
+                    _pickaxeAudio.PlayImpactForTag(hit.collider.tag);
                     SpawnSparkEffect(hit.point, hit.normal);
                 }
+            }
+            else if (hit.collider.CompareTag("Chain"))
+            {
+                var chandelier = hit.collider.GetComponentInParent<ChandelierBreakable>();
+                if (chandelier)
+                {
+                    chandelier.Break();
+                }
+                _pickaxeAudio.PlayImpactForTag(hit.collider.tag);
+                SpawnSparkEffect(hit.point, hit.normal);
             }
             else if (hit.collider.CompareTag("Enemy"))
             {
                 var hasDeathRune = deathRune != null && Inventory.Instance.PickaxeGems.Contains(deathRune);
                 if (hasDeathRune)
                 {
-                    var shade = hit.collider.GetComponentInParent<ZombieBehaviour>();
-                    if (shade != null)
+                    var enemyHealth = hit.collider.GetComponentInParent<EnemyHealth>();
+                    if (enemyHealth)
                     {
-                        shade.TakeDamage(_currentPickaxe.GetComponent<Pickaxe>().Power * 10);
+                        enemyHealth.TakeDamage(_currentPickaxe.GetComponent<Pickaxe>().Power * 10);
                     }
                     SpawnBloodEffect(hit.point, hit.normal);
+                    if (_enemyHitSound)
+                    {
+                        _audioSource.PlayOneShot(_enemyHitSound);
+                    }
                 }
                 else
                 {
                     SpawnLightBloodEffect(hit.point, hit.normal);
+                    if (_enemyHitNoRuneSound)
+                    {
+                        _audioSource.PlayOneShot(_enemyHitNoRuneSound);
+                    }
                 }
-                _audioSource.PlayOneShot(pickaxeValidSound);
+                var enemyAI = hit.collider.GetComponentInParent<EnemyAI>();
+                if (enemyAI)
+                {
+                    enemyAI.ForceEngage();
+                }
             }
             else
             {
-                _audioSource.PlayOneShot(pickaxeInvalidSound);
-                SpawnSparkEffect(hit.point, hit.normal);
+                _pickaxeAudio.PlayImpactForTag(hit.collider.tag);
+                _lastNoisePosition = hit.point;
+                _lastNoiseRadius = _miningNoiseRadius;
+                NoiseEmitter.Emit(hit.point, _miningNoiseRadius, hit.collider.tag);
+                var tag = hit.collider.tag;
+                if (tag == "Wood")
+                {
+                    SpawnWoodChipEffect(hit.point, hit.normal);
+                }
+                else if (tag != "Grass" && tag != "Carpet")
+                {
+                    SpawnSparkEffect(hit.point, hit.normal);
+                }
             }
         }
         else
         {
-            _audioSource.PlayOneShot(pickaxeMissSound);
+            _pickaxeAudio.PlayMiss();
         }
     }
 
@@ -162,6 +289,16 @@ public class PickaxeHand : MonoBehaviour
         Destroy(vfx, 1f);
     }
 
+    private void SpawnWoodChipEffect(Vector3 point, Vector3 normal)
+    {
+        if (!woodChipVFX)
+        {
+            return;
+        }
+        var vfx = Instantiate(woodChipVFX, point, Quaternion.LookRotation(normal));
+        Destroy(vfx, 1f);
+    }
+
     private void SpawnMaterialHitEffect(Vector3 point, Material mat)
     {
         var vfx = Instantiate(materialHitVFX, point, Quaternion.identity);
@@ -172,7 +309,9 @@ public class PickaxeHand : MonoBehaviour
             {
                 var renderer = gibble.GetComponent<Renderer>();
                 if (renderer != null)
+                {
                     renderer.material = mat;
+                }
             }
         }
         Destroy(vfx, 2f);
@@ -193,5 +332,36 @@ public class PickaxeHand : MonoBehaviour
     public void PlayUpgradePickupSound()
     {
         _audioSource.PlayOneShot(pickaxeUpgradeSound);
+    }
+
+    public void EnableSlashVFX()
+    {
+        if (!_pickaxeParticleSystem)
+        {
+            return;
+        }
+        _pickaxeParticleSystem.Play();
+    }
+
+    public void DisableSlashVFX()
+    {
+        if (!_pickaxeParticleSystem)
+        {
+            return;
+        }
+        _pickaxeParticleSystem.Clear(true);
+        _pickaxeParticleSystem.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+    }
+        
+    private void OnDrawGizmos()
+    {
+        if (_lastNoiseRadius <= 0f)
+        {
+            return;
+        }
+        Gizmos.color = new Color(1f, 0.5f, 0f, 0.3f);
+        Gizmos.DrawSphere(_lastNoisePosition, _lastNoiseRadius);
+        Gizmos.color = new Color(1f, 0.5f, 0f, 1f);
+        Gizmos.DrawWireSphere(_lastNoisePosition, _lastNoiseRadius);
     }
 }

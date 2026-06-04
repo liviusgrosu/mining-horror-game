@@ -1,0 +1,50 @@
+Chatting immersive sims, Underworld Ascendant, and communicating options with Warren Spector and Otherside Entertainment
+
+When Warren Spector was creating the original Deus Ex, Arkane’s studio head Harvey Smith - who was a lead designer on Deus Ex at Ion Storm at the time - had to convince Spector to cut large portions from his vision.
+
+Originally, Spector wanted there to be a section in Deus Ex where the Russian-Mexico Alliance broke across the border and into San Antonio, triggering a full-blown war. He also wanted a chapter where protagonist J.C. Denton freed 2,000 captives from a concentration camp.
+
+“Making a game - and it's a cliche to say this - is like sculpting,” Spector says. “It's not like painting where you are adding layers. It's sculpting. My teams often say I am a kitchen sink designer because I throw everything in and then start shaving away things that don't work. 
+
+“I don't want to go too far into Deus Ex, but there was a lot of stuff cut - not so much systemically, because it's very hard to cut systems from an immersive simulation because they are all interlinked. Most of what we cut was content - locations and missions. We cut the White House.”
+
+
+Spector says these cuts made the game better. In fact, some of the things he originally wanted to do were, at the time, almost impossible. Spector’s next game, Underworld Ascendant, created with Otherside Entertainment, is much more reined in.
+
+“For Warren and I, we have never made a game - or at the least the games we are proudest of - where we didn't have a bunch of dead ends,” producer Paul Neurath explains. “There has to be some intellectual honesty about it - recognising when you are reaching your dead ends, but also that's the process and you winnow down to the core of what makes a great game.
+
+“With Underworld Ascendant, it is a tightly scoped game in a lot of ways. There's not a lot of territory to explore. You're not going to be wandering for days across the abyss or anything like that. But our hope is that what we delivered was what matters to the players and that deep immersive sim is central and informs everything that we decided on.”
+
+Underworld Ascendant’s lineage is clear. This is from the same school of design as Deus Ex and Thief - a genre that lets players find their own way through each problem, usually in creative ways, and sometimes even in ways the developers didn’t anticipate. Each system interlocks and the rules are consistent, creating something akin to a collaboration between player and creator.
+
+For this immersive sim there are three main pillars: combat, stealth, and magic. All three disciplines can be mixed and matched, or players are free to specialise down one specific route. Whatever they choose, there will be solutions to problems that feel unique to them.
+
+“We said back during the Kickstarter that we wanted you to come up with solutions that we'd have never thought of before,” Spector says. “I thought that was a little bit much, but even the first time we released an early prototype of the game to some of our early backers, they were coming up with solutions that we had never thought of before.
+
+“In that first video that someone posted, they found a way of using ‘Move Wood’ on a crate to create an elevator. We were like: 'Oh, that's in the game now'. Every single time we have taken the game out to show people, we have seen solutions we couldn't have imagined.”
+
+Another player during a PAX demo got through one of the areas using only an 80lb sconce. They picked it up and carried it around the entire level, using it to block enemies and traverse the environment.
+
+The idea behind Underworld Ascendant was to create a pure immersive sim that retained the values of the genre, but also while pushing it forward. This is no easy task with a core team of 14 people, but the developers say that this lack of resources helped keep their ambitions in check.
+
+“The constantly evolving world is an area we have looked at,” writer and director Joe Fielder explains. “We have a pretty small indie team here and we're up against teams that have hundreds of people. We really saw a lot of larger RPGs have miles and miles of world to explore in a tourist sense, but they can become kind of static over time.
+
+“In our case, we took inspiration from a lot of modern board games that do interesting things, where you have a repeatable narrative and a lot of interesting variation, designer curated.”
+
+“The big touristy games, the way I always describe them is ‘miles wide and their simulations are an inch deep’, which means the gameplay possibilities are limited,” Spector adds. “For us, we're in the ‘inch wide, miles deep’ game where we may have a smaller tighter environment, but the things you can do are much richer that you are really incentivised to play over and over and over again to see the world differently - not just to see the expanse of the world but to see the impact you can have on the world, which is one of the hallmarks of the immersive simulation.”
+
+The magic system in Underworld Ascendant was also built to add depth to your choices within this evolving world. The runestones are based on the traditional Norse alphabet and you can combine them into nouns, verbs, and adjectives. You get recipes for some results, but many of the most surprising are left for you to figure out on your own. Spells allow you to wield the elements, but they also allow you to manipulate the environment or change the property of items and enemies.
+
+“There's a couple of areas where we are really trying to push forward more and more to see what immersive sims can do, and innovate when we can,” Neurath says. “In a lot more recent immersive sim games - Dishonored, BioShock Infinite, Deus Ex - those tend to build in A, B C solutions where the designers have built a path through any area. In Dishonored, you can fight the enemy or you can stealth past them. If you choose stealthing, the game will recognise that and give you a different experience. It's very much the designers laying out that you can do one of those two options. With Underworld Ascendant, it's much more fluid.”
+
+Otherside is also attempting to solve on of the old design issues that have dogged immersive sims for almost two decades: communicating what’s possible to the player. I personally love the Dishonored series because I know about a bunch of the cool, unexpected things you can do with its tools: a decapitated head, to me, is a grenade - it just needs a mine sticking on it. Otherside hopes to spotlight some of these weird combos in a bid to deter people from trying to run through the game swinging their sword at everything.
+
+“The story in is the settlement of Marchaul,” Fielder explains. “Their entire society is based on trading these unique survival tactics. They reward you for varying your tactics and also they are really focused on having you combine these tactics in interesting ways. The game is constantly pushing you to explore all the different opportunities you have, the side bounties you offer are: 'Hey, can you fulfil this quest in an interesting way?'. One way might be not being seen; another might be entering into a level without anything in your backpack and just adapting with things you find within the world. We find these are ways we like to play. A lot of the time this pushes you to explore to see what you can get away with.”
+
+Dishonored: Death of the Outsider tried something similar recently, giving players optional bounties within missions that encourage players to try different playstyles. It also stripped out the persistent punishments the series is famous for, in which the world becomes more hostile the more aggressively you play, giving players the breathing room to mess around.
+
+There’s another problem that’s followed the immersive sim genre since inception, however, and it’s one that Otherside is hoping to dodge by branding Underworld Ascendant a ‘dungeon crawler’. Here’s the thing: to a layman, the term ‘immersive sim’ means nothing, and it communicates even less.
+
+“I wish we could come up with something better,” Spector says. “Underworld came out in 1992 and since then we have been trying to come up with a cooler way to say 'immersive simulation’. It's pathetic. I've been calling them 'in-sims' recently, but that's inelegant, too. After a few years of trying to come up with a term, the best I had was 'emergent RPG'. That's still kind-of lacking.”
+
+Still, to those in the know, there’s something extremely exciting about that genre definition. While immersive sim elements have been making their way into more mainstream titles - most notably, Zelda: Breath of the Wild - there are very few pure immersive sims being made. A week ago, I didn’t know Underworld Ascendant existed, and now I know there’s a new immersive sim being made by some of the people who helped make the genre happen in the first place. I’m already combining runic spells of my own in my mind, ahead of when the game releases later this week. 
