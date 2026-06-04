@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52183e977aa3bea489791c73ae6c61bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StealthLight
-  detectionRange: 10
+  detectionRange: 4
   maxContribution: 1
   falloffCurve:
     serializedVersion: 2
@@ -308,15 +308,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4193091922379602204, guid: 0a15ac3817a60e34aaab18eb34a8c9ce, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.379
+      value: -0.405
       objectReference: {fileID: 0}
     - target: {fileID: 4193091922379602204, guid: 0a15ac3817a60e34aaab18eb34a8c9ce, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4193091922379602204, guid: 0a15ac3817a60e34aaab18eb34a8c9ce, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.234
+      value: -0.055
       objectReference: {fileID: 0}
     - target: {fileID: 4193091922379602204, guid: 0a15ac3817a60e34aaab18eb34a8c9ce, type: 3}
       propertyPath: m_LocalRotation.w
